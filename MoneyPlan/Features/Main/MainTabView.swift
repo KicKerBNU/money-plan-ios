@@ -1,0 +1,163 @@
+import SwiftUI
+
+enum AppTab: Hashable {
+    case expenses, income, add, chat, accounts
+}
+
+struct MainTabView: View {
+    @State private var selectedTab: AppTab = .expenses
+    @State private var previousTab: AppTab = .expenses
+    @State private var showAddExpense = false
+
+    /// "Add" is rendered as a tab item so iOS keeps the bar at a natural 5 slots,
+    /// but selecting it bounces back to the prior tab and presents the form sheet
+    /// — a common iOS pattern (Instagram, Twitter/X) for primary-action tabs.
+    private var tabSelection: Binding<AppTab> {
+        Binding(
+            get: { selectedTab },
+            set: { newValue in
+                if newValue == .add {
+                    showAddExpense = true
+                    // Snap selection back so the placeholder view never appears.
+                    DispatchQueue.main.async { selectedTab = previousTab }
+                } else {
+                    previousTab = newValue
+                    selectedTab = newValue
+                }
+            }
+        )
+    }
+
+    var body: some View {
+        TabView(selection: tabSelection) {
+            ExpensesView(showAddSheet: $showAddExpense)
+                .tabItem { Label("appNav.expenses", systemImage: "list.bullet.rectangle.fill") }
+                .tag(AppTab.expenses)
+
+            IncomeView()
+                .tabItem { Label("appNav.income", systemImage: "arrow.up.right") }
+                .tag(AppTab.income)
+
+            // Placeholder view — never actually shown thanks to the binding above.
+            Color.clear
+                .tabItem { Label("appNav.add", systemImage: "plus.circle.fill") }
+                .tag(AppTab.add)
+
+            ChatbotView()
+                .tabItem { Label("appNav.chatbot", systemImage: "bubble.left.and.bubble.right.fill") }
+                .tag(AppTab.chat)
+
+            AccountsView()
+                .tabItem { Label("appNav.accounts", systemImage: "building.columns.fill") }
+                .tag(AppTab.accounts)
+        }
+    }
+}
+
+struct SettingsToolbar: View {
+    @Environment(AuthService.self) private var auth
+    @Environment(ThemeManager.self) private var theme
+    @Environment(MoneyPreferences.self) private var money
+
+    @State private var showDeleteAccountConfirm = false
+    @State private var isDeletingAccount = false
+
+    var body: some View {
+        Menu {
+            // Theme submenu (System / Light / Dark)
+            Menu {
+                Picker("theme.label", selection: themePreferenceBinding) {
+                    Label("theme.system", systemImage: "circle.lefthalf.filled")
+                        .tag(ThemeManager.Preference.system)
+                    Label("theme.light", systemImage: "sun.max")
+                        .tag(ThemeManager.Preference.light)
+                    Label("theme.dark", systemImage: "moon")
+                        .tag(ThemeManager.Preference.dark)
+                }
+            } label: {
+                Label("theme.label", systemImage: themeIcon)
+            }
+
+            // Currency submenu
+            Menu {
+                Picker("preferences.currency", selection: currencyBinding) {
+                    Text(verbatim: String(localized: "preferences.currencyAuto") + " · " + money.autoCurrency)
+                        .tag(String?.none)
+                    ForEach(MoneyPreferences.supportedCurrencies, id: \.self) { code in
+                        Text(verbatim: code).tag(String?.some(code))
+                    }
+                }
+            } label: {
+                Label {
+                    HStack {
+                        Text("preferences.currency")
+                        Spacer()
+                        Text(verbatim: money.activeCurrency)
+                            .foregroundStyle(.secondary)
+                    }
+                } icon: {
+                    Image(systemName: "dollarsign.circle")
+                }
+            }
+
+            Divider()
+
+            Button(role: .destructive) {
+                showDeleteAccountConfirm = true
+            } label: {
+                Label("auth.deleteAccount.menu", systemImage: "person.crop.circle.badge.minus")
+            }
+            .disabled(isDeletingAccount)
+
+            Button(role: .destructive) {
+                try? auth.signOut()
+            } label: {
+                Label("appNav.logout", systemImage: "rectangle.portrait.and.arrow.right")
+            }
+        } label: {
+            Image(systemName: "gearshape")
+        }
+        .accessibilityLabel("appNav.settingsMenu")
+        .confirmationDialog(
+            "auth.deleteAccount.confirmTitle",
+            isPresented: $showDeleteAccountConfirm,
+            titleVisibility: .visible
+        ) {
+            Button("auth.deleteAccount.confirmAction", role: .destructive) {
+                Task { await deleteAccount() }
+            }
+            Button("common.cancel", role: .cancel) {}
+        } message: {
+            Text("auth.deleteAccount.confirmBody")
+        }
+    }
+
+    private func deleteAccount() async {
+        isDeletingAccount = true
+        defer { isDeletingAccount = false }
+        do {
+            try await auth.deleteAccount()
+        } catch {
+            // Errors surface via ToastCenter from APIClient.
+        }
+    }
+
+    private var themeIcon: String {
+        switch theme.preference {
+        case .system: "circle.lefthalf.filled"
+        case .light: "sun.max"
+        case .dark: "moon"
+        }
+    }
+
+    private var themePreferenceBinding: Binding<ThemeManager.Preference> {
+        Binding(get: { theme.preference }, set: { theme.preference = $0 })
+    }
+
+    private var currencyBinding: Binding<String?> {
+        Binding(
+            get: { money.currency },
+            set: { money.setCurrency($0) }
+        )
+    }
+}

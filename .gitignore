@@ -1,0 +1,12 @@
+# Xcode
+DerivedData/
+build/
+*.xcuserstate
+xcuserdata/
+
+# Firebase (download from console)
+MoneyPlan/Resources/GoogleService-Info.plist
+
+# SPM
+.swiftpm/
+.build/

@@ -1,0 +1,803 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		0261B87DDEF5CF7814636670 /* FinanceCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B1FD95C8AF3834D23D5D4FC /* FinanceCard.swift */; };
+		061B7868240852E3F282B472 /* MoneyPreferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = EECB05C68F571003623B46C1 /* MoneyPreferences.swift */; };
+		16264AA4A1DA01930C82AB72 /* IncomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE20BBB0D8F954F35701162D /* IncomeView.swift */; };
+		1F3EDDB44B0CC5DF596BD862 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 866C017D71FE8E4D4CD6BCA1 /* FirebaseAuth */; };
+		263BB63BA6EE5BA9E6968686 /* MarketingScreenshotViews+Extended.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D67FA4427CF4B09A54E4C3B /* MarketingScreenshotViews+Extended.swift */; };
+		31ABB72C248ECFE7AC2B641D /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0A053646D6BFA46395D8BEA /* RootView.swift */; };
+		333470A4E5B4713D369F435E /* ChatbotView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 470831BD3BE336D90F9687ED /* ChatbotView.swift */; };
+		3B9D85BFAB1B5ADC925ADDE8 /* FirebaseConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD74D878F8E5C40DB7C57432 /* FirebaseConfiguration.swift */; };
+		43E55B2C15F144F42C283EA3 /* ToastCenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2608CDA84C416A408597BCF /* ToastCenter.swift */; };
+		4EB13DB1D99980A77BDA388B /* MarketingScreenshotData.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFBA1A21B442862366724EBC /* MarketingScreenshotData.swift */; };
+		537A0D50E47D555FB0948A8F /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 549C988A606FEFE6D1306D31 /* MainTabView.swift */; };
+		5529915E16CFA04F8947B546 /* CategoryIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24980C727AB134A64D62F375 /* CategoryIcon.swift */; };
+		5D2E542756D786E5FE72622B /* GenerateAppPreviewsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80D60BBDB81980A8A5DB699F /* GenerateAppPreviewsTests.swift */; };
+		5D43B11AAE0AC2DEEB229C11 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A020BD0502A7751A8219620 /* LoginView.swift */; };
+		5DB34E7446233D548C38C753 /* DateUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = C626E57E422CCC291F60273D /* DateUtils.swift */; };
+		643F78758F42BDD5C30600C0 /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = 590F9994F9A3A2BE02FADE3E /* GoogleSignIn */; };
+		65524C67BA9AC0B31D3B2ABD /* GoogleService-Info.plist.example in Resources */ = {isa = PBXBuildFile; fileRef = 1F8933C55F4E14DC18610A12 /* GoogleService-Info.plist.example */; };
+		658F6036D6E1274AB2AED2F3 /* CurrencyFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F0943E92808FBD3D6B3F710 /* CurrencyFormatter.swift */; };
+		6BBD59236A15D64FF6F3334F /* FirebaseSetupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 860125A0266A4BC423A04761 /* FirebaseSetupView.swift */; };
+		6E3035E56B96452085452986 /* ExpenseFormSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46CF8F55044532D5765D3C91 /* ExpenseFormSheet.swift */; };
+		6E9E54022ACC366F73350318 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 72EF77A5C2EABD2649863217 /* Localizable.xcstrings */; };
+		718DE86802CC73AE852E9C64 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 953E7E9CB00744FFED3A3222 /* AppDelegate.swift */; };
+		7B36250BBDB54737FEA96914 /* AppTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 629A21396DC9DC70DAA7CA3F /* AppTheme.swift */; };
+		8128981813EF4B19E5A5016F /* AccountsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B62C843536B751C032DB55B3 /* AccountsView.swift */; };
+		8431211B16D74315B24DA7B2 /* MoneyPlanApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC7ACEDF23982E9E2CA2F867 /* MoneyPlanApp.swift */; };
+		93EB68917743DD7EC28F0D44 /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A251F5D8443B4159BBE9BD4B /* AuthService.swift */; };
+		A1C5A32F9DE0F70D87BD5E95 /* FinanceAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9D3B551C337D25B12A8738F /* FinanceAPI.swift */; };
+		A9C33F16C7813F9B430BA811 /* OverviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AB9162DE03405A29E0ADC1C /* OverviewView.swift */; };
+		B0392A88DC47267CEA5B8051 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = B8D3DB19B29BD00477955E19 /* GoogleService-Info.plist */; };
+		B9A194E0AFB30A57C8A2D4B5 /* APIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3EF759C5264017543A46A1E /* APIClient.swift */; };
+		C09F3823A4437B82AA74D440 /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = B65A676B171EA05C142945A4 /* Models.swift */; };
+		C5580FE36117EDD82EA03613 /* ExpensesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A10E179DBF259E627F8E951 /* ExpensesViewModel.swift */; };
+		CAD8EA7B5B1CD42B7A4A65BD /* ExpensesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB174D5FE7A4171432842B8B /* ExpensesView.swift */; };
+		D064DBB9EE3021857B745CC4 /* MarketingScreenshotViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFB116CCF317F523F7505883 /* MarketingScreenshotViews.swift */; };
+		D33F2AC233D62F292D7EE75C /* GenerateScreenshotsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC820CE7CA5A11FE478A25D2 /* GenerateScreenshotsTests.swift */; };
+		E0C02DE40CCED9CA4F5E58CD /* MarketingAppPreviewSequences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C3E3E010DC5AC9992586B7D /* MarketingAppPreviewSequences.swift */; };
+		F2DA023D1A9177E86E0BE3B9 /* StatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD80D21BE3A7F1ADBB2337D1 /* StatsView.swift */; };
+		FBE72125414B719FBF3F8A1B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F9086F3696D1BC540FD2C232 /* Assets.xcassets */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		F31A5E490DDE129B72145556 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 77FB0592A4134CF70741A20C /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D050876B4A35A54DBB2BC715;
+			remoteInfo = MoneyPlan;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		0AB9162DE03405A29E0ADC1C /* OverviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverviewView.swift; sourceTree = "<group>"; };
+		1A020BD0502A7751A8219620 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
+		1F8933C55F4E14DC18610A12 /* GoogleService-Info.plist.example */ = {isa = PBXFileReference; path = "GoogleService-Info.plist.example"; sourceTree = "<group>"; };
+		24980C727AB134A64D62F375 /* CategoryIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryIcon.swift; sourceTree = "<group>"; };
+		2A10E179DBF259E627F8E951 /* ExpensesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpensesViewModel.swift; sourceTree = "<group>"; };
+		2F0943E92808FBD3D6B3F710 /* CurrencyFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyFormatter.swift; sourceTree = "<group>"; };
+		3B1FD95C8AF3834D23D5D4FC /* FinanceCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinanceCard.swift; sourceTree = "<group>"; };
+		46CF8F55044532D5765D3C91 /* ExpenseFormSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpenseFormSheet.swift; sourceTree = "<group>"; };
+		470831BD3BE336D90F9687ED /* ChatbotView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatbotView.swift; sourceTree = "<group>"; };
+		549C988A606FEFE6D1306D31 /* MainTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabView.swift; sourceTree = "<group>"; };
+		598B00B5009736635949BEE7 /* MoneyPlanScreenshotTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = MoneyPlanScreenshotTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		5AC0627E593AD66ED878673F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		5C3E3E010DC5AC9992586B7D /* MarketingAppPreviewSequences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketingAppPreviewSequences.swift; sourceTree = "<group>"; };
+		629A21396DC9DC70DAA7CA3F /* AppTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppTheme.swift; sourceTree = "<group>"; };
+		6D67FA4427CF4B09A54E4C3B /* MarketingScreenshotViews+Extended.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MarketingScreenshotViews+Extended.swift"; sourceTree = "<group>"; };
+		72EF77A5C2EABD2649863217 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
+		80D60BBDB81980A8A5DB699F /* GenerateAppPreviewsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenerateAppPreviewsTests.swift; sourceTree = "<group>"; };
+		860125A0266A4BC423A04761 /* FirebaseSetupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseSetupView.swift; sourceTree = "<group>"; };
+		953E7E9CB00744FFED3A3222 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		A251F5D8443B4159BBE9BD4B /* AuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
+		AFB116CCF317F523F7505883 /* MarketingScreenshotViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketingScreenshotViews.swift; sourceTree = "<group>"; };
+		B3EF759C5264017543A46A1E /* APIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIClient.swift; sourceTree = "<group>"; };
+		B62C843536B751C032DB55B3 /* AccountsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountsView.swift; sourceTree = "<group>"; };
+		B65A676B171EA05C142945A4 /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
+		B8D3DB19B29BD00477955E19 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		BB174D5FE7A4171432842B8B /* ExpensesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpensesView.swift; sourceTree = "<group>"; };
+		BC58DCC06C3F0915D309085D /* MoneyPlan.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = MoneyPlan.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		C2608CDA84C416A408597BCF /* ToastCenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToastCenter.swift; sourceTree = "<group>"; };
+		C626E57E422CCC291F60273D /* DateUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateUtils.swift; sourceTree = "<group>"; };
+		CD80D21BE3A7F1ADBB2337D1 /* StatsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsView.swift; sourceTree = "<group>"; };
+		D0A053646D6BFA46395D8BEA /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
+		DC820CE7CA5A11FE478A25D2 /* GenerateScreenshotsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenerateScreenshotsTests.swift; sourceTree = "<group>"; };
+		DD55DD59B3652673055B772C /* MoneyPlan.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MoneyPlan.entitlements; sourceTree = "<group>"; };
+		DD74D878F8E5C40DB7C57432 /* FirebaseConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseConfiguration.swift; sourceTree = "<group>"; };
+		DE20BBB0D8F954F35701162D /* IncomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IncomeView.swift; sourceTree = "<group>"; };
+		DFBA1A21B442862366724EBC /* MarketingScreenshotData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketingScreenshotData.swift; sourceTree = "<group>"; };
+		EECB05C68F571003623B46C1 /* MoneyPreferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoneyPreferences.swift; sourceTree = "<group>"; };
+		F9086F3696D1BC540FD2C232 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		F9D3B551C337D25B12A8738F /* FinanceAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinanceAPI.swift; sourceTree = "<group>"; };
+		FC7ACEDF23982E9E2CA2F867 /* MoneyPlanApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoneyPlanApp.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		BA608BB54F9C0609EF228BDA /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1F3EDDB44B0CC5DF596BD862 /* FirebaseAuth in Frameworks */,
+				643F78758F42BDD5C30600C0 /* GoogleSignIn in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		07103A89521D6229BEAA0770 /* Auth */ = {
+			isa = PBXGroup;
+			children = (
+				A251F5D8443B4159BBE9BD4B /* AuthService.swift */,
+			);
+			path = Auth;
+			sourceTree = "<group>";
+		};
+		0A1CCF1B75F787776D6B128A /* Accounts */ = {
+			isa = PBXGroup;
+			children = (
+				B62C843536B751C032DB55B3 /* AccountsView.swift */,
+			);
+			path = Accounts;
+			sourceTree = "<group>";
+		};
+		28E591539D618645ADF11A84 /* MoneyPlan */ = {
+			isa = PBXGroup;
+			children = (
+				5AC0627E593AD66ED878673F /* Info.plist */,
+				DD55DD59B3652673055B772C /* MoneyPlan.entitlements */,
+				FC7ACEDF23982E9E2CA2F867 /* MoneyPlanApp.swift */,
+				939C0956766D12900C04A473 /* Core */,
+				4B95C5AC2B3F15D8B3E145BF /* Features */,
+				A2963B5FD1D808FB90BA1184 /* Marketing */,
+				91D6541D09F5F9BF66414553 /* Resources */,
+				A01C65B2C947963D4D4BF64A /* Shared */,
+			);
+			path = MoneyPlan;
+			sourceTree = "<group>";
+		};
+		2E8EA53D796E156C122FE8C3 /* Theme */ = {
+			isa = PBXGroup;
+			children = (
+				629A21396DC9DC70DAA7CA3F /* AppTheme.swift */,
+			);
+			path = Theme;
+			sourceTree = "<group>";
+		};
+		38C70F8B6E75A643ED0E6DE8 /* Chatbot */ = {
+			isa = PBXGroup;
+			children = (
+				470831BD3BE336D90F9687ED /* ChatbotView.swift */,
+			);
+			path = Chatbot;
+			sourceTree = "<group>";
+		};
+		425FE4C2CFE25BA35B8B154C /* Setup */ = {
+			isa = PBXGroup;
+			children = (
+				860125A0266A4BC423A04761 /* FirebaseSetupView.swift */,
+			);
+			path = Setup;
+			sourceTree = "<group>";
+		};
+		45A819572C786D75F5613484 /* Firebase */ = {
+			isa = PBXGroup;
+			children = (
+				953E7E9CB00744FFED3A3222 /* AppDelegate.swift */,
+				DD74D878F8E5C40DB7C57432 /* FirebaseConfiguration.swift */,
+			);
+			path = Firebase;
+			sourceTree = "<group>";
+		};
+		4B95C5AC2B3F15D8B3E145BF /* Features */ = {
+			isa = PBXGroup;
+			children = (
+				0A1CCF1B75F787776D6B128A /* Accounts */,
+				641E3199C04BEB96288F33F7 /* Auth */,
+				38C70F8B6E75A643ED0E6DE8 /* Chatbot */,
+				DFC0891DE97DB7F7A096FE61 /* Expenses */,
+				BA1D03AED517FEAB7E488354 /* Income */,
+				DCFBA1BF4354743FB68C170A /* Main */,
+				7DF606477ED782533401B9A4 /* Overview */,
+				B12498D1BBDD66E8D82B6EAA /* Root */,
+				425FE4C2CFE25BA35B8B154C /* Setup */,
+				9F1B20D0BACC556814A59B28 /* Stats */,
+			);
+			path = Features;
+			sourceTree = "<group>";
+		};
+		641E3199C04BEB96288F33F7 /* Auth */ = {
+			isa = PBXGroup;
+			children = (
+				1A020BD0502A7751A8219620 /* LoginView.swift */,
+			);
+			path = Auth;
+			sourceTree = "<group>";
+		};
+		71D36E5633FA554DCD1E5F7B /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				3B1FD95C8AF3834D23D5D4FC /* FinanceCard.swift */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		7DF606477ED782533401B9A4 /* Overview */ = {
+			isa = PBXGroup;
+			children = (
+				0AB9162DE03405A29E0ADC1C /* OverviewView.swift */,
+			);
+			path = Overview;
+			sourceTree = "<group>";
+		};
+		91D6541D09F5F9BF66414553 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				F9086F3696D1BC540FD2C232 /* Assets.xcassets */,
+				B8D3DB19B29BD00477955E19 /* GoogleService-Info.plist */,
+				1F8933C55F4E14DC18610A12 /* GoogleService-Info.plist.example */,
+				72EF77A5C2EABD2649863217 /* Localizable.xcstrings */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		939C0956766D12900C04A473 /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				BEE0C985FA6518BC77B30002 /* API */,
+				07103A89521D6229BEAA0770 /* Auth */,
+				45A819572C786D75F5613484 /* Firebase */,
+				CAC1A478CDF4E1EAC911D5C7 /* Models */,
+				A3CD285687C72F7F9C38770F /* Money */,
+				2E8EA53D796E156C122FE8C3 /* Theme */,
+				C48C3F375A659CF2FBB3EF6E /* Utils */,
+			);
+			path = Core;
+			sourceTree = "<group>";
+		};
+		93BA7C91787094F4DB596655 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				BC58DCC06C3F0915D309085D /* MoneyPlan.app */,
+				598B00B5009736635949BEE7 /* MoneyPlanScreenshotTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		9F1B20D0BACC556814A59B28 /* Stats */ = {
+			isa = PBXGroup;
+			children = (
+				CD80D21BE3A7F1ADBB2337D1 /* StatsView.swift */,
+			);
+			path = Stats;
+			sourceTree = "<group>";
+		};
+		A01C65B2C947963D4D4BF64A /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				C2608CDA84C416A408597BCF /* ToastCenter.swift */,
+				71D36E5633FA554DCD1E5F7B /* Components */,
+			);
+			path = Shared;
+			sourceTree = "<group>";
+		};
+		A2963B5FD1D808FB90BA1184 /* Marketing */ = {
+			isa = PBXGroup;
+			children = (
+				5C3E3E010DC5AC9992586B7D /* MarketingAppPreviewSequences.swift */,
+				DFBA1A21B442862366724EBC /* MarketingScreenshotData.swift */,
+				AFB116CCF317F523F7505883 /* MarketingScreenshotViews.swift */,
+				6D67FA4427CF4B09A54E4C3B /* MarketingScreenshotViews+Extended.swift */,
+			);
+			path = Marketing;
+			sourceTree = "<group>";
+		};
+		A3CD285687C72F7F9C38770F /* Money */ = {
+			isa = PBXGroup;
+			children = (
+				EECB05C68F571003623B46C1 /* MoneyPreferences.swift */,
+			);
+			path = Money;
+			sourceTree = "<group>";
+		};
+		B12498D1BBDD66E8D82B6EAA /* Root */ = {
+			isa = PBXGroup;
+			children = (
+				D0A053646D6BFA46395D8BEA /* RootView.swift */,
+			);
+			path = Root;
+			sourceTree = "<group>";
+		};
+		BA1D03AED517FEAB7E488354 /* Income */ = {
+			isa = PBXGroup;
+			children = (
+				DE20BBB0D8F954F35701162D /* IncomeView.swift */,
+			);
+			path = Income;
+			sourceTree = "<group>";
+		};
+		BEE0C985FA6518BC77B30002 /* API */ = {
+			isa = PBXGroup;
+			children = (
+				B3EF759C5264017543A46A1E /* APIClient.swift */,
+				F9D3B551C337D25B12A8738F /* FinanceAPI.swift */,
+			);
+			path = API;
+			sourceTree = "<group>";
+		};
+		C48C3F375A659CF2FBB3EF6E /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				24980C727AB134A64D62F375 /* CategoryIcon.swift */,
+				2F0943E92808FBD3D6B3F710 /* CurrencyFormatter.swift */,
+				C626E57E422CCC291F60273D /* DateUtils.swift */,
+			);
+			path = Utils;
+			sourceTree = "<group>";
+		};
+		C50CA9CEB5EA27042A9B1721 /* ScreenshotTests */ = {
+			isa = PBXGroup;
+			children = (
+				80D60BBDB81980A8A5DB699F /* GenerateAppPreviewsTests.swift */,
+				DC820CE7CA5A11FE478A25D2 /* GenerateScreenshotsTests.swift */,
+			);
+			path = ScreenshotTests;
+			sourceTree = "<group>";
+		};
+		CAC1A478CDF4E1EAC911D5C7 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				B65A676B171EA05C142945A4 /* Models.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		DCFBA1BF4354743FB68C170A /* Main */ = {
+			isa = PBXGroup;
+			children = (
+				549C988A606FEFE6D1306D31 /* MainTabView.swift */,
+			);
+			path = Main;
+			sourceTree = "<group>";
+		};
+		DFC0891DE97DB7F7A096FE61 /* Expenses */ = {
+			isa = PBXGroup;
+			children = (
+				46CF8F55044532D5765D3C91 /* ExpenseFormSheet.swift */,
+				BB174D5FE7A4171432842B8B /* ExpensesView.swift */,
+				2A10E179DBF259E627F8E951 /* ExpensesViewModel.swift */,
+			);
+			path = Expenses;
+			sourceTree = "<group>";
+		};
+		F8E9E32473BC14922BA7B128 = {
+			isa = PBXGroup;
+			children = (
+				28E591539D618645ADF11A84 /* MoneyPlan */,
+				C50CA9CEB5EA27042A9B1721 /* ScreenshotTests */,
+				93BA7C91787094F4DB596655 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		29BE24CBFD2DF9EF3A22E733 /* MoneyPlanScreenshotTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3BA427C02B5B46A428E156DF /* Build configuration list for PBXNativeTarget "MoneyPlanScreenshotTests" */;
+			buildPhases = (
+				1061D39AF0E63704D1D50DE7 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				51A039668425325361C50D93 /* PBXTargetDependency */,
+			);
+			name = MoneyPlanScreenshotTests;
+			packageProductDependencies = (
+			);
+			productName = MoneyPlanScreenshotTests;
+			productReference = 598B00B5009736635949BEE7 /* MoneyPlanScreenshotTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		D050876B4A35A54DBB2BC715 /* MoneyPlan */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C5836B947A920EDD9661CD8B /* Build configuration list for PBXNativeTarget "MoneyPlan" */;
+			buildPhases = (
+				4D9F961E78F604A9FD62CB2B /* Sources */,
+				092768492E095249C65567F1 /* Resources */,
+				BA608BB54F9C0609EF228BDA /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = MoneyPlan;
+			packageProductDependencies = (
+				866C017D71FE8E4D4CD6BCA1 /* FirebaseAuth */,
+				590F9994F9A3A2BE02FADE3E /* GoogleSignIn */,
+			);
+			productName = MoneyPlan;
+			productReference = BC58DCC06C3F0915D309085D /* MoneyPlan.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		77FB0592A4134CF70741A20C /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1600;
+				TargetAttributes = {
+					29BE24CBFD2DF9EF3A22E733 = {
+						DevelopmentTeam = "";
+						ProvisioningStyle = Automatic;
+					};
+					D050876B4A35A54DBB2BC715 = {
+						DevelopmentTeam = "";
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = B254CE113EAE9C3962A4F419 /* Build configuration list for PBXProject "MoneyPlan" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+				"en-US",
+				pt,
+				"pt-BR",
+				"pt-PT",
+			);
+			mainGroup = F8E9E32473BC14922BA7B128;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				9BAA0BF25517D74496A69DC9 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				25F416F10757F71C6DF588DE /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
+			);
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 93BA7C91787094F4DB596655 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				D050876B4A35A54DBB2BC715 /* MoneyPlan */,
+				29BE24CBFD2DF9EF3A22E733 /* MoneyPlanScreenshotTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		092768492E095249C65567F1 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FBE72125414B719FBF3F8A1B /* Assets.xcassets in Resources */,
+				B0392A88DC47267CEA5B8051 /* GoogleService-Info.plist in Resources */,
+				65524C67BA9AC0B31D3B2ABD /* GoogleService-Info.plist.example in Resources */,
+				6E9E54022ACC366F73350318 /* Localizable.xcstrings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		1061D39AF0E63704D1D50DE7 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5D2E542756D786E5FE72622B /* GenerateAppPreviewsTests.swift in Sources */,
+				D33F2AC233D62F292D7EE75C /* GenerateScreenshotsTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4D9F961E78F604A9FD62CB2B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B9A194E0AFB30A57C8A2D4B5 /* APIClient.swift in Sources */,
+				8128981813EF4B19E5A5016F /* AccountsView.swift in Sources */,
+				718DE86802CC73AE852E9C64 /* AppDelegate.swift in Sources */,
+				7B36250BBDB54737FEA96914 /* AppTheme.swift in Sources */,
+				93EB68917743DD7EC28F0D44 /* AuthService.swift in Sources */,
+				5529915E16CFA04F8947B546 /* CategoryIcon.swift in Sources */,
+				333470A4E5B4713D369F435E /* ChatbotView.swift in Sources */,
+				658F6036D6E1274AB2AED2F3 /* CurrencyFormatter.swift in Sources */,
+				5DB34E7446233D548C38C753 /* DateUtils.swift in Sources */,
+				6E3035E56B96452085452986 /* ExpenseFormSheet.swift in Sources */,
+				CAD8EA7B5B1CD42B7A4A65BD /* ExpensesView.swift in Sources */,
+				C5580FE36117EDD82EA03613 /* ExpensesViewModel.swift in Sources */,
+				A1C5A32F9DE0F70D87BD5E95 /* FinanceAPI.swift in Sources */,
+				0261B87DDEF5CF7814636670 /* FinanceCard.swift in Sources */,
+				3B9D85BFAB1B5ADC925ADDE8 /* FirebaseConfiguration.swift in Sources */,
+				6BBD59236A15D64FF6F3334F /* FirebaseSetupView.swift in Sources */,
+				16264AA4A1DA01930C82AB72 /* IncomeView.swift in Sources */,
+				5D43B11AAE0AC2DEEB229C11 /* LoginView.swift in Sources */,
+				537A0D50E47D555FB0948A8F /* MainTabView.swift in Sources */,
+				E0C02DE40CCED9CA4F5E58CD /* MarketingAppPreviewSequences.swift in Sources */,
+				4EB13DB1D99980A77BDA388B /* MarketingScreenshotData.swift in Sources */,
+				263BB63BA6EE5BA9E6968686 /* MarketingScreenshotViews+Extended.swift in Sources */,
+				D064DBB9EE3021857B745CC4 /* MarketingScreenshotViews.swift in Sources */,
+				C09F3823A4437B82AA74D440 /* Models.swift in Sources */,
+				8431211B16D74315B24DA7B2 /* MoneyPlanApp.swift in Sources */,
+				061B7868240852E3F282B472 /* MoneyPreferences.swift in Sources */,
+				A9C33F16C7813F9B430BA811 /* OverviewView.swift in Sources */,
+				31ABB72C248ECFE7AC2B641D /* RootView.swift in Sources */,
+				F2DA023D1A9177E86E0BE3B9 /* StatsView.swift in Sources */,
+				43E55B2C15F144F42C283EA3 /* ToastCenter.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		51A039668425325361C50D93 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D050876B4A35A54DBB2BC715 /* MoneyPlan */;
+			targetProxy = F31A5E490DDE129B72145556 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		35C11328D20E71E49ABB78E8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = MoneyPlan/MoneyPlan.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				INFOPLIST_FILE = MoneyPlan/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Money Plan";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.finance";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.moneyplann.app;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		393F99B51BE366B8BFC9A157 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = "";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.9;
+			};
+			name = Release;
+		};
+		3CF19426EE62DEDF34CE7E68 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.moneyplan.MoneyPlanScreenshotTests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MoneyPlan.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/MoneyPlan";
+			};
+			name = Debug;
+		};
+		7C6FA59BA232B57488FD5099 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.moneyplan.MoneyPlanScreenshotTests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MoneyPlan.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/MoneyPlan";
+			};
+			name = Release;
+		};
+		8CA5065F1E413AB02AEA6339 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = MoneyPlan/MoneyPlan.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				INFOPLIST_FILE = MoneyPlan/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Money Plan";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.finance";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.moneyplann.app;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		9C4B6C88B80C6DF33723F292 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.9;
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		3BA427C02B5B46A428E156DF /* Build configuration list for PBXNativeTarget "MoneyPlanScreenshotTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3CF19426EE62DEDF34CE7E68 /* Debug */,
+				7C6FA59BA232B57488FD5099 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		B254CE113EAE9C3962A4F419 /* Build configuration list for PBXProject "MoneyPlan" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9C4B6C88B80C6DF33723F292 /* Debug */,
+				393F99B51BE366B8BFC9A157 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		C5836B947A920EDD9661CD8B /* Build configuration list for PBXNativeTarget "MoneyPlan" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				35C11328D20E71E49ABB78E8 /* Debug */,
+				8CA5065F1E413AB02AEA6339 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		25F416F10757F71C6DF588DE /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/google/GoogleSignIn-iOS";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 8.0.0;
+			};
+		};
+		9BAA0BF25517D74496A69DC9 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 11.6.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		590F9994F9A3A2BE02FADE3E /* GoogleSignIn */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 25F416F10757F71C6DF588DE /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
+			productName = GoogleSignIn;
+		};
+		866C017D71FE8E4D4CD6BCA1 /* FirebaseAuth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9BAA0BF25517D74496A69DC9 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAuth;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = 77FB0592A4134CF70741A20C /* Project object */;
+}
