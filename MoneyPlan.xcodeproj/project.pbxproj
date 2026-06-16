@@ -29,6 +29,7 @@
 		6E3035E56B96452085452986 /* ExpenseFormSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46CF8F55044532D5765D3C91 /* ExpenseFormSheet.swift */; };
 		6E9E54022ACC366F73350318 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 72EF77A5C2EABD2649863217 /* Localizable.xcstrings */; };
 		718DE86802CC73AE852E9C64 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 953E7E9CB00744FFED3A3222 /* AppDelegate.swift */; };
+		740621324E217BB323A36585 /* AuthAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90910C4C8F87C854C5E81299 /* AuthAPI.swift */; };
 		7B36250BBDB54737FEA96914 /* AppTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 629A21396DC9DC70DAA7CA3F /* AppTheme.swift */; };
 		8128981813EF4B19E5A5016F /* AccountsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B62C843536B751C032DB55B3 /* AccountsView.swift */; };
 		8431211B16D74315B24DA7B2 /* MoneyPlanApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC7ACEDF23982E9E2CA2F867 /* MoneyPlanApp.swift */; };
@@ -60,7 +61,7 @@
 /* Begin PBXFileReference section */
 		0AB9162DE03405A29E0ADC1C /* OverviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverviewView.swift; sourceTree = "<group>"; };
 		1A020BD0502A7751A8219620 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
-		1F8933C55F4E14DC18610A12 /* GoogleService-Info.plist.example */ = {isa = PBXFileReference; path = "GoogleService-Info.plist.example"; sourceTree = "<group>"; };
+		1F8933C55F4E14DC18610A12 /* GoogleService-Info.plist.example */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "GoogleService-Info.plist.example"; sourceTree = "<group>"; };
 		24980C727AB134A64D62F375 /* CategoryIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryIcon.swift; sourceTree = "<group>"; };
 		2A10E179DBF259E627F8E951 /* ExpensesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpensesViewModel.swift; sourceTree = "<group>"; };
 		2F0943E92808FBD3D6B3F710 /* CurrencyFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyFormatter.swift; sourceTree = "<group>"; };
@@ -76,6 +77,7 @@
 		72EF77A5C2EABD2649863217 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		80D60BBDB81980A8A5DB699F /* GenerateAppPreviewsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenerateAppPreviewsTests.swift; sourceTree = "<group>"; };
 		860125A0266A4BC423A04761 /* FirebaseSetupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseSetupView.swift; sourceTree = "<group>"; };
+		90910C4C8F87C854C5E81299 /* AuthAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthAPI.swift; sourceTree = "<group>"; };
 		953E7E9CB00744FFED3A3222 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		A251F5D8443B4159BBE9BD4B /* AuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
 		AFB116CCF317F523F7505883 /* MarketingScreenshotViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketingScreenshotViews.swift; sourceTree = "<group>"; };
@@ -84,7 +86,7 @@
 		B65A676B171EA05C142945A4 /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
 		B8D3DB19B29BD00477955E19 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		BB174D5FE7A4171432842B8B /* ExpensesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpensesView.swift; sourceTree = "<group>"; };
-		BC58DCC06C3F0915D309085D /* MoneyPlan.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = MoneyPlan.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		BC58DCC06C3F0915D309085D /* MoneyPlan.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MoneyPlan.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C2608CDA84C416A408597BCF /* ToastCenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToastCenter.swift; sourceTree = "<group>"; };
 		C626E57E422CCC291F60273D /* DateUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateUtils.swift; sourceTree = "<group>"; };
 		CD80D21BE3A7F1ADBB2337D1 /* StatsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsView.swift; sourceTree = "<group>"; };
@@ -308,6 +310,7 @@
 			isa = PBXGroup;
 			children = (
 				B3EF759C5264017543A46A1E /* APIClient.swift */,
+				90910C4C8F87C854C5E81299 /* AuthAPI.swift */,
 				F9D3B551C337D25B12A8738F /* FinanceAPI.swift */,
 			);
 			path = API;
@@ -423,7 +426,6 @@
 						ProvisioningStyle = Automatic;
 					};
 					D050876B4A35A54DBB2BC715 = {
-						DevelopmentTeam = "";
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -488,6 +490,7 @@
 				8128981813EF4B19E5A5016F /* AccountsView.swift in Sources */,
 				718DE86802CC73AE852E9C64 /* AppDelegate.swift in Sources */,
 				7B36250BBDB54737FEA96914 /* AppTheme.swift in Sources */,
+				740621324E217BB323A36585 /* AuthAPI.swift in Sources */,
 				93EB68917743DD7EC28F0D44 /* AuthService.swift in Sources */,
 				5529915E16CFA04F8947B546 /* CategoryIcon.swift in Sources */,
 				333470A4E5B4713D369F435E /* ChatbotView.swift in Sources */,
@@ -534,6 +537,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = MoneyPlan/MoneyPlan.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				DEVELOPMENT_TEAM = 53K55422K6;
 				INFOPLIST_FILE = MoneyPlan/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Money Plan";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.finance";
@@ -651,6 +655,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = MoneyPlan/MoneyPlan.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				DEVELOPMENT_TEAM = 53K55422K6;
 				INFOPLIST_FILE = MoneyPlan/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Money Plan";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.finance";
