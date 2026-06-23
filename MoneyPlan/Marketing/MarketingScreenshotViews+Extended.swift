@@ -1,3 +1,4 @@
+import AuthenticationServices
 import Charts
 import SwiftUI
 
@@ -156,18 +157,13 @@ private struct MarketingLoginContent: View {
                     Rectangle().fill(Color.black.opacity(0.12)).frame(height: 1)
                 }
 
-                HStack(spacing: 8) {
-                    Image(systemName: "apple.logo")
-                        .font(.body.weight(.semibold))
-                    Text("Sign in with Apple")
-                        .fontWeight(.semibold)
-                }
-                .frame(maxWidth: .infinity)
-                .frame(height: 48)
-                .foregroundStyle(.white)
-                .background(Color.black, in: RoundedRectangle(cornerRadius: 12, style: .continuous))
+                SignInWithAppleButton(.signIn) { _ in } onCompletion: { _ in }
+                    .signInWithAppleButtonStyle(.whiteOutline)
+                    .frame(maxWidth: .infinity)
+                    .frame(height: 48)
+                    .allowsHitTesting(false)
 
-                HStack(spacing: 10) {
+                HStack(spacing: 8) {
                     Image(systemName: "globe")
                         .font(.body.weight(.semibold))
                     Text("auth.login.googleButton")
@@ -175,10 +171,11 @@ private struct MarketingLoginContent: View {
                 }
                 .frame(maxWidth: .infinity)
                 .frame(height: 48)
+                .foregroundStyle(.primary)
                 .background(Color.white, in: RoundedRectangle(cornerRadius: 12, style: .continuous))
                 .overlay(
                     RoundedRectangle(cornerRadius: 12, style: .continuous)
-                        .strokeBorder(Color.black.opacity(0.12))
+                        .strokeBorder(Color.black.opacity(0.25), lineWidth: 1)
                 )
             }
         }

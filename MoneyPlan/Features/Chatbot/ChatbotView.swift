@@ -44,8 +44,13 @@ final class ChatbotViewModel {
 }
 
 struct ChatbotView: View {
+    @Environment(AuthService.self) private var auth
     @State private var viewModel = ChatbotViewModel()
     @FocusState private var isComposerFocused: Bool
+    @State private var showConsentSheet = false
+    @State private var hasAIConsent = false
+
+    private var firebaseUid: String? { auth.user?.uid }
 
     var body: some View {
         NavigationStack {
@@ -58,7 +63,11 @@ struct ChatbotView: View {
                                 .foregroundStyle(AppColors.muted)
                                 .padding(.bottom, 8)
 
-                            if viewModel.messages.isEmpty {
+                            if !hasAIConsent {
+                                ExpenseChatConsentBanner {
+                                    grantConsent()
+                                }
+                            } else if viewModel.messages.isEmpty {
                                 FinanceCard {
                                     Text("chatbot.empty")
                                         .font(.footnote)
@@ -88,12 +97,9 @@ struct ChatbotView: View {
                             }
                         }
                         .padding()
-                        // Tap anywhere in the scroll content to dismiss the keyboard
-                        // and reveal the tab bar again.
                         .contentShape(Rectangle())
                         .onTapGesture { isComposerFocused = false }
                     }
-                    // Standard iOS swipe-down-to-dismiss for chat scroll views.
                     .scrollDismissesKeyboard(.interactively)
                     .onChange(of: viewModel.messages.count) { _, _ in
                         if let last = viewModel.messages.last {
@@ -102,29 +108,64 @@ struct ChatbotView: View {
                     }
                 }
 
-                ChatComposer(
-                    input: $viewModel.input,
-                    isSending: viewModel.isSending,
-                    focus: $isComposerFocused,
-                    onSend: { Task { await viewModel.send() } }
-                )
+                if hasAIConsent {
+                    ChatComposer(
+                        input: $viewModel.input,
+                        isSending: viewModel.isSending,
+                        focus: $isComposerFocused,
+                        onSend: { Task { await viewModel.send() } }
+                    )
+                } else {
+                    Text("chatbot.consent.blockedHint")
+                        .font(.footnote)
+                        .foregroundStyle(AppColors.muted)
+                        .multilineTextAlignment(.center)
+                        .frame(maxWidth: .infinity)
+                        .padding(.horizontal, 20)
+                        .padding(.vertical, 14)
+                        .background(.bar)
+                }
             }
             .navigationTitle("chatbot.title")
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
                     Button("chatbot.clear") { viewModel.clear() }
-                        .disabled(viewModel.messages.isEmpty)
+                        .disabled(viewModel.messages.isEmpty || !hasAIConsent)
                 }
                 ToolbarItem(placement: .topBarTrailing) { SettingsToolbar() }
-                // "Done" button above the keyboard so the user always has a
-                // one-tap escape back to the tab bar.
                 ToolbarItemGroup(placement: .keyboard) {
                     Spacer()
                     Button("common.done") { isComposerFocused = false }
                         .fontWeight(.semibold)
                 }
             }
+            .onAppear { refreshConsentState(presentSheetIfNeeded: true) }
+            .onChange(of: firebaseUid) { _, _ in refreshConsentState(presentSheetIfNeeded: true) }
+            .sheet(isPresented: $showConsentSheet) {
+                ExpenseChatConsentSheet(
+                    onAgree: { grantConsent() },
+                    onDecline: { hasAIConsent = false }
+                )
+            }
         }
+    }
+
+    private func refreshConsentState(presentSheetIfNeeded: Bool) {
+        guard let uid = firebaseUid else {
+            hasAIConsent = false
+            return
+        }
+        hasAIConsent = ExpenseChatConsentStore.hasConsent(for: uid)
+        if presentSheetIfNeeded, !hasAIConsent {
+            showConsentSheet = true
+        }
+    }
+
+    private func grantConsent() {
+        guard let uid = firebaseUid else { return }
+        ExpenseChatConsentStore.grantConsent(for: uid)
+        hasAIConsent = true
+        showConsentSheet = false
     }
 }
 

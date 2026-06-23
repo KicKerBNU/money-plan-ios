@@ -17,6 +17,10 @@ struct LoginView: View {
     enum AuthMode: Hashable { case signIn, signUp }
     enum Field: Hashable { case email, password }
 
+    /// Matches Sign in with Apple HIG sizing; keep Google button visually equivalent.
+    private static let socialButtonHeight: CGFloat = 50
+    private static let socialButtonCornerRadius: CGFloat = 12
+
     private static let appName: String = {
         let bundle = Bundle.main
         return bundle.object(forInfoDictionaryKey: "CFBundleDisplayName") as? String
@@ -239,7 +243,7 @@ struct LoginView: View {
     // MARK: - Social
 
     private var socialSection: some View {
-        VStack(spacing: 10) {
+        VStack(spacing: 12) {
             HStack(spacing: 10) {
                 line
                 Text("auth.login.or")
@@ -250,6 +254,7 @@ struct LoginView: View {
                 line
             }
 
+            // Apple HIG: use the system button; whiteOutline pairs with the bordered Google button on this light screen.
             SignInWithAppleButton(
                 mode == .signIn ? .signIn : .signUp,
                 onRequest: { request in
@@ -260,28 +265,39 @@ struct LoginView: View {
                     Task { await completeAppleSignIn(result) }
                 }
             )
-            .signInWithAppleButtonStyle(.black)
-            .frame(height: 48)
-            .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+            .signInWithAppleButtonStyle(.whiteOutline)
+            .frame(maxWidth: .infinity)
+            .frame(height: Self.socialButtonHeight)
             .disabled(isSubmitting)
+            .opacity(isSubmitting ? 0.55 : 1)
 
-            Button {
-                Task { await submitGoogle() }
-            } label: {
-                HStack(spacing: 10) {
+            googleSignInButton
+        }
+    }
+
+    private var googleSignInButton: some View {
+        Button {
+            Task { await submitGoogle() }
+        } label: {
+                HStack(spacing: 8) {
                     Image(systemName: "globe")
                         .font(.body.weight(.semibold))
                     Text("auth.login.googleButton")
-                        .fontWeight(.semibold)
-                }
-                .frame(maxWidth: .infinity)
-                .frame(height: 48)
+                    .font(.body.weight(.semibold))
             }
-            .buttonStyle(.bordered)
-            .controlSize(.large)
-            .tint(.primary)
-            .disabled(isSubmitting)
+            .frame(maxWidth: .infinity)
+            .frame(height: Self.socialButtonHeight)
+            .foregroundStyle(.primary)
+            .background(Color.white, in: RoundedRectangle(cornerRadius: Self.socialButtonCornerRadius, style: .continuous))
+            .overlay(
+                RoundedRectangle(cornerRadius: Self.socialButtonCornerRadius, style: .continuous)
+                    .strokeBorder(Color.black.opacity(0.25), lineWidth: 1)
+            )
         }
+        .buttonStyle(.plain)
+        .disabled(isSubmitting)
+        .opacity(isSubmitting ? 0.55 : 1)
+        .accessibilityLabel("auth.login.googleButton")
     }
 
     private var line: some View {

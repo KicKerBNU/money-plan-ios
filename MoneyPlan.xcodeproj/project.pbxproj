@@ -43,8 +43,10 @@
 		CAD8EA7B5B1CD42B7A4A65BD /* ExpensesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB174D5FE7A4171432842B8B /* ExpensesView.swift */; };
 		D064DBB9EE3021857B745CC4 /* MarketingScreenshotViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFB116CCF317F523F7505883 /* MarketingScreenshotViews.swift */; };
 		D33F2AC233D62F292D7EE75C /* GenerateScreenshotsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC820CE7CA5A11FE478A25D2 /* GenerateScreenshotsTests.swift */; };
+		D9A9B3F9CFB32485D90BA833 /* ExpenseChatConsentStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70DC45828CE75C9D127DC59D /* ExpenseChatConsentStore.swift */; };
 		E0C02DE40CCED9CA4F5E58CD /* MarketingAppPreviewSequences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C3E3E010DC5AC9992586B7D /* MarketingAppPreviewSequences.swift */; };
 		F2DA023D1A9177E86E0BE3B9 /* StatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD80D21BE3A7F1ADBB2337D1 /* StatsView.swift */; };
+		FBA032CF40921970E1375F88 /* ExpenseChatConsentViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5FD4918D830570699761C56 /* ExpenseChatConsentViews.swift */; };
 		FBE72125414B719FBF3F8A1B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F9086F3696D1BC540FD2C232 /* Assets.xcassets */; };
 /* End PBXBuildFile section */
 
@@ -61,7 +63,7 @@
 /* Begin PBXFileReference section */
 		0AB9162DE03405A29E0ADC1C /* OverviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverviewView.swift; sourceTree = "<group>"; };
 		1A020BD0502A7751A8219620 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
-		1F8933C55F4E14DC18610A12 /* GoogleService-Info.plist.example */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "GoogleService-Info.plist.example"; sourceTree = "<group>"; };
+		1F8933C55F4E14DC18610A12 /* GoogleService-Info.plist.example */ = {isa = PBXFileReference; path = "GoogleService-Info.plist.example"; sourceTree = "<group>"; };
 		24980C727AB134A64D62F375 /* CategoryIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryIcon.swift; sourceTree = "<group>"; };
 		2A10E179DBF259E627F8E951 /* ExpensesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpensesViewModel.swift; sourceTree = "<group>"; };
 		2F0943E92808FBD3D6B3F710 /* CurrencyFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyFormatter.swift; sourceTree = "<group>"; };
@@ -74,6 +76,7 @@
 		5C3E3E010DC5AC9992586B7D /* MarketingAppPreviewSequences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketingAppPreviewSequences.swift; sourceTree = "<group>"; };
 		629A21396DC9DC70DAA7CA3F /* AppTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppTheme.swift; sourceTree = "<group>"; };
 		6D67FA4427CF4B09A54E4C3B /* MarketingScreenshotViews+Extended.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MarketingScreenshotViews+Extended.swift"; sourceTree = "<group>"; };
+		70DC45828CE75C9D127DC59D /* ExpenseChatConsentStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpenseChatConsentStore.swift; sourceTree = "<group>"; };
 		72EF77A5C2EABD2649863217 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		80D60BBDB81980A8A5DB699F /* GenerateAppPreviewsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenerateAppPreviewsTests.swift; sourceTree = "<group>"; };
 		860125A0266A4BC423A04761 /* FirebaseSetupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseSetupView.swift; sourceTree = "<group>"; };
@@ -86,8 +89,9 @@
 		B65A676B171EA05C142945A4 /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
 		B8D3DB19B29BD00477955E19 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		BB174D5FE7A4171432842B8B /* ExpensesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpensesView.swift; sourceTree = "<group>"; };
-		BC58DCC06C3F0915D309085D /* MoneyPlan.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MoneyPlan.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		BC58DCC06C3F0915D309085D /* MoneyPlan.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = MoneyPlan.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C2608CDA84C416A408597BCF /* ToastCenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToastCenter.swift; sourceTree = "<group>"; };
+		C5FD4918D830570699761C56 /* ExpenseChatConsentViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpenseChatConsentViews.swift; sourceTree = "<group>"; };
 		C626E57E422CCC291F60273D /* DateUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateUtils.swift; sourceTree = "<group>"; };
 		CD80D21BE3A7F1ADBB2337D1 /* StatsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsView.swift; sourceTree = "<group>"; };
 		D0A053646D6BFA46395D8BEA /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
@@ -158,6 +162,7 @@
 			isa = PBXGroup;
 			children = (
 				470831BD3BE336D90F9687ED /* ChatbotView.swift */,
+				C5FD4918D830570699761C56 /* ExpenseChatConsentViews.swift */,
 			);
 			path = Chatbot;
 			sourceTree = "<group>";
@@ -194,6 +199,14 @@
 				9F1B20D0BACC556814A59B28 /* Stats */,
 			);
 			path = Features;
+			sourceTree = "<group>";
+		};
+		5DBAFA61D526722194304377 /* Chat */ = {
+			isa = PBXGroup;
+			children = (
+				70DC45828CE75C9D127DC59D /* ExpenseChatConsentStore.swift */,
+			);
+			path = Chat;
 			sourceTree = "<group>";
 		};
 		641E3199C04BEB96288F33F7 /* Auth */ = {
@@ -236,6 +249,7 @@
 			children = (
 				BEE0C985FA6518BC77B30002 /* API */,
 				07103A89521D6229BEAA0770 /* Auth */,
+				5DBAFA61D526722194304377 /* Chat */,
 				45A819572C786D75F5613484 /* Firebase */,
 				CAC1A478CDF4E1EAC911D5C7 /* Models */,
 				A3CD285687C72F7F9C38770F /* Money */,
@@ -426,6 +440,7 @@
 						ProvisioningStyle = Automatic;
 					};
 					D050876B4A35A54DBB2BC715 = {
+						DevelopmentTeam = "";
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -496,6 +511,8 @@
 				333470A4E5B4713D369F435E /* ChatbotView.swift in Sources */,
 				658F6036D6E1274AB2AED2F3 /* CurrencyFormatter.swift in Sources */,
 				5DB34E7446233D548C38C753 /* DateUtils.swift in Sources */,
+				D9A9B3F9CFB32485D90BA833 /* ExpenseChatConsentStore.swift in Sources */,
+				FBA032CF40921970E1375F88 /* ExpenseChatConsentViews.swift in Sources */,
 				6E3035E56B96452085452986 /* ExpenseFormSheet.swift in Sources */,
 				CAD8EA7B5B1CD42B7A4A65BD /* ExpensesView.swift in Sources */,
 				C5580FE36117EDD82EA03613 /* ExpensesViewModel.swift in Sources */,
@@ -537,7 +554,6 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = MoneyPlan/MoneyPlan.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				DEVELOPMENT_TEAM = 53K55422K6;
 				INFOPLIST_FILE = MoneyPlan/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Money Plan";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.finance";
@@ -655,7 +671,6 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = MoneyPlan/MoneyPlan.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				DEVELOPMENT_TEAM = 53K55422K6;
 				INFOPLIST_FILE = MoneyPlan/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Money Plan";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.finance";

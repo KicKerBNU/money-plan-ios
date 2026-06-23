@@ -238,12 +238,13 @@ HOW TO TEST
 3. Expenses — view list, filters, and add an expense (+).
 4. Income — view and add income entries.
 5. Accounts — view multiple accounts and balances.
-6. Chat (Expense assistant) — this tab is only available after sign-in. Ask: "How much did I spend on food this month?" The reply is generated from this demo account's logged expense data via our backend. It is not a general-purpose AI chatbot.
+6. Chat (Expense assistant) — this tab is only available after sign-in. On first open, a "Third-party AI processing" sheet explains what data is sent and that it is shared with OpenAI; tap "Agree and continue" before sending a message. Then ask: "How much did I spend on food this month?" The reply is generated from this demo account's logged expense data via our backend. It is not a general-purpose AI chatbot.
 
 EXPENSE ASSISTANT (CHAT) — ACCOUNT-BASED ONLY
 - Requires login. Without authentication, the app does not show the main tabs and the backend rejects chat requests (no user ID → no expense data).
 - Not generic AI chat. The assistant only answers questions about the logged-in user's own expense records (totals, categories, date ranges). It does not answer general knowledge, jokes, or off-topic questions.
 - Messages go to our backend API (https://money-plan-backend-production.up.railway.app), which queries that user's data and uses OpenAI to format the answer. No financial advice — summaries from user-entered data only.
+- IN-APP AI CONSENT (Guideline 5.1.1(i) / 5.1.2(i)): Before the first chat message, the app discloses what data is sent, identifies OpenAI as the processor, and requires "Agree and continue". No data is sent to OpenAI if the user taps "Not now".
 
 REQUIREMENTS
 - Internet connection (Firebase Auth + API at https://money-plan-backend-production.up.railway.app).

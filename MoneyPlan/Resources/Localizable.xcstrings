@@ -2122,6 +2122,457 @@
         }
       }
     },
+    "chatbot.consent.agree" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Agree and continue"
+          }
+        },
+        "en-US" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Agree and continue"
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Concordar e continuar"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Concordar e continuar"
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Concordar e continuar"
+          }
+        }
+      }
+    },
+    "chatbot.consent.bannerBody" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "To use Chat, you must agree to send your messages and relevant expense data to OpenAI via our servers. See details in the prompt or our Privacy Policy."
+          }
+        },
+        "en-US" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "To use Chat, you must agree to send your messages and relevant expense data to OpenAI via our servers. See details in the prompt or our Privacy Policy."
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Para usar o Chat, você precisa concordar em enviar suas mensagens e dados de despesas relevantes à OpenAI pelos nossos servidores. Veja os detalhes no aviso ou na Política de Privacidade."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Para usar o Chat, você precisa concordar em enviar suas mensagens e dados de despesas relevantes à OpenAI pelos nossos servidores. Veja os detalhes no aviso ou na Política de Privacidade."
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Para usar o Chat, tem de concordar em enviar as suas mensagens e dados de despesas relevantes à OpenAI através dos nossos servidores. Veja os detalhes no aviso ou na Política de Privacidade."
+          }
+        }
+      }
+    },
+    "chatbot.consent.blockedHint" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Agree to AI processing above to send messages."
+          }
+        },
+        "en-US" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Agree to AI processing above to send messages."
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Concorde com o processamento por IA acima para enviar mensagens."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Concorde com o processamento por IA acima para enviar mensagens."
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Concorde com o processamento por IA acima para enviar mensagens."
+          }
+        }
+      }
+    },
+    "chatbot.consent.decline" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not now"
+          }
+        },
+        "en-US" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not now"
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Agora não"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Agora não"
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Agora não"
+          }
+        }
+      }
+    },
+    "chatbot.consent.howBody" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Only to answer your expense questions inside Money Plan. We do not use the assistant for advertising or sell your data."
+          }
+        },
+        "en-US" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Only to answer your expense questions inside Money Plan. We do not use the assistant for advertising or sell your data."
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Somente para responder perguntas sobre despesas dentro do Money Plan. Não usamos o assistente para anúncios nem vendemos seus dados."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Somente para responder perguntas sobre despesas dentro do Money Plan. Não usamos o assistente para anúncios nem vendemos seus dados."
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apenas para responder a perguntas sobre despesas dentro do Money Plan. Não usamos o assistente para publicidade nem vendemos os seus dados."
+          }
+        }
+      }
+    },
+    "chatbot.consent.howTitle" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "How we use it"
+          }
+        },
+        "en-US" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "How we use it"
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Como usamos"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Como usamos"
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Como utilizamos"
+          }
+        }
+      }
+    },
+    "chatbot.consent.intro" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Before you use the Expense assistant, please review what we send and who receives it. We only send data after you agree below."
+          }
+        },
+        "en-US" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Before you use the Expense assistant, please review what we send and who receives it. We only send data after you agree below."
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Antes de usar o Assistente de despesas, veja o que enviamos e quem recebe. Só enviamos dados depois que você concordar abaixo."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Antes de usar o Assistente de despesas, veja o que enviamos e quem recebe. Só enviamos dados depois que você concordar abaixo."
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Antes de usar o Assistente de despesas, veja o que enviamos e quem recebe. Só enviamos dados depois de concordar abaixo."
+          }
+        }
+      }
+    },
+    "chatbot.consent.privacyLink" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Privacy Policy"
+          }
+        },
+        "en-US" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Privacy Policy"
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Política de Privacidade"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Política de Privacidade"
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Política de Privacidade"
+          }
+        }
+      }
+    },
+    "chatbot.consent.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Third-party AI processing"
+          }
+        },
+        "en-US" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Third-party AI processing"
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Processamento por IA de terceiros"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Processamento por IA de terceiros"
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Processamento por IA de terceiros"
+          }
+        }
+      }
+    },
+    "chatbot.consent.whatBody" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your chat messages, recent messages in this conversation, and expense records from your account that are needed to answer your question (for example totals, categories, or expense lines for a date range you ask about)."
+          }
+        },
+        "en-US" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your chat messages, recent messages in this conversation, and expense records from your account that are needed to answer your question (for example totals, categories, or expense lines for a date range you ask about)."
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Suas mensagens no chat, mensagens recentes desta conversa e registros de despesas da sua conta necessários para responder (por exemplo totais, categorias ou lançamentos em um período que você pedir)."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Suas mensagens no chat, mensagens recentes desta conversa e registros de despesas da sua conta necessários para responder (por exemplo totais, categorias ou lançamentos em um período que você pedir)."
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "As suas mensagens no chat, mensagens recentes desta conversa e registos de despesas da sua conta necessários para responder (por exemplo totais, categorias ou lançamentos num período que pedir)."
+          }
+        }
+      }
+    },
+    "chatbot.consent.whatTitle" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "What we send"
+          }
+        },
+        "en-US" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "What we send"
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "O que enviamos"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "O que enviamos"
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "O que enviamos"
+          }
+        }
+      }
+    },
+    "chatbot.consent.whoBody" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OpenAI processes this data on our behalf through our backend API to generate replies. OpenAI does not receive your password or unrelated app data."
+          }
+        },
+        "en-US" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OpenAI processes this data on our behalf through our backend API to generate replies. OpenAI does not receive your password or unrelated app data."
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A OpenAI processa esses dados em nosso nome pela nossa API para gerar respostas. A OpenAI não recebe sua senha nem outros dados do app."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A OpenAI processa esses dados em nosso nome pela nossa API para gerar respostas. A OpenAI não recebe sua senha nem outros dados do app."
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A OpenAI processa estes dados em nosso nome através da nossa API para gerar respostas. A OpenAI não recebe a sua palavra-passe nem outros dados da app."
+          }
+        }
+      }
+    },
+    "chatbot.consent.whoTitle" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Who receives it"
+          }
+        },
+        "en-US" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Who receives it"
+          }
+        },
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quem recebe"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quem recebe"
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quem recebe"
+          }
+        }
+      }
+    },
     "chatbot.empty" : {
       "localizations" : {
         "en" : {
@@ -5014,9 +5465,6 @@
       }
     },
     "Rent is about 83% of spending." : {
-
-    },
-    "Sign in with Apple" : {
 
     },
     "Spent across %@ categories" : {
