@@ -60,6 +60,7 @@ struct SettingsToolbar: View {
     @Environment(MoneyPreferences.self) private var money
 
     @State private var showDeleteAccountConfirm = false
+    @State private var showRecurringExpenses = false
     @State private var isDeletingAccount = false
 
     var body: some View {
@@ -102,6 +103,14 @@ struct SettingsToolbar: View {
 
             Divider()
 
+            Button {
+                showRecurringExpenses = true
+            } label: {
+                Label("recurring.settingsMenu", systemImage: "arrow.triangle.2.circlepath")
+            }
+
+            Divider()
+
             Button(role: .destructive) {
                 showDeleteAccountConfirm = true
             } label: {
@@ -129,6 +138,9 @@ struct SettingsToolbar: View {
             Button("common.cancel", role: .cancel) {}
         } message: {
             Text("auth.deleteAccount.confirmBody")
+        }
+        .sheet(isPresented: $showRecurringExpenses) {
+            RecurringExpensesView()
         }
     }
 

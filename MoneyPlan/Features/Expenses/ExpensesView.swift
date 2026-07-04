@@ -39,21 +39,33 @@ struct ExpensesView: View {
             }
             .searchable(text: $viewModel.searchText, prompt: "expenses.searchPlaceholder")
             .sheet(isPresented: $showAddSheet) {
-                ExpenseFormSheet(accounts: viewModel.accounts, categories: viewModel.categories) { date, amount, categoryId, accountId, note in
-                    try await viewModel.createExpense(date: date, amount: amount, categoryId: categoryId, accountId: accountId, note: note)
+                ExpenseFormSheet(accounts: viewModel.accounts, categories: viewModel.categories) { date, amount, categoryId, accountId, note, recurrence in
+                    try await viewModel.createExpense(
+                        date: date,
+                        amount: amount,
+                        categoryId: categoryId,
+                        accountId: accountId,
+                        note: note,
+                        recurrence: recurrence
+                    )
                 }
             }
             .sheet(item: $editingExpense) { expense in
-                ExpenseFormSheet(accounts: viewModel.accounts, categories: viewModel.categories, editing: expense) { date, amount, categoryId, accountId, note in
-                    var updated = expense
-                    updated.date = date
-                    updated.amount = amount
-                    updated.categoryId = categoryId
-                    updated.accountId = accountId
-                    updated.note = note
-                    if let cat = viewModel.categories.first(where: { $0.id == categoryId }) { updated.categoryName = cat.name }
-                    if let acc = viewModel.accounts.first(where: { $0.id == accountId }) { updated.accountName = acc.name }
-                    await viewModel.updateExpenseOptimistic(updated)
+                ExpenseFormSheet(
+                    accounts: viewModel.accounts,
+                    categories: viewModel.categories,
+                    editing: expense,
+                    linkedRecurring: viewModel.linkedRecurring(for: expense)
+                ) { date, amount, categoryId, accountId, note, recurrence in
+                    try await viewModel.saveExpenseEdit(
+                        original: expense,
+                        date: date,
+                        amount: amount,
+                        categoryId: categoryId,
+                        accountId: accountId,
+                        note: note,
+                        recurrence: recurrence
+                    )
                 }
             }
             .confirmationDialog(

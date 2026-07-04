@@ -25,7 +25,8 @@ enum FinanceAPI {
         amount: Double,
         categoryId: Int,
         accountId: Int,
-        note: String?
+        note: String?,
+        recurrenceFrequency: RecurrenceFrequency? = nil
     ) async throws -> Expense {
         struct Body: Encodable {
             var date: String
@@ -33,11 +34,19 @@ enum FinanceAPI {
             var categoryId: Int
             var accountId: Int
             var note: String?
+            var recurrenceFrequency: RecurrenceFrequency?
         }
         let response: DataResponse<Expense> = try await client.fetch(
             "/v1/expenses",
             method: "POST",
-            body: Body(date: date, amount: amount, categoryId: categoryId, accountId: accountId, note: note)
+            body: Body(
+                date: date,
+                amount: amount,
+                categoryId: categoryId,
+                accountId: accountId,
+                note: note,
+                recurrenceFrequency: recurrenceFrequency
+            )
         )
         return response.data
     }
@@ -48,7 +57,9 @@ enum FinanceAPI {
         amount: Double,
         categoryId: Int,
         accountId: Int,
-        note: String?
+        note: String?,
+        recurrenceEnabled: Bool? = nil,
+        recurrenceFrequency: RecurrenceFrequency? = nil
     ) async throws -> Expense {
         struct Body: Encodable {
             var date: String
@@ -56,11 +67,21 @@ enum FinanceAPI {
             var categoryId: Int
             var accountId: Int
             var note: String?
+            var recurrenceEnabled: Bool?
+            var recurrenceFrequency: RecurrenceFrequency?
         }
         let response: DataResponse<Expense> = try await client.fetch(
             "/v1/expenses/\(id)",
             method: "PUT",
-            body: Body(date: date, amount: amount, categoryId: categoryId, accountId: accountId, note: note)
+            body: Body(
+                date: date,
+                amount: amount,
+                categoryId: categoryId,
+                accountId: accountId,
+                note: note,
+                recurrenceEnabled: recurrenceEnabled,
+                recurrenceFrequency: recurrenceFrequency
+            )
         )
         return response.data
     }
@@ -81,6 +102,64 @@ enum FinanceAPI {
             body: Body(year: year, month: month, orderedIds: orderedIds)
         )
         return response.data
+    }
+
+    // MARK: - Recurring expenses
+
+    static func fetchRecurringExpenses() async throws -> [RecurringExpense] {
+        let response: DataResponse<[RecurringExpense]> = try await client.fetch("/v1/recurring-expenses")
+        return response.data
+    }
+
+    static func fetchRecurringExpense(id: Int) async throws -> RecurringExpense {
+        let response: DataResponse<RecurringExpense> = try await client.fetch("/v1/recurring-expenses/\(id)")
+        return response.data
+    }
+
+    static func setRecurringExpenseActive(id: Int, active: Bool) async throws -> RecurringExpense {
+        struct Body: Encodable { var active: Bool }
+        let response: DataResponse<RecurringExpense> = try await client.fetch(
+            "/v1/recurring-expenses/\(id)",
+            method: "PATCH",
+            body: Body(active: active)
+        )
+        return response.data
+    }
+
+    static func updateRecurringExpense(
+        id: Int,
+        amount: Double,
+        categoryId: Int,
+        accountId: Int,
+        note: String?,
+        frequency: RecurrenceFrequency,
+        startDate: String
+    ) async throws -> RecurringExpense {
+        struct Body: Encodable {
+            var amount: Double
+            var categoryId: Int
+            var accountId: Int
+            var note: String?
+            var frequency: RecurrenceFrequency
+            var startDate: String
+        }
+        let response: DataResponse<RecurringExpense> = try await client.fetch(
+            "/v1/recurring-expenses/\(id)",
+            method: "PUT",
+            body: Body(
+                amount: amount,
+                categoryId: categoryId,
+                accountId: accountId,
+                note: note,
+                frequency: frequency,
+                startDate: startDate
+            )
+        )
+        return response.data
+    }
+
+    static func deleteRecurringExpense(id: Int) async throws {
+        let _: EmptyResponse = try await client.fetch("/v1/recurring-expenses/\(id)", method: "DELETE")
     }
 
     // MARK: - Accounts

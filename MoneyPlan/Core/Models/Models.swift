@@ -26,6 +26,50 @@ struct Expense: Codable, Identifiable, Hashable, Sendable {
     var accountName: String
     var note: String?
     var manualSort: Int?
+    var recurringExpenseId: Int?
+}
+
+enum RecurrenceFrequency: String, Codable, CaseIterable, Identifiable, Hashable, Sendable {
+    case weekly
+    case monthly
+    case quarterly
+    case semiannual
+    case yearly
+
+    var id: String { rawValue }
+
+    var localizationKey: String {
+        switch self {
+        case .weekly: "recurring.frequency.weekly"
+        case .monthly: "recurring.frequency.monthly"
+        case .quarterly: "recurring.frequency.quarterly"
+        case .semiannual: "recurring.frequency.semiannual"
+        case .yearly: "recurring.frequency.yearly"
+        }
+    }
+}
+
+struct RecurringExpense: Codable, Identifiable, Hashable, Sendable {
+    let id: Int
+    var amount: Double
+    var categoryId: Int
+    var categoryName: String
+    var accountId: Int
+    var accountName: String
+    var note: String?
+    var frequency: RecurrenceFrequency
+    var startDate: String
+    var nextDate: String
+    var active: Bool
+}
+
+struct RecurringExpenseSave: Sendable {
+    enum Mode: Sendable {
+        case create(RecurrenceFrequency)
+        case update(id: Int, enabled: Bool, frequency: RecurrenceFrequency)
+    }
+
+    let mode: Mode
 }
 
 // MARK: - Income domain

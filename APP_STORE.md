@@ -10,7 +10,7 @@ Step-by-step guide to ship **`com.moneyplann.app`** from archive → TestFlight 
 | **Bundle ID** | `com.moneyplann.app` |
 | **Version** | 1.0.0 |
 | **Submitted** | June 8, 2026 |
-| **Status** | **Waiting for Review** (App Store Connect) |
+| **Status** | **Live on the App Store** |
 | **Pricing** | Free — no in-app purchases |
 | **Privacy policy** | https://www.moneyplann.com/privacy |
 | **Support URL** | https://www.moneyplann.com/faq |
@@ -172,20 +172,56 @@ Common upload failures:
 
 ## Phase 3 — App Store submission (after TestFlight)
 
+### 3.0 Where to find Keywords (not under App Information)
+
+Apple puts **Keywords** on the **version listing**, not under **General → App Information**.
+
+#### View keywords on the live version (1.0.0)
+
+1. [App Store Connect → Apps](https://appstoreconnect.apple.com/apps) → **Money Plan**
+2. Left sidebar → **Distribution**
+3. Under **iOS App**, click **1.0.0** (status: **Ready for Sale** / *Live on the App Store*)
+4. Scroll past screenshots to **English (U.S.)** (or your primary locale)
+5. **Keywords** is near **Description** and **Promotional Text** (100 characters, comma-separated)
+
+On a **live** version, Keywords is usually **read-only** — you can audit what shipped, not edit in place.
+
+**App Information** (sidebar under General) has name, category, privacy URL, etc. — but **not** Keywords.
+
+**New Connect UI tip:** if the sidebar only shows **1.0.0** without expandable metadata, open that version and use the **locale** row (e.g. **English (U.S.)**) or the **Edit** / pencil control on the product-page section — Keywords is in that block, not under General.
+
+#### Change keywords (app already on the App Store)
+
+Keywords **cannot** be updated on the live 1.0.0 listing. Create a **new App Store version**:
+
+1. **Distribution** → **iOS App** → **+** (or **Add Version**) → **1.0.1**
+2. Metadata copies from 1.0.0 — edit **Keywords** on the **1.0.1** draft
+3. Attach a **new build** (increment build number in Xcode, archive, upload — Apple requires a build on each version submission)
+4. **What's New:** e.g. `Improved App Store discoverability.`
+5. Submit **1.0.1** for review
+
+Bundle keyword + description tweaks into one **1.0.1** submission so you only wait on review once.
+
+**Recommended keywords** (97 chars; avoids overlap with subtitle *Expenses, income & AI chat*):
+
+```text
+budget,finance,spending,tracker,money,accounts,free,personal,planner,manager,wallet,savings,cash
+```
+
 ### 3.1 Required metadata (App Store Connect)
 
-| Field | Notes |
-|-------|--------|
-| **App name** | Money Plan |
-| **Subtitle** | Short tagline (30 chars) |
-| **Description** | What the app does (expenses, income, AI assistant) |
-| **Keywords** | finance, budget, expenses, … |
-| **Support URL** | HTTPS page (help/contact) |
-| **Privacy Policy URL** | **Required** — must describe auth, data storage, third parties (Firebase, OpenAI via backend) |
-| **Category** | Finance (already `public.app-category.finance` in project) |
-| **Age rating** | Questionnaire in Connect |
-| **Screenshots** | 6.7", 6.5", 5.5" iPhone sizes (and iPad if supporting iPad) |
-| **App Privacy** | Data collection questionnaire (see below) |
+| Field | Where | Notes |
+|-------|--------|--------|
+| **App name** | App Information or version listing | Money Plan |
+| **Subtitle** | Version listing (localized) | e.g. `Expenses, income & AI chat` (30 chars) |
+| **Description** | Version listing (localized) | What the app does (expenses, income, AI assistant) |
+| **Keywords** | Version listing (localized) | See [§3.0](#30-where-to-find-keywords-not-under-app-information) — not App Information |
+| **Support URL** | Version listing | HTTPS page (help/contact) |
+| **Privacy Policy URL** | App Information | **Required** — auth, data storage, third parties |
+| **Category** | App Information | Finance |
+| **Age rating** | App Information | Questionnaire in Connect |
+| **Screenshots** | Version listing | 6.7", 6.5", 5.5" iPhone sizes (and iPad if supporting iPad) |
+| **App Privacy** | App Privacy (sidebar) | Data collection questionnaire (see below) |
 
 ### 3.2 App Privacy (nutrition labels)
 
@@ -217,7 +253,7 @@ Apple requires **Sign in with Apple** if you offer Google (or other third-party)
 
 ### 3.5 Review notes (App Store Connect)
 
-Paste the block below into **App Review Information → Notes**. Put the demo password in **Sign-In Information** as well (same value in both places).
+Paste the block below into **App Review Information → Notes**. Put the demo email and password in **Sign-In Information** only — never commit those values to git.
 
 ```
 Money Plan — App Review notes
@@ -227,8 +263,7 @@ Money Plan is a personal finance app. Every screen and feature requires sign-in,
 This app is account-based under Guideline 5.1.1: expenses, income, accounts, overview, and the Expense assistant all read and write the signed-in user's private financial data on our server. Registration is required because the product cannot function without identifying the user and loading their data.
 
 DEMO ACCOUNT (recommended for review)
-Email: appstore.review@moneyplann.com
-Password: [same password as in the Sign-In Information field above]
+Use the email and password entered in App Store Connect Sign-In Information (same account for all reviewers).
 
 This account already includes sample expenses, income, and accounts so you can test all features immediately.
 
@@ -260,14 +295,9 @@ If you have any issue signing in, please contact us at support@moneyplann.com.
 
 **Resolution Center (Guideline 5.1.1 rejection):** If Apple questions login before Chat, reply that the Expense assistant is account-based — it only queries the signed-in user's expense records and cannot work without authentication. Ask reviewers to sign in with the demo account before opening the Chat tab.
 
-**Demo account credentials (for Sign-In Information field):**
+**Demo account credentials:** enter email and password in App Store Connect **Sign-In Information** only (team password manager for your copy). Do not paste passwords into tracked docs.
 
-| Field | Value |
-|-------|--------|
-| Email | `appstore.review@moneyplann.com` |
-| Password | `MoneyPlan-Review2026!` |
-
-Re-seed sample data if needed: `money-plan-backend/scripts/create-demo-account.ts` (see backend README).
+Re-seed sample data: `money-plan-backend/scripts/create-demo-account.ts` with local `scripts/demo-account.env` (see `demo-account.env.example`).
 
 ### 3.6 Submit for review
 

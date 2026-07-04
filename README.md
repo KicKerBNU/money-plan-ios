@@ -6,21 +6,20 @@ Native SwiftUI iOS app for [Money Plan](../money-plan-frontend), sharing the sam
 
 | | |
 |---|---|
-| **Status** | **Submitted — waiting for Apple review** |
-| **Submitted** | June 8, 2026 |
+| **Status** | **Live on the App Store** |
 | **Version** | 1.0.0 |
+| **App Store** | *(add public URL from App Store Connect → App Information → Apple ID)* |
 | **Bundle ID** | `com.moneyplann.app` |
 | **Category** | Finance |
 | **Pricing** | Free |
 | **Privacy policy** | [moneyplann.com/privacy](https://www.moneyplann.com/privacy) |
 | **Support** | [moneyplann.com/faq](https://www.moneyplann.com/faq) |
 
-The first public App Store release was submitted via [App Store Connect](https://appstoreconnect.apple.com). Review typically takes 24–48 hours (sometimes longer). After approval, release manually or automatically from App Store Connect → **App Store** → version **1.0.0**.
+The app is **live on the App Store** (v1.0.0). For metadata updates (keywords, description), create version **1.0.1** — see **[APP_STORE.md](./APP_STORE.md#30-where-to-find-keywords-not-under-app-information)**.
 
-**App Review demo account** (for Apple reviewers):
+**Organic growth (ASO + SEO):** see **[`../ORGANIC_GROWTH.md`](../ORGANIC_GROWTH.md)** for App Store, Play Store, and web checklist.
 
-- Email: `appstore.review@moneyplann.com`
-- Password: `MoneyPlan-Review2026!`
+**App Review demo account:** credentials are **not** in this repo. Use **App Store Connect → App Information → App Review Information → Sign-In Information** (and your team password manager). Re-seed: `money-plan-backend/scripts/create-demo-account.ts` (`scripts/demo-account.env.example`).
 
 ## Features (parity with web app)
 

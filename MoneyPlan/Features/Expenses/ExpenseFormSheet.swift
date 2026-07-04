@@ -6,15 +6,27 @@ struct ExpenseFormSheet: View {
     let accounts: [Account]
     let categories: [Category]
     var editing: Expense?
-    var onSave: (String, Double, Int, Int, String?) async throws -> Void
+    var linkedRecurring: RecurringExpense?
+    var onSave: (String, Double, Int, Int, String?, RecurringExpenseSave?) async throws -> Void
 
     @State private var date = Date()
     @State private var amountText = ""
     @State private var categoryId: Int = 0
     @State private var accountId: Int = 0
     @State private var note = ""
+    @State private var isRecurring = false
+    @State private var recurrenceFrequency: RecurrenceFrequency = .monthly
+    @State private var loadedRecurring: RecurringExpense?
     @State private var isSaving = false
     @State private var errorMessage = ""
+
+    private var activeRecurring: RecurringExpense? {
+        linkedRecurring ?? loadedRecurring
+    }
+
+    private var showsRecurrenceSection: Bool {
+        editing == nil || editing?.recurringExpenseId != nil || activeRecurring != nil
+    }
 
     var body: some View {
         NavigationStack {
@@ -39,6 +51,28 @@ struct ExpenseFormSheet: View {
                 TextField("expenses.form.note", text: $note, axis: .vertical)
                     .lineLimit(2 ... 4)
 
+                if showsRecurrenceSection {
+                    Section {
+                        Toggle("recurring.form.isRecurring", isOn: $isRecurring)
+
+                        if isRecurring {
+                            Picker("recurring.form.frequency", selection: $recurrenceFrequency) {
+                                ForEach(RecurrenceFrequency.allCases) { frequency in
+                                    Text(LocalizedStringKey(frequency.localizationKey)).tag(frequency)
+                                }
+                            }
+                        }
+                    } footer: {
+                        if editing != nil, isRecurring {
+                            Text("recurring.form.editLinkedFooter")
+                        } else if isRecurring {
+                            Text("recurring.form.footer")
+                        } else if editing?.recurringExpenseId != nil {
+                            Text("recurring.form.stopRecurrenceHint")
+                        }
+                    }
+                }
+
                 if !errorMessage.isEmpty {
                     Text(errorMessage)
                         .foregroundStyle(AppColors.danger)
@@ -59,6 +93,9 @@ struct ExpenseFormSheet: View {
                 }
             }
             .onAppear(perform: populate)
+            .task(id: editing?.recurringExpenseId) {
+                await loadLinkedRecurringIfNeeded()
+            }
         }
     }
 
@@ -73,9 +110,31 @@ struct ExpenseFormSheet: View {
             categoryId = editing.categoryId
             accountId = editing.accountId
             note = editing.note ?? ""
+            if let linked = linkedRecurring {
+                recurrenceFrequency = linked.frequency
+            }
         } else {
             if let cat = categories.first { categoryId = cat.id }
             if let acc = DefaultAccountPicker.pick(from: accounts) { accountId = acc.id }
+        }
+    }
+
+    private func loadLinkedRecurringIfNeeded() async {
+        if let linked = linkedRecurring {
+            isRecurring = linked.active
+            recurrenceFrequency = linked.frequency
+        }
+        guard let recurringId = editing?.recurringExpenseId else { return }
+        do {
+            let item = try await FinanceAPI.fetchRecurringExpense(id: recurringId)
+            loadedRecurring = item
+            isRecurring = item.active
+            recurrenceFrequency = item.frequency
+        } catch {
+            loadedRecurring = nil
+            if editing?.recurringExpenseId != nil {
+                isRecurring = false
+            }
         }
     }
 
@@ -85,8 +144,29 @@ struct ExpenseFormSheet: View {
         errorMessage = ""
         defer { isSaving = false }
 
+        let recurrenceSave: RecurringExpenseSave? = {
+            if editing == nil {
+                return isRecurring ? RecurringExpenseSave(mode: .create(recurrenceFrequency)) : nil
+            }
+            guard showsRecurrenceSection else { return nil }
+            return RecurringExpenseSave(
+                mode: .update(
+                    id: editing?.recurringExpenseId ?? activeRecurring?.id ?? 0,
+                    enabled: isRecurring,
+                    frequency: recurrenceFrequency
+                )
+            )
+        }()
+
         do {
-            try await onSave(DateUtils.localISODate(from: date), amount, categoryId, accountId, note.isEmpty ? nil : note)
+            try await onSave(
+                DateUtils.localISODate(from: date),
+                amount,
+                categoryId,
+                accountId,
+                note.isEmpty ? nil : note,
+                recurrenceSave
+            )
             dismiss()
         } catch {
             errorMessage = error.localizedDescription
