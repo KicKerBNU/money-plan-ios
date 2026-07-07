@@ -1,4 +1,3 @@
-import AuthenticationServices
 import Charts
 import SwiftUI
 
@@ -6,21 +5,25 @@ import SwiftUI
 
 struct MarketingLoginScreenshot: View {
     var body: some View {
-        MarketingLoginContent()
-            .preferredColorScheme(.light)
-            .tint(AppColors.primary)
+        MarketingScreenshotFrame(copy: MarketingScreenshotCopy.login) {
+            MarketingLoginContent()
+                .preferredColorScheme(.light)
+                .tint(AppColors.primary)
+        }
     }
 }
 
 struct MarketingAddExpenseScreenshot: View {
     var body: some View {
-        MarketingScreenshotShell(tab: .expenses) {
-            ZStack(alignment: .bottom) {
-                MarketingExpensesContent()
-                    .opacity(0.35)
-                    .allowsHitTesting(false)
+        MarketingScreenshotFrame(copy: MarketingScreenshotCopy.addExpense) {
+            MarketingScreenshotShell(tab: .expenses) {
+                ZStack(alignment: .bottom) {
+                    MarketingExpensesContent()
+                        .opacity(0.35)
+                        .allowsHitTesting(false)
 
-                MarketingExpenseFormPanel()
+                    MarketingExpenseFormPanel()
+                }
             }
         }
     }
@@ -28,32 +31,40 @@ struct MarketingAddExpenseScreenshot: View {
 
 struct MarketingOverviewScreenshot: View {
     var body: some View {
-        MarketingScreenshotShell(tab: .expenses) {
-            MarketingOverviewContent()
+        MarketingScreenshotFrame(copy: MarketingScreenshotCopy.overview) {
+            MarketingScreenshotShell(tab: .expenses) {
+                MarketingOverviewContent()
+            }
         }
     }
 }
 
 struct MarketingStatsScreenshot: View {
     var body: some View {
-        MarketingScreenshotShell(tab: .expenses) {
-            MarketingStatsContent()
+        MarketingScreenshotFrame(copy: MarketingScreenshotCopy.stats) {
+            MarketingScreenshotShell(tab: .expenses) {
+                MarketingStatsContent()
+            }
         }
     }
 }
 
 struct MarketingExpensesByCategoryScreenshot: View {
     var body: some View {
-        MarketingScreenshotShell(tab: .expenses) {
-            MarketingExpensesByCategoryContent()
+        MarketingScreenshotFrame(copy: MarketingScreenshotCopy.expensesByCategory) {
+            MarketingScreenshotShell(tab: .expenses) {
+                MarketingExpensesByCategoryContent()
+            }
         }
     }
 }
 
 struct MarketingSettingsScreenshot: View {
     var body: some View {
-        MarketingScreenshotShell(tab: .expenses) {
-            MarketingSettingsContent()
+        MarketingScreenshotFrame(copy: MarketingScreenshotCopy.settings) {
+            MarketingScreenshotShell(tab: .expenses) {
+                MarketingSettingsContent()
+            }
         }
     }
 }
@@ -86,22 +97,14 @@ private struct MarketingLoginContent: View {
     var body: some View {
         VStack(spacing: 24) {
             VStack(spacing: 10) {
-                ZStack {
-                    RoundedRectangle(cornerRadius: 18, style: .continuous)
-                        .fill(LinearGradient(
-                            colors: [AppColors.primary, AppColors.primary.opacity(0.75)],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        ))
-                        .frame(width: 60, height: 60)
-                        .shadow(color: AppColors.primary.opacity(0.3), radius: 14, x: 0, y: 8)
+                Image("MarketingAppIcon")
+                    .resizable()
+                    .interpolation(.high)
+                    .frame(width: 60, height: 60)
+                    .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
+                    .shadow(color: AppColors.primary.opacity(0.3), radius: 14, x: 0, y: 8)
 
-                    Image(systemName: "dollarsign")
-                        .font(.system(size: 28, weight: .bold))
-                        .foregroundStyle(.white)
-                }
-
-                Text("Money Plan")
+                Text("Money Plann")
                     .font(.caption.weight(.semibold))
                     .foregroundStyle(.secondary)
                     .tracking(1.2)
@@ -109,6 +112,11 @@ private struct MarketingLoginContent: View {
 
                 Text("auth.login.title")
                     .font(.title2.weight(.bold))
+                    .multilineTextAlignment(.center)
+
+                Text("auth.login.description")
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
                     .multilineTextAlignment(.center)
             }
 
@@ -147,36 +155,20 @@ private struct MarketingLoginContent: View {
 
             Spacer(minLength: 0)
 
-            VStack(spacing: 10) {
+            VStack(spacing: 12) {
                 HStack(spacing: 10) {
                     Rectangle().fill(Color.black.opacity(0.12)).frame(height: 1)
                     Text("auth.login.or")
                         .font(.caption2.weight(.semibold))
                         .foregroundStyle(.secondary)
                         .textCase(.uppercase)
+                        .tracking(0.6)
                     Rectangle().fill(Color.black.opacity(0.12)).frame(height: 1)
                 }
 
-                SignInWithAppleButton(.signIn) { _ in } onCompletion: { _ in }
-                    .signInWithAppleButtonStyle(.whiteOutline)
-                    .frame(maxWidth: .infinity)
-                    .frame(height: 48)
-                    .allowsHitTesting(false)
+                MarketingSignInWithAppleButton()
 
-                HStack(spacing: 8) {
-                    Image(systemName: "globe")
-                        .font(.body.weight(.semibold))
-                    Text("auth.login.googleButton")
-                        .fontWeight(.semibold)
-                }
-                .frame(maxWidth: .infinity)
-                .frame(height: 48)
-                .foregroundStyle(.primary)
-                .background(Color.white, in: RoundedRectangle(cornerRadius: 12, style: .continuous))
-                .overlay(
-                    RoundedRectangle(cornerRadius: 12, style: .continuous)
-                        .strokeBorder(Color.black.opacity(0.25), lineWidth: 1)
-                )
+                MarketingGoogleSignInButton()
             }
         }
         .padding(.horizontal, 20)
@@ -592,5 +584,52 @@ private struct MarketingSettingsContent: View {
         }
         .padding(12)
         .background(selected ? AppColors.primary.opacity(0.1) : AppColors.surfaceSoft, in: RoundedRectangle(cornerRadius: 10, style: .continuous))
+    }
+}
+
+// MARK: - Social buttons (ImageRenderer-safe; SignInWithAppleButton does not rasterize)
+
+private enum MarketingSocialButtonMetrics {
+    static let height: CGFloat = 50
+    static let cornerRadius: CGFloat = 12
+}
+
+/// Matches `LoginView` `.whiteOutline` Sign in with Apple on a light background.
+private struct MarketingSignInWithAppleButton: View {
+    var body: some View {
+        HStack(spacing: 8) {
+            Image(systemName: "apple.logo")
+                .font(.body.weight(.semibold))
+            Text("Sign in with Apple")
+                .font(.body.weight(.semibold))
+        }
+        .frame(maxWidth: .infinity)
+        .frame(height: MarketingSocialButtonMetrics.height)
+        .foregroundStyle(.black)
+        .background(Color.white, in: RoundedRectangle(cornerRadius: MarketingSocialButtonMetrics.cornerRadius, style: .continuous))
+        .overlay(
+            RoundedRectangle(cornerRadius: MarketingSocialButtonMetrics.cornerRadius, style: .continuous)
+                .strokeBorder(Color.black.opacity(0.25), lineWidth: 1)
+        )
+    }
+}
+
+/// Matches `LoginView.googleSignInButton`.
+private struct MarketingGoogleSignInButton: View {
+    var body: some View {
+        HStack(spacing: 8) {
+            Image(systemName: "globe")
+                .font(.body.weight(.semibold))
+            Text("auth.login.googleButton")
+                .font(.body.weight(.semibold))
+        }
+        .frame(maxWidth: .infinity)
+        .frame(height: MarketingSocialButtonMetrics.height)
+        .foregroundStyle(.primary)
+        .background(Color.white, in: RoundedRectangle(cornerRadius: MarketingSocialButtonMetrics.cornerRadius, style: .continuous))
+        .overlay(
+            RoundedRectangle(cornerRadius: MarketingSocialButtonMetrics.cornerRadius, style: .continuous)
+                .strokeBorder(Color.black.opacity(0.25), lineWidth: 1)
+        )
     }
 }

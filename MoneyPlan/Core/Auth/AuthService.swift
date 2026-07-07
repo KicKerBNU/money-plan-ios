@@ -29,6 +29,7 @@ final class AuthService {
             Task { @MainActor in
                 self?.user = user
                 self?.isReady = true
+                AnalyticsService.syncUserID()
             }
         }
     }

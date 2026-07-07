@@ -3,6 +3,10 @@ DerivedData/
 build/
 *.xcuserstate
 xcuserdata/
+.DS_Store
+
+# Generated App Store preview videos + frame PNGs (large; regenerate locally)
+AppStorePreviews/
 
 # Firebase (download from console)
 MoneyPlan/Resources/GoogleService-Info.plist

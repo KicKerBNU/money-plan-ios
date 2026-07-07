@@ -4,32 +4,47 @@ import SwiftUI
 
 struct MarketingExpensesScreenshot: View {
     var body: some View {
-        MarketingScreenshotShell(tab: .expenses) {
-            MarketingExpensesContent()
-        }
+        MarketingHeroExpensesScreenshot()
     }
 }
 
 struct MarketingIncomeScreenshot: View {
     var body: some View {
-        MarketingScreenshotShell(tab: .income) {
-            MarketingIncomeContent()
+        MarketingScreenshotFrame(copy: MarketingScreenshotCopy.income) {
+            MarketingScreenshotShell(tab: .income) {
+                MarketingIncomeContent()
+            }
         }
     }
 }
 
 struct MarketingChatbotScreenshot: View {
     var body: some View {
-        MarketingScreenshotShell(tab: .chat) {
-            MarketingChatbotContent()
+        MarketingScreenshotFrame(copy: MarketingScreenshotCopy.chatbot) {
+            MarketingScreenshotShell(tab: .chat) {
+                MarketingChatbotContent()
+            }
         }
     }
 }
 
 struct MarketingAccountsScreenshot: View {
     var body: some View {
-        MarketingScreenshotShell(tab: .accounts) {
-            MarketingAccountsContent()
+        MarketingScreenshotFrame(copy: MarketingScreenshotCopy.accounts) {
+            MarketingScreenshotShell(tab: .accounts) {
+                MarketingAccountsContent()
+            }
+        }
+    }
+}
+
+/// Phone-frame expenses slide (optional slot 2+ in Connect).
+struct MarketingExpensesPhoneScreenshot: View {
+    var body: some View {
+        MarketingScreenshotFrame(copy: MarketingScreenshotCopy.expenses) {
+            MarketingScreenshotShell(tab: .expenses) {
+                MarketingExpensesContent()
+            }
         }
     }
 }
@@ -68,7 +83,7 @@ private struct MarketingTabBar: View {
             tabItem(.accounts, label: "appNav.accounts", icon: "building.columns.fill")
         }
         .padding(.top, 6)
-        .padding(.bottom, 2)
+        .padding(.bottom, 10)
         .background(.bar)
         .overlay(alignment: .top) { Divider() }
     }

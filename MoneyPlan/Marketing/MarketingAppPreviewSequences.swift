@@ -40,7 +40,11 @@ struct MarketingAppPreviewFrame: View {
             case .incomeAndAccounts:
                 incomeAndAccountsFrame
             case .aiAssistant:
-                MarketingChatbotAnimatedScreenshot(progress: progress)
+                MarketingScreenshotFrame(copy: MarketingScreenshotCopy.chatbot) {
+                    MarketingScreenshotShell(tab: .chat) {
+                        MarketingChatbotAnimatedContent(progress: progress)
+                    }
+                }
             }
         }
         .frame(width: AppPreviewSpec.width, height: AppPreviewSpec.height)
@@ -99,7 +103,7 @@ struct MarketingAppPreviewFrame: View {
 
 // MARK: - Preview 3: animated chat
 
-struct MarketingChatbotAnimatedScreenshot: View {
+struct MarketingChatbotAnimatedContent: View {
     let progress: Double
 
     private let userText = "How much did I spend on food this month?"
@@ -107,43 +111,41 @@ struct MarketingChatbotAnimatedScreenshot: View {
         "You've spent €113.60 on Food in June across 2 entries — groceries (€45.20) and dinner out (€68.40)."
 
     var body: some View {
-        MarketingScreenshotShell(tab: .chat) {
-            VStack(spacing: 0) {
-                MarketingNavBar(title: "chatbot.title") {
-                    Text("chatbot.clear")
-                        .font(.subheadline)
-                        .foregroundStyle(AppColors.muted)
-                } trailing: {
-                    MarketingToolbarGear()
-                }
-
-                VStack(alignment: .leading, spacing: 12) {
-                    Text("chatbot.subtitle")
-                        .font(.subheadline)
-                        .foregroundStyle(AppColors.muted)
-                        .padding(.bottom, 8)
-
-                    if visibleUserCount > 0 {
-                        MarketingAnimatedChatBubble(
-                            role: .user,
-                            content: String(userText.prefix(visibleUserCount))
-                        )
-                    }
-
-                    if visibleAssistantCount > 0 {
-                        MarketingAnimatedChatBubble(
-                            role: .assistant,
-                            content: String(assistantText.prefix(visibleAssistantCount))
-                        )
-                    }
-
-                    Spacer(minLength: 0)
-                }
-                .padding()
-                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
-
-                MarketingChatComposer()
+        VStack(spacing: 0) {
+            MarketingNavBar(title: "chatbot.title") {
+                Text("chatbot.clear")
+                    .font(.subheadline)
+                    .foregroundStyle(AppColors.muted)
+            } trailing: {
+                MarketingToolbarGear()
             }
+
+            VStack(alignment: .leading, spacing: 12) {
+                Text("chatbot.subtitle")
+                    .font(.subheadline)
+                    .foregroundStyle(AppColors.muted)
+                    .padding(.bottom, 8)
+
+                if visibleUserCount > 0 {
+                    MarketingAnimatedChatBubble(
+                        role: .user,
+                        content: String(userText.prefix(visibleUserCount))
+                    )
+                }
+
+                if visibleAssistantCount > 0 {
+                    MarketingAnimatedChatBubble(
+                        role: .assistant,
+                        content: String(assistantText.prefix(visibleAssistantCount))
+                    )
+                }
+
+                Spacer(minLength: 0)
+            }
+            .padding()
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+
+            MarketingChatComposer()
         }
     }
 
@@ -163,6 +165,17 @@ struct MarketingChatbotAnimatedScreenshot: View {
         guard progress <= end else { return assistantText.count }
         let t = (progress - start) / (end - start)
         return Int(Double(assistantText.count) * t)
+    }
+}
+
+/// Static chatbot marketing screenshot (non-animated).
+struct MarketingChatbotAnimatedScreenshot: View {
+    let progress: Double
+
+    var body: some View {
+        MarketingScreenshotShell(tab: .chat) {
+            MarketingChatbotAnimatedContent(progress: progress)
+        }
     }
 }
 

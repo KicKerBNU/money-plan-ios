@@ -114,6 +114,15 @@ encode_preview "preview-01-track-spending"
 encode_preview "preview-02-income-accounts"
 encode_preview "preview-03-ai-assistant"
 
+PREVIEW_69="${ROOT}/AppStorePreviews/iPhone-6.9"
+mkdir -p "$PREVIEW_69"
+for name in preview-01-track-spending preview-02-income-accounts preview-03-ai-assistant; do
+  cp "${PREVIEW_ROOT}/${name}.mov" "${PREVIEW_69}/${name}.mov"
+done
+
 echo ""
-echo "Upload these 3 files to App Store Connect → iPhone 6.5\" → App Previews:"
+echo "Upload these 3 files to App Store Connect → iPhone 6.5\" or 6.9\" Display → App Previews:"
 ls -1 "${PREVIEW_ROOT}"/*.mov
+echo ""
+echo "Copies for 6.9\" slot:"
+ls -1 "${PREVIEW_69}"/*.mov

@@ -24,4 +24,8 @@ xcodebuild test \
 
 echo ""
 echo "Done. Upload these folders to App Store Connect:"
+echo "  6.9\" slot (1320×2868):           AppStoreScreenshots/iPhone-6.9/"
+echo "  PRIMARY (6.5\" slot, 1284×2778): AppStoreScreenshots/iPhone-6.5/"
+echo "  Legacy (1242×2688):              AppStoreScreenshots/iPhone-6.5-legacy/"
+echo "  6.7\" slot (1290×2796):           AppStoreScreenshots/iPhone-6.7/"
 find AppStoreScreenshots -name '*.png' | sort

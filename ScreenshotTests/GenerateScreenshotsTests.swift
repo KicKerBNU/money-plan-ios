@@ -18,38 +18,66 @@ final class GenerateScreenshotsTests: XCTestCase {
 
         let screens: [(String, AnyView)] = [
             ("01-expenses", AnyView(MarketingExpensesScreenshot())),
-            ("02-income", AnyView(MarketingIncomeScreenshot())),
-            ("03-chatbot", AnyView(MarketingChatbotScreenshot())),
-            ("04-accounts", AnyView(MarketingAccountsScreenshot())),
-            ("05-login", AnyView(MarketingLoginScreenshot())),
-            ("06-add-expense", AnyView(MarketingAddExpenseScreenshot())),
-            ("07-overview", AnyView(MarketingOverviewScreenshot())),
-            ("08-stats", AnyView(MarketingStatsScreenshot())),
-            ("09-expenses-by-category", AnyView(MarketingExpensesByCategoryScreenshot())),
-            ("10-settings", AnyView(MarketingSettingsScreenshot())),
+            ("02-chatbot", AnyView(MarketingChatbotScreenshot())),
+            ("03-accounts", AnyView(MarketingAccountsScreenshot())),
+            ("04-income", AnyView(MarketingIncomeScreenshot())),
+            ("05-overview", AnyView(MarketingOverviewScreenshot())),
+            ("06-stats", AnyView(MarketingStatsScreenshot())),
+            ("07-add-expense", AnyView(MarketingAddExpenseScreenshot())),
+            ("08-expenses-by-category", AnyView(MarketingExpensesByCategoryScreenshot())),
+            ("09-settings", AnyView(MarketingSettingsScreenshot())),
+            ("10-login", AnyView(MarketingLoginScreenshot())),
+            ("11-expenses-phone", AnyView(MarketingExpensesPhoneScreenshot())),
         ]
 
         let iPhone65 = ScreenshotSpec(
             folder: "iPhone-6.5",
             width: 428,
             height: 926,
-            scale: 3
+            scale: 3,
+            expectedPixelWidth: 1284,
+            expectedPixelHeight: 2778
+        )
+        let iPhone65Legacy = ScreenshotSpec(
+            folder: "iPhone-6.5-legacy",
+            width: 414,
+            height: 896,
+            scale: 3,
+            expectedPixelWidth: 1242,
+            expectedPixelHeight: 2688
         )
         let iPhone67 = ScreenshotSpec(
             folder: "iPhone-6.7",
             width: 430,
             height: 932,
-            scale: 3
+            scale: 3,
+            expectedPixelWidth: 1290,
+            expectedPixelHeight: 2796
+        )
+        let iPhone69 = ScreenshotSpec(
+            folder: "iPhone-6.9",
+            width: 440,
+            height: 956,
+            scale: 3,
+            expectedPixelWidth: 1320,
+            expectedPixelHeight: 2868
         )
         let iPad = ScreenshotSpec(
             folder: "iPad-12.9",
             width: 1024,
             height: 1366,
-            scale: 2
+            scale: 2,
+            expectedPixelWidth: 2048,
+            expectedPixelHeight: 2732
         )
 
-        for spec in [iPhone65, iPhone67, iPad] {
+        for spec in [iPhone65, iPhone65Legacy, iPhone67, iPhone69, iPad] {
             let dir = outputRoot.appendingPathComponent(spec.folder, isDirectory: true)
+            if FileManager.default.fileExists(atPath: dir.path) {
+                try FileManager.default.contentsOfDirectory(at: dir, includingPropertiesForKeys: nil)
+                    .filter { $0.pathExtension == "png" }
+                    .forEach { try FileManager.default.removeItem(at: $0) }
+            }
             try FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
 
             for (name, view) in screens {
@@ -65,6 +93,8 @@ final class GenerateScreenshotsTests: XCTestCase {
         let width: CGFloat
         let height: CGFloat
         let scale: CGFloat
+        let expectedPixelWidth: Int
+        let expectedPixelHeight: Int
     }
 
     private func render<V: View>(_ content: V, spec: ScreenshotSpec, to url: URL) throws {
@@ -84,5 +114,8 @@ final class GenerateScreenshotsTests: XCTestCase {
             ])
         }
         try data.write(to: url, options: .atomic)
+
+        XCTAssertEqual(image.size.width * spec.scale, CGFloat(spec.expectedPixelWidth), accuracy: 0.5)
+        XCTAssertEqual(image.size.height * spec.scale, CGFloat(spec.expectedPixelHeight), accuracy: 0.5)
     }
 }

@@ -51,6 +51,27 @@ struct MainTabView: View {
                 .tabItem { Label("appNav.accounts", systemImage: "building.columns.fill") }
                 .tag(AppTab.accounts)
         }
+        .onAppear {
+            logScreen(for: selectedTab)
+        }
+        .onChange(of: selectedTab) { _, tab in
+            logScreen(for: tab)
+        }
+    }
+
+    private func logScreen(for tab: AppTab) {
+        guard tab != .add else { return }
+        AnalyticsService.logScreen(screenName(for: tab))
+    }
+
+    private func screenName(for tab: AppTab) -> String {
+        switch tab {
+        case .expenses: "expenses"
+        case .income: "income"
+        case .add: "add"
+        case .chat: "chatbot"
+        case .accounts: "accounts"
+        }
     }
 }
 

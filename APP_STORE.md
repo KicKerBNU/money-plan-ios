@@ -230,7 +230,22 @@ budget,finance,spending,tracker,money,accounts,free,personal,planner,manager,wal
 | **Privacy Policy URL** | App Information | **Required** — auth, data storage, third parties |
 | **Category** | App Information | Finance |
 | **Age rating** | App Information | Questionnaire in Connect |
-| **Screenshots** | Version listing | 6.7", 6.5", 5.5" iPhone sizes (and iPad if supporting iPad) |
+| **Screenshots** | Version listing | **6.7"** (required), 6.5", iPad if applicable — see [§3.4](#34-marketing-screenshots--search-visibility) |
+
+### 3.4 Marketing screenshots & search visibility
+
+**Regenerate** (gradient + headline + phone mockup):
+
+```bash
+cd money-plan-ios
+./scripts/generate-app-store-screenshots.sh
+```
+
+Upload PNGs from `AppStoreScreenshots/iPhone-6.7/` first (1290 × 2796). Recommended order: `01-expenses` → `02-chatbot` → `03-accounts` → `04-income` → `05-overview`. Details: `AppStoreScreenshots/README.md`.
+
+**Why search may not show screenshots:** In App Store **search results**, Apple often shows screenshot carousels only for **Search Ads** (labeled “Ad”) or featured placements. **Organic search** frequently shows icon + title only — that is normal. Screenshots always appear on your **product page** after the user taps your app; optimize those first.
+
+**Screenshot-only updates** do not require a new binary — replace images in App Store Connect → Save.
 | **App Privacy** | App Privacy (sidebar) | Data collection questionnaire (see below) |
 
 ### 3.2 App Privacy (nutrition labels)
@@ -242,11 +257,11 @@ Declare what the app collects, aligned with actual behavior:
 | **Contact info** (email) | Yes — Firebase Auth account |
 | **Financial info** | Yes — expenses/income user enters |
 | **User ID** | Yes — Firebase UID |
-| **Usage data** | If Firebase Analytics enabled — Yes, analytics |
+| **Usage data** | Yes — Firebase Analytics (product usage: screens, sessions). **Not used for advertising or cross-app tracking.** |
 | **Data linked to user** | Yes |
 | **Third parties** | Firebase (Google), your backend API (Railway), OpenAI (via backend for chat only) |
 
-Review [Firebase data disclosure](https://firebase.google.com/support/guides/app-store-data-disclosure) and your backend privacy policy.
+Review [Firebase data disclosure](https://firebase.google.com/support/guides/app-store-data-disclosure) and **`ANALYTICS.md`** at the repo root for exact App Privacy answers.
 
 ### 3.3 Export compliance (encryption)
 

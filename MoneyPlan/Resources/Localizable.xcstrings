@@ -2053,6 +2053,9 @@
         }
       }
     },
+    "Cash flow" : {
+
+    },
     "chatbot.assistant" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -4315,6 +4318,9 @@
         }
       }
     },
+    "Income" : {
+
+    },
     "income.actions.addIncome" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -4917,7 +4923,10 @@
     "June 2026" : {
 
     },
-    "Money Plan" : {
+    "Money Plann" : {
+
+    },
+    "MONEY PLANN" : {
 
     },
     "overview.categoriesTitle" : {
@@ -5645,6 +5654,9 @@
           }
         }
       }
+    },
+    "Recent expenses" : {
+
     },
     "recurring.confirmDelete.body" : {
       "localizations" : {
@@ -6374,6 +6386,12 @@
     "Rent is about 83% of spending." : {
 
     },
+    "Sign in with Apple" : {
+
+    },
+    "Spent" : {
+
+    },
     "Spent across %@ categories" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -6793,6 +6811,9 @@
       }
     },
     "You retained roughly %@%% of income." : {
+
+    },
+    "Your accounts" : {
 
     }
   },

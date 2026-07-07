@@ -54,6 +54,7 @@ enum FirebaseConfiguration {
 
         FirebaseApp.configure()
         status = .configured
+        AnalyticsService.configure()
         return status
     }
 

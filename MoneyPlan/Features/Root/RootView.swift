@@ -19,6 +19,7 @@ struct RootView: View {
                     // Login is always light — keeps the brand surface consistent and
                     // avoids the dark-on-dark contrast issues we hit earlier.
                     .preferredColorScheme(.light)
+                    .onAppear { AnalyticsService.logScreen("login") }
             }
         }
         .overlay { ToastOverlay() }

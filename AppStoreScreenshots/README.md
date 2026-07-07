@@ -1,40 +1,72 @@
 # App Store screenshots
 
-Generated marketing PNGs for App Store Connect. Re-run:
+Marketing PNGs for App Store Connect — gradient background, headline, and phone mockup.
+
+Regenerate after UI or copy changes:
 
 ```bash
 ./scripts/generate-app-store-screenshots.sh
 ```
 
-## Upload mapping
+## Which folder to upload (important)
 
-| Folder | App Store Connect slot | Size (portrait) |
-|--------|------------------------|-----------------|
-| `iPhone-6.5/` | iPhone 6.5" Display | 1284 × 2778 |
-| `iPhone-6.7/` | iPhone 6.7" Display | 1290 × 2796 |
-| `iPad-12.9/` | iPad Pro 12.9" | 2048 × 2732 |
+App Store Connect rejected **1290 × 2796** if you upload to the **6.5" Display** slot. That slot only accepts:
 
-| # | Screen |
-|---|--------|
-| 01 | Expenses list |
-| 02 | Income |
-| 03 | AI chatbot |
-| 04 | Accounts |
-| 05 | Login (Email, Apple, Google) |
-| 06 | Add expense form |
-| 07 | Overview & chart |
-| 08 | Spending stats |
-| 09 | Category filters |
-| 10 | Theme & currency settings |
+| Portrait size | Upload from |
+|---------------|-------------|
+| **1284 × 2778** | **`iPhone-6.5/`** ← use this (most common) |
+| **1242 × 2688** | **`iPhone-6.5-legacy/`** (if Connect asks for this size) |
 
-Upload **01–03** first (used on the App Store install sheet). Use **04–10** to fill the remaining slots (up to 10 per size).
+| Portrait size | Upload from |
+|---------------|-------------|
+| **1290 × 2796** | **`iPhone-6.7/`** — 6.7" Display slot (also accepted on 6.9") |
+| **1320 × 2868** | **`iPhone-6.9/`** — **6.9" Display** slot (recommended for Pro Max) |
+
+**If you see “dimensions are wrong”:** you likely uploaded the wrong folder to a slot (e.g. `iPhone-6.7/` into **6.5"**). Match folder to the size Connect lists in that tab.
+
+Verify any file:
+
+```bash
+sips -g pixelWidth -g pixelHeight AppStoreScreenshots/iPhone-6.5/01-expenses.png
+# pixelWidth: 1284
+# pixelHeight: 2778
+```
+
+## Recommended upload order
+
+| # | File | Style |
+|---|------|--------|
+| 01 | `01-expenses.png` | Hero — floating cards + value prop |
+| 02 | `02-chatbot.png` | Phone — AI assistant |
+| 03 | `03-accounts.png` | Phone — accounts |
+| 04 | `04-income.png` | Phone — income |
+| 05 | `05-overview.png` | Phone — charts & insights |
+
+Optional: `11-expenses-phone.png`, then 06–10.
+
+## App Store Connect steps
+
+1. **App Store Connect** → **Money Plann** → **App Store** → version draft (e.g. 1.0.2).
+2. **Previews and Screenshots** → **iPhone 6.5" Display** (or the slot that lists 1284 × 2778).
+3. Upload PNGs from **`AppStoreScreenshots/iPhone-6.5/`** in order above.
+4. If you also have a **6.9" Display** section, upload **`iPhone-6.9/`** (1320 × 2868) — up to 10 PNGs + 3 app previews.
+5. If you also have a **6.7" Display** section, upload **`iPhone-6.7/`** there separately.
+6. **Save** → submit for review (no new app binary needed for screenshots only).
+
+## All generated sizes
+
+| Folder | Portrait pixels | Connect slot |
+|--------|-----------------|--------------|
+| `iPhone-6.5/` | 1284 × 2778 | 6.5" Display |
+| `iPhone-6.5-legacy/` | 1242 × 2688 | 6.5" (legacy) |
+| `iPhone-6.7/` | 1290 × 2796 | 6.7" Display (also valid on 6.9") |
+| `iPhone-6.9/` | 1320 × 2868 | **6.9" Display** (Pro Max — recommended) |
+| `iPad-12.9/` | 2048 × 2732 | iPad Pro 12.9" |
 
 ## App Previews (videos)
-
-Previews use a **different resolution** than screenshots: **886 × 1920** for iPhone 6.5".
 
 ```bash
 ./scripts/generate-app-store-previews.sh
 ```
 
-See `AppStorePreviews/COMPLIANCE.md` for Apple’s strict rules and rejection checklist.
+See `AppStorePreviews/COMPLIANCE.md`.
