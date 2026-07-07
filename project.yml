@@ -19,9 +19,9 @@ packages:
 settings:
   base:
     SWIFT_VERSION: "5.9"
-    MARKETING_VERSION: "1.0.1"
-    CURRENT_PROJECT_VERSION: "2"
-    DEVELOPMENT_TEAM: ""
+    MARKETING_VERSION: "1.0.2"
+    CURRENT_PROJECT_VERSION: "7"
+    DEVELOPMENT_TEAM: "53K55422K6"
     CODE_SIGN_STYLE: Automatic
 
 targets:
@@ -54,6 +54,8 @@ targets:
       path: MoneyPlan/Info.plist
       properties:
         CFBundleDisplayName: Money Plan
+        CFBundleShortVersionString: "$(MARKETING_VERSION)"
+        CFBundleVersion: "$(CURRENT_PROJECT_VERSION)"
         # REVERSED_CLIENT_ID from GoogleService-Info.plist — required by Google Sign-In.
         # Keep in sync if you ever rotate the OAuth client ID in Firebase.
         CFBundleURLTypes:
@@ -93,6 +95,14 @@ schemes:
     build:
       targets:
         MoneyPlan: all
+    archive:
+      # Auto-increment build number before Product → Archive (App Store uploads need unique builds).
+      preActions:
+        - name: Bump iOS build number
+          script: |
+            cd "${SRCROOT}"
+            ./scripts/bump-ios-version.sh
+          settingsTarget: MoneyPlan
     test:
       targets:
         - MoneyPlanScreenshotTests

@@ -1,69 +1,10 @@
 import SwiftUI
 
-@MainActor
-@Observable
-final class IncomeViewModel {
-    var entries: [IncomeEntry] = []
-    var accounts: [Account] = []
-    var isLoading = true
-    var errorMessage: String?
-
-    private let yearMonth = DateUtils.currentYearMonth()
-
-    var total: Double { entries.reduce(0) { $0 + $1.amount } }
-    var lastDate: String? { entries.map(\.date).sorted().last }
-
-    func load() async {
-        isLoading = true
-        errorMessage = nil
-        defer { isLoading = false }
-        do {
-            async let inc = FinanceAPI.fetchIncomes(year: yearMonth.year, month: yearMonth.month)
-            async let acc = FinanceAPI.fetchAccounts()
-            entries = try await inc
-            accounts = try await acc
-        } catch {
-            errorMessage = error.localizedDescription
-        }
-    }
-
-    func create(date: String, amount: Double, accountId: Int, note: String?) async throws {
-        _ = try await FinanceAPI.createIncome(date: date, amount: amount, accountId: accountId, note: note)
-        await load()
-    }
-
-    func update(_ entry: IncomeEntry) async throws {
-        guard let accountId = entry.accountId else { return }
-        _ = try await FinanceAPI.updateIncome(
-            id: entry.id,
-            date: entry.date,
-            amount: entry.amount,
-            accountId: accountId,
-            note: entry.note
-        )
-        await load()
-    }
-
-    func delete(_ entry: IncomeEntry) async {
-        let snapshot = entries
-        entries.removeAll { $0.id == entry.id }
-        do {
-            try await FinanceAPI.deleteIncome(id: entry.id)
-        } catch {
-            entries = snapshot
-            await load()
-        }
-    }
-}
-
 struct IncomeView: View {
     @Environment(MoneyPreferences.self) private var money
     @State private var viewModel = IncomeViewModel()
-    @State private var date = Date()
-    @State private var amountText = ""
-    @State private var note = ""
-    @State private var accountId = 0
-    @State private var editing: IncomeEntry?
+    @State private var showAddSheet = false
+    @State private var editingEntry: IncomeEntry?
     @State private var toDelete: IncomeEntry?
 
     var body: some View {
@@ -78,6 +19,14 @@ struct IncomeView: View {
             }
             .navigationTitle("income.title")
             .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button {
+                        showAddSheet = true
+                    } label: {
+                        Image(systemName: "plus")
+                    }
+                    .accessibilityLabel("income.actions.addIncome")
+                }
                 ToolbarItem(placement: .topBarTrailing) { SettingsToolbar() }
             }
             .confirmationDialog(
@@ -92,13 +41,35 @@ struct IncomeView: View {
             } message: {
                 Text("income.confirmDelete.body")
             }
-            .task { await viewModel.load() }
-            .refreshable { await viewModel.load() }
-            .onAppear {
-                if let acc = DefaultAccountPicker.pick(from: viewModel.accounts) {
-                    accountId = acc.id
+            .sheet(isPresented: $showAddSheet) {
+                IncomeFormSheet(accounts: viewModel.accounts) { date, amount, accountId, note, recurrence in
+                    try await viewModel.create(
+                        date: date,
+                        amount: amount,
+                        accountId: accountId,
+                        note: note,
+                        recurrence: recurrence
+                    )
                 }
             }
+            .sheet(item: $editingEntry) { entry in
+                IncomeFormSheet(
+                    accounts: viewModel.accounts,
+                    editing: entry,
+                    linkedRecurring: viewModel.linkedRecurring(for: entry)
+                ) { date, amount, accountId, note, recurrence in
+                    try await viewModel.saveEdit(
+                        original: entry,
+                        date: date,
+                        amount: amount,
+                        accountId: accountId,
+                        note: note,
+                        recurrence: recurrence
+                    )
+                }
+            }
+            .task { await viewModel.load() }
+            .refreshable { await viewModel.load() }
         }
     }
 
@@ -109,37 +80,50 @@ struct IncomeView: View {
                     .font(.subheadline)
                     .foregroundStyle(AppColors.muted)
 
+                HStack {
+                    Button {
+                        Task { await viewModel.shiftPeriod(by: -1) }
+                    } label: {
+                        Image(systemName: "chevron.left")
+                    }
+                    .accessibilityLabel("income.period.prev")
+
+                    Spacer()
+
+                    Text(viewModel.periodLabel)
+                        .font(.subheadline.weight(.semibold))
+
+                    Spacer()
+
+                    Button {
+                        Task { await viewModel.shiftPeriod(by: 1) }
+                    } label: {
+                        Image(systemName: "chevron.right")
+                    }
+                    .accessibilityLabel("income.period.next")
+                }
+                .padding(.horizontal, 4)
+
                 FinanceCard {
-                    KPIView(title: "income.summary.totalIncome", value: CurrencyFormatter.format(viewModel.total))
+                    KPIView(
+                        title: "income.summary.totalIncome",
+                        value: CurrencyFormatter.format(viewModel.total),
+                        valueColor: AppColors.positive
+                    )
                     if let last = viewModel.lastDate {
                         Text(String(format: String(localized: "income.summary.lastEntry"), viewModel.entries.count, DateUtils.formatShortDate(last)))
                             .font(.caption)
                             .foregroundStyle(AppColors.muted)
                     }
-                }
 
-                FinanceCard {
-                    Text(editing == nil ? "income.quickAdd.title" : "expenses.form.editTitle")
-                        .font(.headline)
-
-                    Form {
-                        DatePicker("income.form.date", selection: $date, displayedComponents: .date)
-                        TextField("income.form.amount", text: $amountText)
-                            .keyboardType(.decimalPad)
-                        Picker("expenses.form.account", selection: $accountId) {
-                            ForEach(viewModel.accounts) { acc in
-                                Text(acc.name).tag(acc.id)
-                            }
-                        }
-                        TextField("income.form.notePlaceholder", text: $note)
-                    }
-                    .frame(height: 280)
-
-                    Button(editing == nil ? "income.form.submit" : "common.save") {
-                        Task { await submit() }
+                    Button {
+                        showAddSheet = true
+                    } label: {
+                        Label("income.actions.addIncome", systemImage: "plus.circle.fill")
+                            .frame(maxWidth: .infinity)
                     }
                     .buttonStyle(.borderedProminent)
-                    .frame(maxWidth: .infinity)
+                    .padding(.top, 8)
                 }
 
                 FinanceCard {
@@ -147,14 +131,33 @@ struct IncomeView: View {
                         .font(.headline)
 
                     if viewModel.entries.isEmpty {
-                        Text("expenses.empty")
-                            .foregroundStyle(AppColors.muted)
+                        VStack(spacing: 8) {
+                            Text("income.empty.title")
+                                .font(.subheadline.weight(.semibold))
+                            Text("income.empty.body")
+                                .font(.caption)
+                                .foregroundStyle(AppColors.muted)
+                                .multilineTextAlignment(.center)
+                        }
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 12)
                     } else {
                         ForEach(viewModel.entries) { entry in
-                            HStack {
-                                VStack(alignment: .leading) {
-                                    Text(CurrencyFormatter.format(entry.amount))
-                                        .font(.subheadline.weight(.semibold))
+                            HStack(alignment: .top, spacing: 12) {
+                                VStack(alignment: .leading, spacing: 4) {
+                                    HStack(spacing: 6) {
+                                        Text(CurrencyFormatter.format(entry.amount))
+                                            .font(.subheadline.weight(.semibold))
+                                            .foregroundStyle(AppColors.positive)
+                                        if viewModel.isRecurringEntry(entry) {
+                                            Image(systemName: "arrow.up.circle")
+                                                .font(.caption2)
+                                                .foregroundStyle(AppColors.primary)
+                                                .accessibilityLabel("recurringIncome.form.isRecurring")
+                                        }
+                                    }
+                                    Text(entryTitle(for: entry))
+                                        .font(.subheadline)
                                     Text("\(DateUtils.formatShortDate(entry.date)) · \(entry.accountName ?? "")")
                                         .font(.caption)
                                         .foregroundStyle(AppColors.muted)
@@ -162,8 +165,10 @@ struct IncomeView: View {
                                 Spacer()
                                 Menu {
                                     Button {
-                                        editing = entry
-                                        populateForm(entry)
+                                        Task {
+                                            await viewModel.load()
+                                            editingEntry = viewModel.freshEntry(for: entry)
+                                        }
                                     } label: {
                                         Label("common.edit", systemImage: "square.and.pencil")
                                     }
@@ -172,6 +177,7 @@ struct IncomeView: View {
                                     }
                                 } label: {
                                     Image(systemName: "ellipsis.circle")
+                                        .foregroundStyle(AppColors.muted)
                                 }
                             }
                             .padding(.vertical, 6)
@@ -184,31 +190,10 @@ struct IncomeView: View {
         .background(Color(.systemGroupedBackground))
     }
 
-    private func populateForm(_ entry: IncomeEntry) {
-        date = DateUtils.parseLocalISODate(entry.date) ?? Date()
-        amountText = String(entry.amount)
-        note = entry.note ?? ""
-        accountId = entry.accountId ?? accountId
-    }
-
-    private func submit() async {
-        guard let amount = Double(amountText.replacingOccurrences(of: ",", with: ".")) else { return }
-        let iso = DateUtils.localISODate(from: date)
-        do {
-            if var entry = editing {
-                entry.date = iso
-                entry.amount = amount
-                entry.accountId = accountId
-                entry.note = note.isEmpty ? nil : note
-                try await viewModel.update(entry)
-                editing = nil
-                amountText = ""
-                note = ""
-            } else {
-                try await viewModel.create(date: iso, amount: amount, accountId: accountId, note: note.isEmpty ? nil : note)
-                amountText = ""
-                note = ""
-            }
-        } catch {}
+    private func entryTitle(for entry: IncomeEntry) -> String {
+        if let note = entry.note?.trimmingCharacters(in: .whitespacesAndNewlines), !note.isEmpty {
+            return note
+        }
+        return entry.accountName ?? String(localized: "income.title")
     }
 }

@@ -98,5 +98,23 @@
    <ArchiveAction
       buildConfiguration = "Release"
       revealArchiveInOrganizer = "YES">
+      <PreActions>
+         <ExecutionAction
+            ActionType = "Xcode.IDEStandardExecutionActionsCore.ExecutionActionType.ShellScriptAction">
+            <ActionContent
+               title = "Bump iOS build number"
+               scriptText = "cd &quot;/Users/evertonbuzzi/Dev/money-plan/money-plan-ios&quot;&#10;./scripts/bump-ios-version.sh&#10;">
+               <EnvironmentBuildable>
+                  <BuildableReference
+                     BuildableIdentifier = "primary"
+                     BlueprintIdentifier = "D050876B4A35A54DBB2BC715"
+                     BuildableName = "MoneyPlan.app"
+                     BlueprintName = "MoneyPlan"
+                     ReferencedContainer = "container:MoneyPlan.xcodeproj">
+                  </BuildableReference>
+               </EnvironmentBuildable>
+            </ActionContent>
+         </ExecutionAction>
+      </PreActions>
    </ArchiveAction>
 </Scheme>

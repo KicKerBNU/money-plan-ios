@@ -61,6 +61,7 @@ struct SettingsToolbar: View {
 
     @State private var showDeleteAccountConfirm = false
     @State private var showRecurringExpenses = false
+    @State private var showRecurringIncomes = false
     @State private var isDeletingAccount = false
 
     var body: some View {
@@ -109,6 +110,12 @@ struct SettingsToolbar: View {
                 Label("recurring.settingsMenu", systemImage: "arrow.triangle.2.circlepath")
             }
 
+            Button {
+                showRecurringIncomes = true
+            } label: {
+                Label("recurringIncome.settingsMenu", systemImage: "arrow.up.circle")
+            }
+
             Divider()
 
             Button(role: .destructive) {
@@ -141,6 +148,9 @@ struct SettingsToolbar: View {
         }
         .sheet(isPresented: $showRecurringExpenses) {
             RecurringExpensesView()
+        }
+        .sheet(isPresented: $showRecurringIncomes) {
+            RecurringIncomesView()
         }
     }
 

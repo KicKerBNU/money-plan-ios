@@ -3305,6 +3305,7 @@
       }
     },
     "expenses.empty" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -3794,7 +3795,6 @@
       }
     },
     "expenses.form.account" : {
-      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -4315,6 +4315,29 @@
         }
       }
     },
+    "income.actions.addIncome" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add income"
+          }
+        },
+        "en-US" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add income"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Adicionar receita"
+          }
+        }
+      }
+    },
     "income.confirmDelete.body" : {
       "localizations" : {
         "en" : {
@@ -4380,6 +4403,96 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Eliminar receita?"
+          }
+        }
+      }
+    },
+    "income.empty.body" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add salary, freelance payments, rent, or any other money coming in."
+          }
+        },
+        "en-US" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add salary, freelance payments, rent, or any other money coming in."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Adicione salário, freelances, aluguel ou qualquer outra entrada."
+          }
+        }
+      }
+    },
+    "income.empty.title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No income this month"
+          }
+        },
+        "en-US" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No income this month"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nenhuma receita neste mês"
+          }
+        }
+      }
+    },
+    "income.form.account" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Account"
+          }
+        },
+        "en-US" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Account"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Conta"
+          }
+        }
+      }
+    },
+    "income.form.addTitle" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add income"
+          }
+        },
+        "en-US" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add income"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Adicionar receita"
           }
         }
       }
@@ -4454,6 +4567,29 @@
         }
       }
     },
+    "income.form.editTitle" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Edit income"
+          }
+        },
+        "en-US" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Edit income"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Editar receita"
+          }
+        }
+      }
+    },
     "income.form.notePlaceholder" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -4520,6 +4656,52 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Adicionar receita"
+          }
+        }
+      }
+    },
+    "income.period.next" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Next month"
+          }
+        },
+        "en-US" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Next month"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Próximo mês"
+          }
+        }
+      }
+    },
+    "income.period.prev" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Previous month"
+          }
+        },
+        "en-US" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Previous month"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mês anterior"
           }
         }
       }
@@ -5509,27 +5691,6 @@
         }
       }
     },
-    "recurring.form.editLinkedFooter" : {
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Changes apply to this recurring schedule. Turn off to stop future repeats." } },
-        "en-US" : { "stringUnit" : { "state" : "translated", "value" : "Changes apply to this recurring schedule. Turn off to stop future repeats." } },
-        "pt-BR" : { "stringUnit" : { "state" : "translated", "value" : "Alterações aplicam-se a esta recorrência. Desligue para parar repetições futuras." } }
-      }
-    },
-    "recurring.form.stopRecurrenceHint" : {
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Turn off recurring expense to stop future repeats." } },
-        "en-US" : { "stringUnit" : { "state" : "translated", "value" : "Turn off recurring expense to stop future repeats." } },
-        "pt-BR" : { "stringUnit" : { "state" : "translated", "value" : "Desligue despesa recorrente para parar repetições futuras." } }
-      }
-    },
-    "recurring.status.paused" : {
-      "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Paused" } },
-        "en-US" : { "stringUnit" : { "state" : "translated", "value" : "Paused" } },
-        "pt-BR" : { "stringUnit" : { "state" : "translated", "value" : "Pausada" } }
-      }
-    },
     "recurring.edit.title" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -5594,6 +5755,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Nenhuma despesa recorrente"
+          }
+        }
+      }
+    },
+    "recurring.form.editLinkedFooter" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Changes apply to this recurring schedule. Turn off to stop future repeats."
+          }
+        },
+        "en-US" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Changes apply to this recurring schedule. Turn off to stop future repeats."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alterações aplicam-se a esta recorrência. Desligue para parar repetições futuras."
           }
         }
       }
@@ -5685,6 +5868,28 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Data de início"
+          }
+        }
+      }
+    },
+    "recurring.form.stopRecurrenceHint" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Turn off recurring expense to stop future repeats."
+          }
+        },
+        "en-US" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Turn off recurring expense to stop future repeats."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Desligue despesa recorrente para parar repetições futuras."
           }
         }
       }
@@ -5850,6 +6055,28 @@
         }
       }
     },
+    "recurring.status.paused" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Paused"
+          }
+        },
+        "en-US" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Paused"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pausada"
+          }
+        }
+      }
+    },
     "recurring.title" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -5869,6 +6096,277 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Despesas recorrentes"
+          }
+        }
+      }
+    },
+    "recurringIncome.confirmDelete.body" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This removes the recurring template. Existing income entries are kept."
+          }
+        },
+        "en-US" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This removes the recurring template. Existing income entries are kept."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Isso remove o modelo recorrente. As receitas existentes são mantidas."
+          }
+        }
+      }
+    },
+    "recurringIncome.confirmDelete.title" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete recurring income?"
+          }
+        },
+        "en-US" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete recurring income?"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Excluir receita recorrente?"
+          }
+        }
+      }
+    },
+    "recurringIncome.edit.title" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Edit recurring income"
+          }
+        },
+        "en-US" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Edit recurring income"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Editar receita recorrente"
+          }
+        }
+      }
+    },
+    "recurringIncome.empty.body" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mark an income entry as recurring when you add it from Income, or link one when editing an existing entry."
+          }
+        },
+        "en-US" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mark an income entry as recurring when you add it from Income, or link one when editing an existing entry."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Marque uma receita como recorrente ao adicioná-la em Receitas, ou vincule ao editar um lançamento existente."
+          }
+        }
+      }
+    },
+    "recurringIncome.empty.title" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No recurring income"
+          }
+        },
+        "en-US" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No recurring income"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nenhuma receita recorrente"
+          }
+        }
+      }
+    },
+    "recurringIncome.form.editLinkedFooter" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Changes apply to the linked recurring template."
+          }
+        },
+        "en-US" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Changes apply to the linked recurring template."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "As alterações se aplicam ao modelo recorrente vinculado."
+          }
+        }
+      }
+    },
+    "recurringIncome.form.footer" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A recurring template will be created for future deposits."
+          }
+        },
+        "en-US" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A recurring template will be created for future deposits."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Um modelo recorrente será criado para recebimentos futuros."
+          }
+        }
+      }
+    },
+    "recurringIncome.form.isRecurring" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recurring income"
+          }
+        },
+        "en-US" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recurring income"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Receita recorrente"
+          }
+        }
+      }
+    },
+    "recurringIncome.form.stopRecurrenceHint" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recurrence is paused. Turn on to schedule future deposits again."
+          }
+        },
+        "en-US" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recurrence is paused. Turn on to schedule future deposits again."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A recorrência está pausada. Ative para agendar recebimentos futuros novamente."
+          }
+        }
+      }
+    },
+    "recurringIncome.nextDue" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Next expected: %@"
+          }
+        },
+        "en-US" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Next expected: %@"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Próximo recebimento: %@"
+          }
+        }
+      }
+    },
+    "recurringIncome.settingsMenu" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recurring income"
+          }
+        },
+        "en-US" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recurring income"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Receitas recorrentes"
+          }
+        }
+      }
+    },
+    "recurringIncome.title" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recurring income"
+          }
+        },
+        "en-US" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recurring income"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Receitas recorrentes"
           }
         }
       }

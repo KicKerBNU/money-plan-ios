@@ -96,9 +96,19 @@ settings:
 - [ ] Production API: default `https://money-plan-backend-production.up.railway.app` (see `APIClient.swift`).
 - [ ] Valid `GoogleService-Info.plist` in `MoneyPlan/Resources/` (not `.example`).
 - [ ] Sign in with Email, Google, and Apple tested on a **real device**.
-- [ ] Version numbers: `MARKETING_VERSION` (user-facing, e.g. `1.0.0`) and `CURRENT_PROJECT_VERSION` (build number, e.g. `1`) in `project.yml`.
+- [ ] Version numbers live in **`project.yml`** (`MARKETING_VERSION`, `CURRENT_PROJECT_VERSION`). `Info.plist` uses `$(MARKETING_VERSION)` / `$(CURRENT_PROJECT_VERSION)` — do not hardcode versions there.
 
-**Every new upload** must increase **build number** (`CURRENT_PROJECT_VERSION`). You may keep the same marketing version for TestFlight betas.
+**Automatic build bump:** **Product → Archive** runs `scripts/bump-ios-version.sh` as a scheme pre-action and increments **`CURRENT_PROJECT_VERSION`** every time. You do not need to edit the build number manually for each upload.
+
+**New App Store version** (e.g. 1.0.1 → 1.0.2): run once before archiving:
+
+```bash
+./scripts/bump-ios-version.sh --marketing 1.0.2
+```
+
+Then archive (Xcode or `./scripts/archive-app-store.sh`). CLI archive uses the same pre-action.
+
+**Every new upload** must increase **build number** (`CURRENT_PROJECT_VERSION`). Marketing version only needs to change when shipping a new App Store version line.
 
 ### 2.2 Archive (Xcode GUI)
 
