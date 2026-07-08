@@ -138,17 +138,38 @@ struct AccountsView: View {
 
     // MARK: - Cards carousel
 
+    /// 1 account: card proportions preserved (~60% width). 2: split the row. 3+: scroll horizontally.
+    @ViewBuilder
     private var cardsCarousel: some View {
-        ScrollView(.horizontal, showsIndicators: false) {
+        if viewModel.accounts.count == 1, let account = viewModel.accounts.first {
+            HStack {
+                AccountCard(account: account, isFlexible: true)
+                    .frame(maxWidth: 230)
+                    .onTapGesture { editingAccount = account }
+                    .contextMenu { rowMenu(for: account) }
+
+                Spacer(minLength: 0)
+            }
+        } else if viewModel.accounts.count == 2 {
             HStack(spacing: 12) {
                 ForEach(viewModel.accounts) { account in
-                    AccountCard(account: account)
+                    AccountCard(account: account, isFlexible: true)
                         .onTapGesture { editingAccount = account }
                         .contextMenu { rowMenu(for: account) }
                 }
             }
+        } else {
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 12) {
+                    ForEach(viewModel.accounts) { account in
+                        AccountCard(account: account, isFlexible: false)
+                            .onTapGesture { editingAccount = account }
+                            .contextMenu { rowMenu(for: account) }
+                    }
+                }
+            }
+            .scrollClipDisabled()
         }
-        .scrollClipDisabled()
     }
 
     // MARK: - All accounts list
@@ -200,6 +221,8 @@ struct AccountsView: View {
 
 private struct AccountCard: View {
     let account: Account
+    /// Flexible cards stretch to share the row (1–2 accounts); fixed cards scroll in the carousel.
+    var isFlexible = false
     @Environment(\.colorScheme) private var colorScheme
 
     private var isDark: Bool { colorScheme == .dark }
@@ -271,7 +294,8 @@ private struct AccountCard: View {
                 .minimumScaleFactor(0.7)
         }
         .padding(16)
-        .frame(width: 190, height: 148, alignment: .topLeading)
+        .frame(maxWidth: isFlexible ? .infinity : nil, alignment: .topLeading)
+        .frame(width: isFlexible ? nil : 190, height: 148, alignment: .topLeading)
         .background(metallicGradient, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
         .overlay {
             RoundedRectangle(cornerRadius: 18, style: .continuous)

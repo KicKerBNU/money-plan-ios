@@ -3525,31 +3525,31 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "The account will be deleted only if no expenses are linked to it."
+            "value" : "The account will be removed from your lists. Past expenses and income linked to it are kept."
           }
         },
         "en-US" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "The account will be deleted only if no expenses are linked to it."
+            "value" : "The account will be removed from your lists. Past expenses and income linked to it are kept."
           }
         },
         "pt" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "A conta só será eliminada se não houver despesas associadas."
+            "value" : "A conta será removida das suas listas. As despesas e receitas antigas associadas são mantidas."
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "A conta só será eliminada se não houver despesas associadas."
+            "value" : "A conta será removida das suas listas. As despesas e receitas antigas associadas são mantidas."
           }
         },
         "pt-PT" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "A conta só será eliminada se não houver despesas associadas."
+            "value" : "A conta será removida das suas listas. As despesas e receitas antigas associadas são mantidas."
           }
         }
       }
