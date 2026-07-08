@@ -169,9 +169,16 @@ enum FinanceAPI {
         return response.data
     }
 
-    static func createAccount(name: String) async throws -> Account {
-        struct Body: Encodable { var name: String }
-        let response: DataResponse<Account> = try await client.fetch("/v1/accounts", method: "POST", body: Body(name: name))
+    static func createAccount(name: String, initialBalance: Double? = nil) async throws -> Account {
+        struct Body: Encodable {
+            var name: String
+            var initialBalance: Double?
+        }
+        let response: DataResponse<Account> = try await client.fetch(
+            "/v1/accounts",
+            method: "POST",
+            body: Body(name: name, initialBalance: initialBalance)
+        )
         return response.data
     }
 
@@ -180,12 +187,27 @@ enum FinanceAPI {
             var name: String
             var initialBalance: Double?
         }
-        let response: DataResponse<Account> = try await client.fetch(
+        // Older backend deployments omit `currentBalance` in the PUT response, so decode it as optional.
+        struct UpdatedAccount: Decodable {
+            let id: Int
+            let name: String
+            let isDefault: Bool
+            let initialBalance: Double
+            let currentBalance: Double?
+        }
+        let response: DataResponse<UpdatedAccount> = try await client.fetch(
             "/v1/accounts/\(id)",
             method: "PUT",
             body: Body(name: name, initialBalance: initialBalance)
         )
-        return response.data
+        let data = response.data
+        return Account(
+            id: data.id,
+            name: data.name,
+            isDefault: data.isDefault,
+            initialBalance: data.initialBalance,
+            currentBalance: data.currentBalance ?? data.initialBalance
+        )
     }
 
     static func setAccountDefault(id: Int) async throws -> Account {

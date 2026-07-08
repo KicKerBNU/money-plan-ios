@@ -29,6 +29,27 @@ Step-by-step guide to ship **`com.moneyplann.app`** from archive → TestFlight 
 2. Fix the issue, bump `CURRENT_PROJECT_VERSION` in `project.yml`, archive, upload a new build.
 3. Attach the new build to the same or a new App Store version and resubmit.
 
+#### Metadata rejections (2.3.4 / 2.3.7) — screenshots & app previews
+
+| Guideline | Issue | Fix |
+|-----------|--------|-----|
+| **2.3.7** | Screenshots mention price (“free”, “no subscription”, “no ads”) | Regenerate screenshots after updating `MarketingScreenshotCopy` — do **not** use pricing language on PNGs. Mention pricing only in the **description** if needed. |
+| **2.3.4** | App previews show **device frames** or marketing overlays instead of in-app UI | Regenerate previews with `./scripts/generate-app-store-previews.sh` — previews must be **full-screen app captures** only (no phone bezel, no headline text). |
+
+**After fixing assets (no new binary required for metadata-only resubmission):**
+
+```bash
+cd money-plan-ios
+./scripts/generate-app-store-screenshots.sh
+./scripts/generate-app-store-previews.sh
+```
+
+1. App Store Connect → version → **Previews and Screenshots** → replace PNGs and `.mov` files for each display size (6.5", 6.9", etc.).
+2. Remove any old uploads that still show “free” copy or device frames.
+3. Reply in Resolution Center or resubmit the version for review.
+
+See `AppStorePreviews/COMPLIANCE.md` and `AppStoreScreenshots/README.md`.
+
 ---
 
 ## Prerequisites
@@ -215,7 +236,7 @@ Bundle keyword + description tweaks into one **1.0.1** submission so you only wa
 **Recommended keywords** (97 chars; avoids overlap with subtitle *Expenses, income & AI chat*):
 
 ```text
-budget,finance,spending,tracker,money,accounts,free,personal,planner,manager,wallet,savings,cash
+budget,finance,spending,tracker,money,accounts,personal,planner,manager,wallet,savings,cash
 ```
 
 ### 3.1 Required metadata (App Store Connect)

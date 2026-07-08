@@ -24,16 +24,11 @@ struct ExpensesView: View {
                 }
             }
             .navigationTitle("expenses.title")
+            .navigationBarTitleDisplayMode(.large)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
-                    HStack {
-                        Button {
-                            showAddSheet = true
-                        } label: {
-                            Image(systemName: "plus")
-                        }
-                        .accessibilityLabel("expenses.actions.addExpense")
-                        SettingsToolbar()
+                    AddAndSettingsToolbar(addAccessibilityLabel: "expenses.actions.addExpense") {
+                        showAddSheet = true
                     }
                 }
             }
@@ -49,6 +44,8 @@ struct ExpensesView: View {
                         recurrence: recurrence
                     )
                 }
+                .presentationDetents([.medium, .large])
+                .presentationDragIndicator(.visible)
             }
             .sheet(item: $editingExpense) { expense in
                 ExpenseFormSheet(
@@ -67,6 +64,8 @@ struct ExpensesView: View {
                         recurrence: recurrence
                     )
                 }
+                .presentationDetents([.medium, .large])
+                .presentationDragIndicator(.visible)
             }
             .confirmationDialog(
                 "expenses.confirmDelete.expenseTitle",

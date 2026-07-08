@@ -18,16 +18,13 @@ struct IncomeView: View {
                 }
             }
             .navigationTitle("income.title")
+            .navigationBarTitleDisplayMode(.large)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button {
+                    AddAndSettingsToolbar(addAccessibilityLabel: "income.actions.addIncome") {
                         showAddSheet = true
-                    } label: {
-                        Image(systemName: "plus")
                     }
-                    .accessibilityLabel("income.actions.addIncome")
                 }
-                ToolbarItem(placement: .topBarTrailing) { SettingsToolbar() }
             }
             .confirmationDialog(
                 "income.confirmDelete.title",
@@ -51,6 +48,8 @@ struct IncomeView: View {
                         recurrence: recurrence
                     )
                 }
+                .presentationDetents([.medium, .large])
+                .presentationDragIndicator(.visible)
             }
             .sheet(item: $editingEntry) { entry in
                 IncomeFormSheet(
@@ -67,6 +66,8 @@ struct IncomeView: View {
                         recurrence: recurrence
                     )
                 }
+                .presentationDetents([.medium, .large])
+                .presentationDragIndicator(.visible)
             }
             .task { await viewModel.load() }
             .refreshable { await viewModel.load() }
@@ -75,119 +76,125 @@ struct IncomeView: View {
 
     private var content: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 16) {
-                Text("income.subtitle")
-                    .font(.subheadline)
-                    .foregroundStyle(AppColors.muted)
+            VStack(spacing: 24) {
+                periodPicker
 
-                HStack {
-                    Button {
-                        Task { await viewModel.shiftPeriod(by: -1) }
-                    } label: {
-                        Image(systemName: "chevron.left")
-                    }
-                    .accessibilityLabel("income.period.prev")
+                totalHero
 
-                    Spacer()
+                recentSection
+            }
+            .padding(.horizontal)
+            .padding(.bottom, 24)
+        }
+        .background(Color(.systemGroupedBackground))
+    }
 
-                    Text(viewModel.periodLabel)
-                        .font(.subheadline.weight(.semibold))
+    private var periodPicker: some View {
+        HStack {
+            Button {
+                Task { await viewModel.shiftPeriod(by: -1) }
+            } label: {
+                Image(systemName: "chevron.left")
+                    .font(.subheadline.weight(.semibold))
+            }
+            .foregroundStyle(AppColors.primary)
+            .accessibilityLabel("income.period.prev")
 
-                    Spacer()
+            Spacer()
 
-                    Button {
-                        Task { await viewModel.shiftPeriod(by: 1) }
-                    } label: {
-                        Image(systemName: "chevron.right")
-                    }
-                    .accessibilityLabel("income.period.next")
-                }
-                .padding(.horizontal, 4)
+            Text(viewModel.periodLabel)
+                .font(.subheadline.weight(.semibold))
 
-                FinanceCard {
-                    KPIView(
-                        title: "income.summary.totalIncome",
-                        value: CurrencyFormatter.format(viewModel.total),
-                        valueColor: AppColors.positive
-                    )
-                    if let last = viewModel.lastDate {
-                        Text(String(format: String(localized: "income.summary.lastEntry"), viewModel.entries.count, DateUtils.formatShortDate(last)))
-                            .font(.caption)
-                            .foregroundStyle(AppColors.muted)
-                    }
+            Spacer()
 
-                    Button {
+            Button {
+                Task { await viewModel.shiftPeriod(by: 1) }
+            } label: {
+                Image(systemName: "chevron.right")
+                    .font(.subheadline.weight(.semibold))
+            }
+            .foregroundStyle(AppColors.primary)
+            .accessibilityLabel("income.period.next")
+        }
+        .padding(.top, 4)
+    }
+
+    private var totalHero: some View {
+        VStack(spacing: 8) {
+            Text("income.summary.totalIncome")
+                .font(.subheadline)
+                .foregroundStyle(AppColors.muted)
+
+            Text(CurrencyFormatter.format(viewModel.total))
+                .font(.system(size: 38, weight: .bold, design: .rounded))
+                .foregroundStyle(AppColors.primary)
+                .minimumScaleFactor(0.7)
+                .lineLimit(1)
+        }
+        .frame(maxWidth: .infinity)
+        .padding(.vertical, 4)
+    }
+
+    private var recentSection: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Text("income.recent.title")
+                .font(.caption.weight(.semibold))
+                .foregroundStyle(AppColors.muted)
+                .textCase(.uppercase)
+                .tracking(0.8)
+                .padding(.leading, 4)
+
+            FinanceCard {
+                if viewModel.entries.isEmpty {
+                    EmptyStateView(
+                        title: "income.empty.title",
+                        message: "income.empty.body",
+                        actionTitle: "income.actions.addIncome"
+                    ) {
                         showAddSheet = true
-                    } label: {
-                        Label("income.actions.addIncome", systemImage: "plus.circle.fill")
-                            .frame(maxWidth: .infinity)
                     }
-                    .buttonStyle(.borderedProminent)
-                    .padding(.top, 8)
-                }
+                    .padding(.vertical, 8)
+                } else {
+                    VStack(spacing: 0) {
+                        ForEach(Array(viewModel.entries.enumerated()), id: \.element.id) { index, entry in
+                            if index > 0 {
+                                Divider()
+                                    .padding(.leading, 52)
+                            }
 
-                FinanceCard {
-                    Text("income.recent.title")
-                        .font(.headline)
-
-                    if viewModel.entries.isEmpty {
-                        VStack(spacing: 8) {
-                            Text("income.empty.title")
-                                .font(.subheadline.weight(.semibold))
-                            Text("income.empty.body")
-                                .font(.caption)
-                                .foregroundStyle(AppColors.muted)
-                                .multilineTextAlignment(.center)
-                        }
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 12)
-                    } else {
-                        ForEach(viewModel.entries) { entry in
-                            HStack(alignment: .top, spacing: 12) {
-                                VStack(alignment: .leading, spacing: 4) {
-                                    HStack(spacing: 6) {
-                                        Text(CurrencyFormatter.format(entry.amount))
-                                            .font(.subheadline.weight(.semibold))
-                                            .foregroundStyle(AppColors.positive)
-                                        if viewModel.isRecurringEntry(entry) {
-                                            Image(systemName: "arrow.up.circle")
-                                                .font(.caption2)
-                                                .foregroundStyle(AppColors.primary)
-                                                .accessibilityLabel("recurringIncome.form.isRecurring")
-                                        }
-                                    }
-                                    Text(entryTitle(for: entry))
-                                        .font(.subheadline)
-                                    Text("\(DateUtils.formatShortDate(entry.date)) · \(entry.accountName ?? "")")
-                                        .font(.caption)
-                                        .foregroundStyle(AppColors.muted)
-                                }
-                                Spacer()
-                                Menu {
-                                    Button {
-                                        Task {
-                                            await viewModel.load()
-                                            editingEntry = viewModel.freshEntry(for: entry)
-                                        }
-                                    } label: {
-                                        Label("common.edit", systemImage: "square.and.pencil")
-                                    }
-                                    Button(role: .destructive) { toDelete = entry } label: {
-                                        Label("common.delete", systemImage: "trash")
-                                    }
-                                } label: {
-                                    Image(systemName: "ellipsis.circle")
-                                        .foregroundStyle(AppColors.muted)
+                            IncomeEntryRow(
+                                entry: entry,
+                                title: entryTitle(for: entry),
+                                isRecurring: viewModel.isRecurringEntry(entry)
+                            )
+                            .contentShape(Rectangle())
+                            .onTapGesture {
+                                Task {
+                                    await viewModel.load()
+                                    editingEntry = viewModel.freshEntry(for: entry)
                                 }
                             }
-                            .padding(.vertical, 6)
+                            .contextMenu {
+                                Button {
+                                    Task {
+                                        await viewModel.load()
+                                        editingEntry = viewModel.freshEntry(for: entry)
+                                    }
+                                } label: {
+                                    Label("common.edit", systemImage: "square.and.pencil")
+                                }
+
+                                Button(role: .destructive) {
+                                    toDelete = entry
+                                } label: {
+                                    Label("common.delete", systemImage: "trash")
+                                }
+                            }
                         }
                     }
                 }
             }
-            .padding()
         }
-        .background(Color(.systemGroupedBackground))
     }
 
     private func entryTitle(for entry: IncomeEntry) -> String {
@@ -195,5 +202,51 @@ struct IncomeView: View {
             return note
         }
         return entry.accountName ?? String(localized: "income.title")
+    }
+}
+
+private struct IncomeEntryRow: View {
+    let entry: IncomeEntry
+    let title: String
+    let isRecurring: Bool
+
+    var body: some View {
+        HStack(alignment: .center, spacing: 12) {
+            IncomeIconView(label: title)
+
+            VStack(alignment: .leading, spacing: 4) {
+                HStack(spacing: 6) {
+                    Text(title)
+                        .font(.body.weight(.medium))
+                        .lineLimit(1)
+
+                    if isRecurring {
+                        Image(systemName: "arrow.triangle.2.circlepath")
+                            .font(.caption2.weight(.semibold))
+                            .foregroundStyle(AppColors.primary)
+                            .accessibilityLabel("recurringIncome.form.isRecurring")
+                    }
+                }
+
+                Text(subtitle)
+                    .font(.caption)
+                    .foregroundStyle(AppColors.muted)
+                    .lineLimit(1)
+            }
+
+            Spacer(minLength: 8)
+
+            Text(CurrencyFormatter.format(entry.amount))
+                .font(.body.weight(.semibold))
+                .foregroundStyle(.primary)
+        }
+        .padding(.vertical, 10)
+    }
+
+    private var subtitle: String {
+        let date = DateUtils.formatShortDate(entry.date)
+        let account = entry.accountName ?? ""
+        if account.isEmpty { return date }
+        return "\(date) · \(account)"
     }
 }

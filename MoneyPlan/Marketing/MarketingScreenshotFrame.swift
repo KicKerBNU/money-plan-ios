@@ -10,13 +10,13 @@ struct MarketingScreenshotCopyItem {
 enum MarketingScreenshotCopy {
     static let expensesHero = MarketingScreenshotCopyItem(
         category: "",
-        headline: "Your free personal finance app",
-        subheadline: "Expenses, income, accounts & AI chat — no subscription"
+        headline: "Your personal finance app",
+        subheadline: "Expenses, income, accounts & AI chat"
     )
     static let expenses = MarketingScreenshotCopyItem(
         category: "EXPENSE TRACKING",
         headline: "How much did I spend this month?",
-        subheadline: "Free personal finance — no subscription, no ads"
+        subheadline: "Track spending, income, and every account"
     )
     static let income = MarketingScreenshotCopyItem(
         category: "INCOME & CASH FLOW",

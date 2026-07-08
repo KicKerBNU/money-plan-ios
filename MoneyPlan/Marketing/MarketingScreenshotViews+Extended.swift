@@ -282,7 +282,7 @@ private struct MarketingSheetHeader: View {
 
 // MARK: - Overview
 
-private struct MarketingOverviewContent: View {
+struct MarketingOverviewContent: View {
     private let data = MarketingScreenshotData.self
 
     var body: some View {
@@ -358,7 +358,7 @@ private struct MarketingOverviewContent: View {
 
 // MARK: - Stats
 
-private struct MarketingStatsContent: View {
+struct MarketingStatsContent: View {
     private let stats = MarketingScreenshotData.monthlyStats
 
     var body: some View {
@@ -419,7 +419,7 @@ private struct MarketingStatsContent: View {
 
 // MARK: - Expenses filtered by category
 
-private struct MarketingExpensesByCategoryContent: View {
+struct MarketingExpensesByCategoryContent: View {
     private let data = MarketingScreenshotData.self
 
     var body: some View {

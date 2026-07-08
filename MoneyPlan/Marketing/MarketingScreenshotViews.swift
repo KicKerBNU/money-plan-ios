@@ -250,7 +250,7 @@ struct MarketingExpenseRow: View {
 
 // MARK: - Income
 
-private struct MarketingIncomeContent: View {
+struct MarketingIncomeContent: View {
     private let data = MarketingScreenshotData.self
 
     var body: some View {
@@ -369,7 +369,7 @@ private struct MarketingChatBubble: View {
 
 // MARK: - Accounts
 
-private struct MarketingAccountsContent: View {
+struct MarketingAccountsContent: View {
     private let accounts = MarketingScreenshotData.accounts
 
     var body: some View {

@@ -7,6 +7,29 @@ enum AppPreviewSpec {
     static let fps = 30
     static let durationSeconds = 20.0
     static var frameCount: Int { Int(durationSeconds * Double(fps)) }
+
+    /// Logical iPhone canvas used for marketing UI before scaling to preview pixels.
+    static let designWidth: CGFloat = 390
+    static let designHeight: CGFloat = 844
+}
+
+/// Full-screen in-app UI for App Store previews. No device frame or marketing headline overlays.
+struct MarketingAppPreviewScreen<Content: View>: View {
+    let tab: MarketingTab
+    @ViewBuilder var content: () -> Content
+
+    var body: some View {
+        let scale = AppPreviewSpec.width / AppPreviewSpec.designWidth
+
+        MarketingScreenshotShell(tab: tab, content: content)
+            .frame(width: AppPreviewSpec.designWidth, height: AppPreviewSpec.designHeight)
+            .scaleEffect(scale, anchor: .top)
+            .frame(width: AppPreviewSpec.width, height: AppPreviewSpec.height, alignment: .top)
+            .clipped()
+            .background(Color(.systemGroupedBackground))
+            .preferredColorScheme(.light)
+            .tint(AppColors.primary)
+    }
 }
 
 enum AppPreviewID: Int, CaseIterable {
@@ -40,10 +63,8 @@ struct MarketingAppPreviewFrame: View {
             case .incomeAndAccounts:
                 incomeAndAccountsFrame
             case .aiAssistant:
-                MarketingScreenshotFrame(copy: MarketingScreenshotCopy.chatbot) {
-                    MarketingScreenshotShell(tab: .chat) {
-                        MarketingChatbotAnimatedContent(progress: progress)
-                    }
+                MarketingAppPreviewScreen(tab: .chat) {
+                    MarketingChatbotAnimatedContent(progress: progress)
                 }
             }
         }
@@ -59,9 +80,9 @@ struct MarketingAppPreviewFrame: View {
     private var trackSpendingFrame: some View {
         tripleCrossfade(
             segments: [
-                AnyView(MarketingExpensesScreenshot()),
-                AnyView(MarketingExpensesByCategoryScreenshot()),
-                AnyView(MarketingStatsScreenshot()),
+                AnyView(MarketingAppPreviewScreen(tab: .expenses) { MarketingExpensesContent() }),
+                AnyView(MarketingAppPreviewScreen(tab: .expenses) { MarketingExpensesByCategoryContent() }),
+                AnyView(MarketingAppPreviewScreen(tab: .expenses) { MarketingStatsContent() }),
             ]
         )
     }
@@ -72,9 +93,9 @@ struct MarketingAppPreviewFrame: View {
     private var incomeAndAccountsFrame: some View {
         tripleCrossfade(
             segments: [
-                AnyView(MarketingIncomeScreenshot()),
-                AnyView(MarketingAccountsScreenshot()),
-                AnyView(MarketingOverviewScreenshot()),
+                AnyView(MarketingAppPreviewScreen(tab: .income) { MarketingIncomeContent() }),
+                AnyView(MarketingAppPreviewScreen(tab: .accounts) { MarketingAccountsContent() }),
+                AnyView(MarketingAppPreviewScreen(tab: .expenses) { MarketingOverviewContent() }),
             ]
         )
     }

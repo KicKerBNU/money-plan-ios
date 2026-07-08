@@ -7,6 +7,10 @@ final class AccountsViewModel {
     var isLoading = true
     var errorMessage: String?
 
+    var totalBalance: Double {
+        accounts.reduce(0) { $0 + $1.currentBalance }
+    }
+
     func load() async {
         isLoading = true
         errorMessage = nil
@@ -18,13 +22,22 @@ final class AccountsViewModel {
         }
     }
 
-    func create(name: String) async throws {
-        _ = try await FinanceAPI.createAccount(name: name)
+    func create(name: String, initialBalance: Double, setDefault: Bool) async throws {
+        let account = try await FinanceAPI.createAccount(
+            name: name,
+            initialBalance: initialBalance == 0 ? nil : initialBalance
+        )
+        if setDefault {
+            _ = try await FinanceAPI.setAccountDefault(id: account.id)
+        }
         await load()
     }
 
-    func rename(id: Int, name: String) async throws {
-        _ = try await FinanceAPI.updateAccount(id: id, name: name)
+    func update(id: Int, name: String, initialBalance: Double, setDefault: Bool) async throws {
+        _ = try await FinanceAPI.updateAccount(id: id, name: name, initialBalance: initialBalance)
+        if setDefault {
+            _ = try await FinanceAPI.setAccountDefault(id: id)
+        }
         await load()
     }
 
@@ -32,29 +45,13 @@ final class AccountsViewModel {
         try await FinanceAPI.deleteAccount(id: id)
         await load()
     }
-
-    func moveAndSetDefault(from source: IndexSet, to destination: Int) async {
-        var ordered = accounts
-        ordered.move(fromOffsets: source, toOffset: destination)
-        let snapshot = accounts
-        accounts = ordered
-        guard let first = ordered.first else { return }
-        do {
-            _ = try await FinanceAPI.setAccountDefault(id: first.id)
-            await load()
-        } catch {
-            accounts = snapshot
-            await load()
-        }
-    }
 }
 
 struct AccountsView: View {
     @Environment(MoneyPreferences.self) private var money
     @State private var viewModel = AccountsViewModel()
-    @State private var newName = ""
-    @State private var renaming: Account?
-    @State private var renameText = ""
+    @State private var showAddSheet = false
+    @State private var editingAccount: Account?
     @State private var toDelete: Account?
 
     var body: some View {
@@ -68,32 +65,32 @@ struct AccountsView: View {
                 }
             }
             .navigationTitle("accountsPage.title")
+            .navigationBarTitleDisplayMode(.large)
             .toolbar {
-                ToolbarItem(placement: .topBarTrailing) { SettingsToolbar() }
-            }
-            .sheet(item: $renaming) { account in
-                NavigationStack {
-                    Form {
-                        TextField("accountsPage.listTitle", text: $renameText)
-                    }
-                    .navigationTitle("expenses.renameModal.editAccount")
-                    .navigationBarTitleDisplayMode(.inline)
-                    .toolbar {
-                        ToolbarItem(placement: .cancellationAction) {
-                            Button("common.cancel") { renaming = nil }
-                        }
-                        ToolbarItem(placement: .confirmationAction) {
-                            Button("common.save") {
-                                Task {
-                                    try? await viewModel.rename(id: account.id, name: renameText)
-                                    renaming = nil
-                                }
-                            }
-                        }
+                ToolbarItem(placement: .topBarTrailing) {
+                    AddAndSettingsToolbar(addAccessibilityLabel: "accountsPage.actions.addAccount") {
+                        showAddSheet = true
                     }
                 }
-                .presentationDetents([.medium])
-                .onAppear { renameText = account.name }
+            }
+            .sheet(isPresented: $showAddSheet) {
+                AccountFormSheet { name, balance, setDefault in
+                    try await viewModel.create(name: name, initialBalance: balance, setDefault: setDefault)
+                }
+                .presentationDetents([.medium, .large])
+                .presentationDragIndicator(.visible)
+            }
+            .sheet(item: $editingAccount) { account in
+                AccountFormSheet(editing: account) { name, balance, setDefault in
+                    try await viewModel.update(
+                        id: account.id,
+                        name: name,
+                        initialBalance: balance,
+                        setDefault: setDefault
+                    )
+                }
+                .presentationDetents([.medium, .large])
+                .presentationDragIndicator(.visible)
             }
             .confirmationDialog(
                 "expenses.confirmDelete.accountTitle",
@@ -116,100 +113,211 @@ struct AccountsView: View {
 
     private var content: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 16) {
-                Text("accountsPage.subtitle")
-                    .font(.subheadline)
-                    .foregroundStyle(AppColors.muted)
-
-                FinanceCard {
-                    TextField("expenses.addAccount.placeholder", text: $newName)
-                    Button("common.add") {
-                        Task {
-                            let name = newName.trimmingCharacters(in: .whitespaces)
-                            guard !name.isEmpty else { return }
-                            try? await viewModel.create(name: name)
-                            newName = ""
+            VStack(alignment: .leading, spacing: 24) {
+                if viewModel.accounts.isEmpty {
+                    FinanceCard {
+                        EmptyStateView(
+                            title: "accountsPage.empty.title",
+                            message: "accountsPage.empty.body",
+                            actionTitle: "accountsPage.actions.addAccount"
+                        ) {
+                            showAddSheet = true
                         }
+                        .padding(.vertical, 8)
                     }
-                    .buttonStyle(.borderedProminent)
-                    .frame(maxWidth: .infinity)
-                }
-
-                FinanceCard {
-                    Text("accountsPage.listTitle")
-                        .font(.headline)
-                    Text("accountsPage.dragHint")
-                        .font(.caption)
-                        .foregroundStyle(AppColors.muted)
-
-                    if viewModel.accounts.isEmpty {
-                        Text("accountsPage.empty")
-                            .foregroundStyle(AppColors.muted)
-                    } else {
-                        List {
-                            ForEach(viewModel.accounts) { account in
-                                AccountRow(account: account) {
-                                    renaming = account
-                                } onDelete: {
-                                    toDelete = account
-                                }
-                            }
-                            .onMove { source, destination in
-                                Task { await viewModel.moveAndSetDefault(from: source, to: destination) }
-                            }
-                        }
-                        .listStyle(.plain)
-                        .frame(minHeight: CGFloat(viewModel.accounts.count) * 80)
-                    }
+                } else {
+                    cardsCarousel
+                    allAccountsSection
                 }
             }
-            .padding()
+            .padding(.horizontal)
+            .padding(.bottom, 24)
         }
         .background(Color(.systemGroupedBackground))
     }
+
+    // MARK: - Cards carousel
+
+    private var cardsCarousel: some View {
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: 12) {
+                ForEach(viewModel.accounts) { account in
+                    AccountCard(account: account)
+                        .onTapGesture { editingAccount = account }
+                        .contextMenu { rowMenu(for: account) }
+                }
+            }
+        }
+        .scrollClipDisabled()
+    }
+
+    // MARK: - All accounts list
+
+    private var allAccountsSection: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Text("accountsPage.allAccounts")
+                .font(.caption.weight(.semibold))
+                .foregroundStyle(AppColors.muted)
+                .textCase(.uppercase)
+                .tracking(0.8)
+                .padding(.leading, 4)
+
+            FinanceCard {
+                VStack(spacing: 0) {
+                    ForEach(Array(viewModel.accounts.enumerated()), id: \.element.id) { index, account in
+                        if index > 0 {
+                            Divider()
+                                .padding(.leading, 52)
+                        }
+
+                        AccountRow(account: account)
+                            .contentShape(Rectangle())
+                            .onTapGesture { editingAccount = account }
+                            .contextMenu { rowMenu(for: account) }
+                    }
+                }
+            }
+        }
+    }
+
+    @ViewBuilder
+    private func rowMenu(for account: Account) -> some View {
+        Button {
+            editingAccount = account
+        } label: {
+            Label("common.edit", systemImage: "square.and.pencil")
+        }
+
+        Button(role: .destructive) {
+            toDelete = account
+        } label: {
+            Label("common.delete", systemImage: "trash")
+        }
+    }
 }
+
+// MARK: - Carousel card
+
+private struct AccountCard: View {
+    let account: Account
+    @Environment(\.colorScheme) private var colorScheme
+
+    private var isDark: Bool { colorScheme == .dark }
+
+    /// Diagonal metallic sheen (light silver / dark charcoal) matching the design mockup.
+    private var metallicGradient: LinearGradient {
+        let stops: [Gradient.Stop] = isDark
+            ? [
+                .init(color: Color(white: 0.32), location: 0.0),
+                .init(color: Color(white: 0.17), location: 0.38),
+                .init(color: Color(white: 0.08), location: 0.62),
+                .init(color: Color(white: 0.15), location: 1.0),
+            ]
+            : [
+                .init(color: Color(white: 0.97), location: 0.0),
+                .init(color: Color(white: 0.84), location: 0.38),
+                .init(color: Color(white: 0.72), location: 0.62),
+                .init(color: Color(white: 0.88), location: 1.0),
+            ]
+        return LinearGradient(stops: stops, startPoint: .topLeading, endPoint: .bottomTrailing)
+    }
+
+    private var tileBackground: Color {
+        isDark ? Color.white.opacity(0.12) : Color.black.opacity(0.08)
+    }
+
+    private var badgeBackground: Color {
+        isDark ? Color.white.opacity(0.14) : Color.black.opacity(0.82)
+    }
+
+    private var badgeForeground: Color {
+        .white
+    }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            HStack(alignment: .top) {
+                Image(systemName: AccountIcon.symbol(for: account.name))
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(isDark ? .white : .black)
+                    .frame(width: 34, height: 34)
+                    .background(tileBackground, in: RoundedRectangle(cornerRadius: 9, style: .continuous))
+
+                Spacer(minLength: 8)
+
+                if account.isDefault {
+                    Text("accountsPage.defaultBadge")
+                        .font(.caption2.weight(.semibold))
+                        .textCase(.uppercase)
+                        .tracking(0.6)
+                        .foregroundStyle(badgeForeground)
+                        .padding(.horizontal, 10)
+                        .padding(.vertical, 4)
+                        .background(badgeBackground, in: Capsule())
+                }
+            }
+
+            Spacer(minLength: 20)
+
+            Text(account.name)
+                .font(.footnote)
+                .foregroundStyle(isDark ? Color.white.opacity(0.7) : Color.black.opacity(0.55))
+                .lineLimit(1)
+
+            Text(CurrencyFormatter.format(account.currentBalance))
+                .font(.title3.weight(.bold))
+                .foregroundStyle(isDark ? .white : .black)
+                .lineLimit(1)
+                .minimumScaleFactor(0.7)
+        }
+        .padding(16)
+        .frame(width: 190, height: 148, alignment: .topLeading)
+        .background(metallicGradient, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
+        .overlay {
+            RoundedRectangle(cornerRadius: 18, style: .continuous)
+                .strokeBorder(
+                    LinearGradient(
+                        colors: isDark
+                            ? [Color.white.opacity(0.22), Color.white.opacity(0.04)]
+                            : [Color.white.opacity(0.9), Color.black.opacity(0.06)],
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    ),
+                    lineWidth: 1
+                )
+        }
+        .shadow(color: .black.opacity(isDark ? 0.4 : 0.12), radius: 10, y: 6)
+    }
+}
+
+// MARK: - List row
 
 private struct AccountRow: View {
     let account: Account
-    let onRename: () -> Void
-    let onDelete: () -> Void
 
     var body: some View {
-        HStack {
-            Image(systemName: "line.3.horizontal")
-                .foregroundStyle(AppColors.muted)
-                .accessibilityLabel("accountsPage.dragHandleAria")
+        HStack(alignment: .center, spacing: 12) {
+            AccountIconView(name: account.name)
 
-            VStack(alignment: .leading, spacing: 4) {
-                HStack {
-                    Text(account.name)
-                        .font(.subheadline.weight(.semibold))
-                    if account.isDefault {
-                        Text("accountsPage.defaultBadge")
-                            .font(.caption2.weight(.semibold))
-                            .padding(.horizontal, 8)
-                            .padding(.vertical, 2)
-                            .background(AppColors.primary.opacity(0.15), in: Capsule())
-                    }
+            HStack(spacing: 6) {
+                Text(account.name)
+                    .font(.body.weight(.medium))
+                    .lineLimit(1)
+
+                if account.isDefault {
+                    Image(systemName: "star.fill")
+                        .font(.caption2)
+                        .foregroundStyle(AppColors.primary)
+                        .accessibilityLabel("accountsPage.defaultBadge")
                 }
-                Text("accountsPage.balanceCaption")
-                    .font(.caption)
-                    .foregroundStyle(AppColors.muted)
-                Text(CurrencyFormatter.format(account.currentBalance))
-                    .font(.title3.weight(.bold))
             }
-            Spacer()
-            Menu {
-                Button { onRename() } label: {
-                    Label("common.edit", systemImage: "square.and.pencil")
-                }
-                Button(role: .destructive) { onDelete() } label: {
-                    Label("common.delete", systemImage: "trash")
-                }
-            } label: {
-                Image(systemName: "ellipsis.circle")
-            }
+
+            Spacer(minLength: 8)
+
+            Text(CurrencyFormatter.format(account.currentBalance))
+                .font(.body.weight(.semibold))
+                .foregroundStyle(account.currentBalance < 0 ? AppColors.danger : .primary)
         }
-        .padding(.vertical, 6)
+        .padding(.vertical, 10)
     }
 }

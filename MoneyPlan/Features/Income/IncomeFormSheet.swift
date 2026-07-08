@@ -33,25 +33,36 @@ struct IncomeFormSheet: View {
     var body: some View {
         NavigationStack {
             Form {
-                DatePicker("income.form.date", selection: $date, displayedComponents: .date)
+                Section {
+                    DatePicker("income.form.date", selection: $date, displayedComponents: .date)
 
-                TextField("income.form.amount", text: $amountText)
-                    .keyboardType(.decimalPad)
+                    HStack {
+                        Text("income.form.amount")
+                        Spacer()
+                        TextField("0.00", text: $amountText)
+                            .keyboardType(.decimalPad)
+                            .multilineTextAlignment(.trailing)
+                            .foregroundStyle(amountText.isEmpty ? AppColors.muted : .primary)
+                    }
 
-                if accounts.isEmpty {
-                    Text("expenses.form.account")
-                        .font(.footnote)
-                        .foregroundStyle(AppColors.muted)
-                } else {
-                    Picker("income.form.account", selection: $accountId) {
-                        ForEach(accounts) { acc in
-                            Text(acc.name).tag(acc.id)
+                    if accounts.isEmpty {
+                        LabeledContent("income.form.account") {
+                            Text("—")
+                                .foregroundStyle(AppColors.muted)
+                        }
+                    } else {
+                        Picker("income.form.account", selection: $accountId) {
+                            ForEach(accounts) { acc in
+                                Text(acc.name).tag(acc.id)
+                            }
                         }
                     }
                 }
 
-                TextField("income.form.notePlaceholder", text: $note, axis: .vertical)
-                    .lineLimit(2 ... 4)
+                Section {
+                    TextField("income.form.notePlaceholder", text: $note, axis: .vertical)
+                        .lineLimit(1 ... 3)
+                }
 
                 Section {
                     Toggle("recurringIncome.form.isRecurring", isOn: $isRecurring)
@@ -74,9 +85,11 @@ struct IncomeFormSheet: View {
                 }
 
                 if !errorMessage.isEmpty {
-                    Text(errorMessage)
-                        .foregroundStyle(AppColors.danger)
-                        .font(.footnote)
+                    Section {
+                        Text(errorMessage)
+                            .foregroundStyle(AppColors.danger)
+                            .font(.footnote)
+                    }
                 }
             }
             .navigationTitle(editing == nil ? "income.form.addTitle" : "income.form.editTitle")
@@ -102,6 +115,7 @@ struct IncomeFormSheet: View {
                 await loadLinkedRecurringIfNeeded()
             }
         }
+        .tint(AppColors.primary)
         .interactiveDismissDisabled(isSaving)
     }
 
@@ -111,6 +125,7 @@ struct IncomeFormSheet: View {
 
     private func populateFormFields() {
         guard let editing else {
+            amountText = ""
             if let acc = DefaultAccountPicker.pick(from: accounts) {
                 accountId = acc.id
             }
@@ -118,7 +133,7 @@ struct IncomeFormSheet: View {
         }
 
         date = DateUtils.parseLocalISODate(editing.date) ?? Date()
-        amountText = String(editing.amount)
+        amountText = formatAmountForField(editing.amount)
         note = editing.note ?? ""
 
         if let aid = editing.accountId, aid > 0 {
@@ -126,6 +141,13 @@ struct IncomeFormSheet: View {
         } else if let acc = DefaultAccountPicker.pick(from: accounts) {
             accountId = acc.id
         }
+    }
+
+    private func formatAmountForField(_ value: Double) -> String {
+        if value.truncatingRemainder(dividingBy: 1) == 0 {
+            return String(format: "%.0f", value)
+        }
+        return String(value)
     }
 
     private func loadLinkedRecurringIfNeeded() async {
