@@ -6,9 +6,18 @@ struct ExpensesView: View {
     @State private var viewModel = ExpensesViewModel()
     @State private var editingExpense: Expense?
     @State private var expenseToDelete: Expense?
-    @State private var showTripRange = false
-    @State private var tripStart = Date()
-    @State private var tripEnd = Date()
+
+    /// Segment / legend colors assigned by breakdown rank (matches design mockup).
+    private static let chartPalette: [Color] = [
+        AppColors.primary,
+        Color(.systemRed),
+        Color(.systemYellow),
+        Color(.systemGray),
+        Color(.systemPurple),
+        Color(.systemOrange),
+        Color(.systemBlue),
+        Color(.systemTeal),
+    ]
 
     var body: some View {
         // Re-render when the user picks a new currency in Settings.
@@ -84,29 +93,6 @@ struct ExpensesView: View {
             } message: {
                 Text("expenses.confirmDelete.expenseBody")
             }
-            .sheet(isPresented: $showTripRange) {
-                NavigationStack {
-                    Form {
-                        DatePicker("expenses.filters.from", selection: $tripStart, displayedComponents: .date)
-                        DatePicker("expenses.filters.to", selection: $tripEnd, displayedComponents: .date)
-                    }
-                    .navigationTitle("expenses.filters.tripWeekModalTitle")
-                    .navigationBarTitleDisplayMode(.inline)
-                    .toolbar {
-                        ToolbarItem(placement: .cancellationAction) {
-                            Button("common.cancel") { showTripRange = false }
-                        }
-                        ToolbarItem(placement: .confirmationAction) {
-                            Button("expenses.filters.applyRange") {
-                                viewModel.dateRangeStart = DateUtils.localISODate(from: tripStart)
-                                viewModel.dateRangeEnd = DateUtils.localISODate(from: tripEnd)
-                                showTripRange = false
-                            }
-                        }
-                    }
-                }
-                .presentationDetents([.medium])
-            }
             .task { await viewModel.load() }
             .refreshable { await viewModel.load() }
         }
@@ -115,13 +101,8 @@ struct ExpensesView: View {
     private var expensesContent: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 16) {
-                Text("\(viewModel.expenses.count) \(String(localized: "expenses.entriesThisMonth"))")
-                    .font(.subheadline)
-                    .foregroundStyle(AppColors.muted)
-
-                summaryRow
-                filterRow
-                categoryChips
+                periodPicker
+                summaryCard
 
                 if viewModel.filteredExpenses.isEmpty {
                     EmptyStateView(
@@ -132,15 +113,7 @@ struct ExpensesView: View {
                         showAddSheet = true
                     }
                 } else {
-                    expenseList
-                }
-
-                if !viewModel.categoryBreakdown.isEmpty {
-                    categoryPanel
-                }
-
-                if !viewModel.accounts.isEmpty {
-                    accountsPanel
+                    groupedList
                 }
             }
             .padding()
@@ -148,144 +121,157 @@ struct ExpensesView: View {
         .background(Color(.systemGroupedBackground))
     }
 
-    private var summaryRow: some View {
+    private var periodPicker: some View {
+        HStack {
+            Button {
+                Task { await viewModel.shiftPeriod(by: -1) }
+            } label: {
+                Image(systemName: "chevron.left")
+                    .font(.subheadline.weight(.semibold))
+            }
+            .foregroundStyle(AppColors.primary)
+            .accessibilityLabel("expenses.period.prev")
+
+            Spacer()
+
+            Text(viewModel.periodLabel)
+                .font(.subheadline.weight(.semibold))
+
+            Spacer()
+
+            Button {
+                Task { await viewModel.shiftPeriod(by: 1) }
+            } label: {
+                Image(systemName: "chevron.right")
+                    .font(.subheadline.weight(.semibold))
+            }
+            .foregroundStyle(AppColors.primary)
+            .accessibilityLabel("expenses.period.next")
+        }
+        .padding(.top, 4)
+    }
+
+    // MARK: - Summary card
+
+    private var summaryCard: some View {
         FinanceCard {
-            LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 12) {
-                KPIView(title: "expenses.summary.totalSpent", value: CurrencyFormatter.format(viewModel.totalSpent))
-                KPIView(title: "expenses.summary.cashFlow", value: CurrencyFormatter.formatSigned(viewModel.cashFlow), valueColor: viewModel.cashFlow >= 0 ? AppColors.positive : AppColors.danger)
-            }
-        }
-    }
+            VStack(alignment: .leading, spacing: 14) {
+                HStack(alignment: .top) {
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("expenses.summary.totalSpent")
+                            .font(.caption)
+                            .foregroundStyle(AppColors.muted)
+                        Text(CurrencyFormatter.format(viewModel.totalSpent))
+                            .font(.title3.weight(.bold))
+                    }
 
-    private var filterRow: some View {
-        ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: 8) {
-                FilterChip(localized: "expenses.filters.last3Days", isSelected: false) { viewModel.applyQuickRange(days: 3) }
-                FilterChip(localized: "expenses.filters.last7Days", isSelected: false) { viewModel.applyQuickRange(days: 7) }
-                FilterChip(localized: "expenses.filters.tripWeek", isSelected: false) { showTripRange = true }
-                if viewModel.dateRangeStart != nil {
-                    FilterChip(localized: "expenses.filters.clearDate", isSelected: true) { viewModel.clearDateRange() }
-                }
-            }
-        }
-    }
+                    Spacer()
 
-    private var categoryChips: some View {
-        ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: 8) {
-                FilterChip(localized: "expenses.filters.all", isSelected: viewModel.selectedCategoryIds.isEmpty) {
-                    viewModel.selectedCategoryIds.removeAll()
-                }
-                ForEach(viewModel.categories.prefix(6)) { cat in
-                    FilterChip(literal: cat.name, isSelected: viewModel.selectedCategoryIds.contains(cat.id)) {
-                        if viewModel.selectedCategoryIds.contains(cat.id) {
-                            viewModel.selectedCategoryIds.remove(cat.id)
-                        } else {
-                            viewModel.selectedCategoryIds.insert(cat.id)
-                        }
+                    VStack(alignment: .trailing, spacing: 4) {
+                        Text("expenses.summary.cashFlow")
+                            .font(.caption)
+                            .foregroundStyle(AppColors.muted)
+                        Text(CurrencyFormatter.formatSigned(viewModel.cashFlow))
+                            .font(.title3.weight(.bold))
+                            .foregroundStyle(viewModel.cashFlow >= 0 ? AppColors.positive : AppColors.danger)
                     }
                 }
-            }
-        }
-    }
 
-    private var expenseList: some View {
-        FinanceCard {
-            if viewModel.canReorder {
-                Text("expenses.list.reorderHint")
-                    .font(.caption)
-                    .foregroundStyle(AppColors.muted)
-                    .padding(.bottom, 8)
-            }
-
-            ForEach(viewModel.filteredExpenses) { expense in
-                ExpenseRow(expense: expense) {
-                    editingExpense = expense
-                } onDelete: {
-                    expenseToDelete = expense
+                if !viewModel.categoryBreakdown.isEmpty, viewModel.totalSpent > 0 {
+                    categoryBar
+                    legendGrid
                 }
-                Divider()
             }
         }
     }
 
-    private var categoryPanel: some View {
-        FinanceCard {
-            Text("expenses.panels.byCategory")
-                .font(.headline)
-            ForEach(viewModel.categoryBreakdown, id: \.name) { row in
-                HStack {
-                    CategoryIconView(name: row.name)
+    private var categoryBar: some View {
+        GeometryReader { geo in
+            HStack(spacing: 0) {
+                ForEach(Array(viewModel.categoryBreakdown.enumerated()), id: \.element.name) { index, row in
+                    Rectangle()
+                        .fill(chartColor(at: index))
+                        .frame(width: geo.size.width * row.amount / viewModel.totalSpent)
+                }
+            }
+        }
+        .frame(height: 10)
+        .clipShape(Capsule())
+    }
+
+    private var legendGrid: some View {
+        LazyVGrid(
+            columns: [GridItem(.flexible(), alignment: .leading), GridItem(.flexible(), alignment: .leading)],
+            alignment: .leading,
+            spacing: 10
+        ) {
+            ForEach(Array(viewModel.categoryBreakdown.enumerated()), id: \.element.name) { index, row in
+                HStack(spacing: 6) {
+                    Circle()
+                        .fill(chartColor(at: index))
+                        .frame(width: 8, height: 8)
                     Text(row.name)
-                    Spacer()
-                    Text(CurrencyFormatter.format(row.amount))
-                        .font(.subheadline.weight(.semibold))
-                }
-                .padding(.vertical, 4)
-            }
-        }
-    }
-
-    private var accountsPanel: some View {
-        FinanceCard {
-            Text("expenses.panels.byAccount")
-                .font(.headline)
-            ForEach(viewModel.accounts) { account in
-                HStack {
-                    Image(systemName: "building.columns.fill")
+                        .font(.caption)
                         .foregroundStyle(AppColors.muted)
-                    Text(account.name)
-                    Spacer()
-                    Text(CurrencyFormatter.format(account.currentBalance))
-                        .font(.subheadline.weight(.semibold))
+                        .lineLimit(1)
+                    Text(CurrencyFormatter.formatSigned(-row.amount))
+                        .font(.caption.weight(.semibold))
+                        .lineLimit(1)
                 }
-                .padding(.vertical, 4)
             }
         }
     }
-}
 
-private struct FilterChip: View {
-    private enum Title {
-        case localized(LocalizedStringKey)
-        case literal(String)
+    private func chartColor(at index: Int) -> Color {
+        index < Self.chartPalette.count ? Self.chartPalette[index] : Color(.systemGray3)
     }
 
-    private let title: Title
-    private let isSelected: Bool
-    private let action: () -> Void
+    // MARK: - Date-grouped list
 
-    /// Catalog key — must use a distinct label so Swift does not pick `String` overload
-    /// for literals like `"expenses.filters.last3Days"` (both inits would otherwise match).
-    init(localized title: LocalizedStringKey, isSelected: Bool, action: @escaping () -> Void) {
-        self.title = .localized(title)
-        self.isSelected = isSelected
-        self.action = action
-    }
+    private var groupedList: some View {
+        VStack(alignment: .leading, spacing: 20) {
+            ForEach(viewModel.dateGroups, id: \.date) { group in
+                VStack(spacing: 8) {
+                    HStack {
+                        Text(dayHeader(group.date))
+                            .font(.caption.weight(.semibold))
+                            .tracking(0.6)
+                            .foregroundStyle(AppColors.muted)
+                        Spacer()
+                        Text(CurrencyFormatter.formatSigned(-group.total))
+                            .font(.caption.weight(.semibold))
+                            .foregroundStyle(AppColors.muted)
+                    }
+                    .padding(.horizontal, 4)
 
-    /// User-defined labels (e.g. category names) — not looked up in the string catalog.
-    init(literal title: String, isSelected: Bool, action: @escaping () -> Void) {
-        self.title = .literal(title)
-        self.isSelected = isSelected
-        self.action = action
-    }
+                    VStack(spacing: 0) {
+                        ForEach(group.items) { expense in
+                            ExpenseRow(expense: expense) {
+                                editingExpense = expense
+                            } onDelete: {
+                                expenseToDelete = expense
+                            }
 
-    var body: some View {
-        Button(action: action) {
-            Group {
-                switch title {
-                case .localized(let key):
-                    Text(key)
-                case .literal(let value):
-                    Text(value)
+                            if expense.id != group.items.last?.id {
+                                Divider()
+                                    .padding(.leading, 58)
+                            }
+                        }
+                    }
+                    .background(AppColors.surface, in: RoundedRectangle(cornerRadius: 16))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 16)
+                            .strokeBorder(Color.primary.opacity(0.08))
+                    )
                 }
             }
-            .font(.caption.weight(.medium))
-            .padding(.horizontal, 12)
-            .padding(.vertical, 8)
-            .background(isSelected ? AppColors.primary.opacity(0.2) : AppColors.surfaceSoft, in: Capsule())
         }
-        .buttonStyle(.plain)
+    }
+
+    /// "2026-07-01" -> "JUL 1" (localized month abbreviation).
+    private func dayHeader(_ iso: String) -> String {
+        guard let date = DateUtils.parseLocalISODate(iso) else { return iso }
+        return date.formatted(.dateTime.month(.abbreviated).day()).uppercased()
     }
 }
 
@@ -294,37 +280,43 @@ private struct ExpenseRow: View {
     let onEdit: () -> Void
     let onDelete: () -> Void
 
+    private var subtitle: String {
+        var parts = [DateUtils.formatShortDate(expense.date), expense.accountName]
+        if let note = expense.note, !note.isEmpty {
+            parts.append(note)
+        }
+        return parts.joined(separator: " · ")
+    }
+
     var body: some View {
         HStack(spacing: 12) {
             CategoryIconView(name: expense.categoryName)
+
             VStack(alignment: .leading, spacing: 2) {
                 Text(expense.categoryName)
                     .font(.subheadline.weight(.semibold))
-                Text("\(DateUtils.formatShortDate(expense.date)) · \(expense.accountName)")
+                Text(subtitle)
                     .font(.caption)
                     .foregroundStyle(AppColors.muted)
-                if let note = expense.note, !note.isEmpty {
-                    Text(note)
-                        .font(.caption)
-                        .foregroundStyle(AppColors.muted)
-                        .lineLimit(1)
-                }
+                    .lineLimit(1)
             }
-            Spacer()
-            Text(CurrencyFormatter.format(expense.amount))
+
+            Spacer(minLength: 8)
+
+            Text(CurrencyFormatter.formatSigned(-expense.amount))
                 .font(.subheadline.weight(.bold))
-            Menu {
-                Button { onEdit() } label: {
-                    Label("common.edit", systemImage: "square.and.pencil")
-                }
-                Button(role: .destructive) { onDelete() } label: {
-                    Label("common.delete", systemImage: "trash")
-                }
-            } label: {
-                Image(systemName: "ellipsis.circle")
-                    .foregroundStyle(AppColors.muted)
+        }
+        .padding(.horizontal, 14)
+        .padding(.vertical, 12)
+        .contentShape(Rectangle())
+        .onTapGesture(perform: onEdit)
+        .contextMenu {
+            Button { onEdit() } label: {
+                Label("common.edit", systemImage: "square.and.pencil")
+            }
+            Button(role: .destructive) { onDelete() } label: {
+                Label("common.delete", systemImage: "trash")
             }
         }
-        .padding(.vertical, 4)
     }
 }

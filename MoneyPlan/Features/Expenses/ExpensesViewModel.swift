@@ -11,46 +11,65 @@ final class ExpensesViewModel {
     var isLoading = true
     var errorMessage: String?
     var searchText = ""
-    var selectedCategoryIds: Set<Int> = []
-    var dateRangeStart: String?
-    var dateRangeEnd: String?
 
-    private let yearMonth = DateUtils.currentYearMonth()
+    private(set) var year: Int
+    private(set) var month: Int
 
-    var year: Int { yearMonth.year }
-    var month: Int { yearMonth.month }
+    init() {
+        let current = DateUtils.currentYearMonth()
+        year = current.year
+        month = current.month
+    }
+
+    var periodLabel: String {
+        guard let date = Calendar.current.date(from: DateComponents(year: year, month: month, day: 1)) else {
+            return "\(month)/\(year)"
+        }
+        return DateUtils.formatMonthYear(date)
+    }
+
+    func shiftPeriod(by delta: Int) async {
+        var nextMonth = month + delta
+        var nextYear = year
+        if nextMonth > 12 {
+            nextMonth = 1
+            nextYear += 1
+        } else if nextMonth < 1 {
+            nextMonth = 12
+            nextYear -= 1
+        }
+        year = nextYear
+        month = nextMonth
+        await load()
+    }
 
     var totalSpent: Double { filteredExpenses.reduce(0) { $0 + $1.amount } }
     var totalIncome: Double { incomes.reduce(0) { $0 + $1.amount } }
     var cashFlow: Double { totalIncome - totalSpent }
 
-    var canReorder: Bool {
-        searchText.isEmpty && selectedCategoryIds.isEmpty && dateRangeStart == nil
+    var filteredExpenses: [Expense] {
+        guard !searchText.isEmpty else { return expenses }
+        let q = searchText.lowercased()
+        return expenses.filter {
+            ($0.note?.lowercased().contains(q) ?? false)
+                || $0.categoryName.lowercased().contains(q)
+                || $0.accountName.lowercased().contains(q)
+                || $0.date.contains(q)
+        }
     }
 
-    var filteredExpenses: [Expense] {
-        var list = expenses
-        if !searchText.isEmpty {
-            let q = searchText.lowercased()
-            list = list.filter {
-                ($0.note?.lowercased().contains(q) ?? false)
-                    || $0.categoryName.lowercased().contains(q)
-                    || $0.accountName.lowercased().contains(q)
-                    || $0.date.contains(q)
-            }
+    /// Expenses grouped by day, most recent first, with per-day totals.
+    var dateGroups: [(date: String, total: Double, items: [Expense])] {
+        let groups = Dictionary(grouping: filteredExpenses, by: \.date)
+        return groups.keys.sorted(by: >).map { date in
+            let items = groups[date] ?? []
+            return (date, items.reduce(0) { $0 + $1.amount }, items)
         }
-        if !selectedCategoryIds.isEmpty {
-            list = list.filter { selectedCategoryIds.contains($0.categoryId) }
-        }
-        if let start = dateRangeStart, let end = dateRangeEnd {
-            list = list.filter { $0.date >= start && $0.date <= end }
-        }
-        return list
     }
 
     var categoryBreakdown: [(name: String, amount: Double)] {
         var map: [String: Double] = [:]
-        for e in expenses {
+        for e in filteredExpenses {
             map[e.categoryName, default: 0] += e.amount
         }
         return map.map { ($0.key, $0.value) }
@@ -209,33 +228,4 @@ final class ExpensesViewModel {
         }
     }
 
-    func reorder(from source: IndexSet, to destination: Int) async {
-        guard canReorder else { return }
-        var ordered = expenses
-        ordered.move(fromOffsets: source, toOffset: destination)
-        let snapshot = expenses
-        expenses = ordered
-        do {
-            expenses = try await FinanceAPI.reorderExpenses(
-                year: year,
-                month: month,
-                orderedIds: ordered.map(\.id)
-            )
-        } catch {
-            expenses = snapshot
-            await load()
-        }
-    }
-
-    func applyQuickRange(days: Int) {
-        let end = Date()
-        let start = Calendar.current.date(byAdding: .day, value: -(days - 1), to: end) ?? end
-        dateRangeStart = DateUtils.localISODate(from: start)
-        dateRangeEnd = DateUtils.localISODate(from: end)
-    }
-
-    func clearDateRange() {
-        dateRangeStart = nil
-        dateRangeEnd = nil
-    }
 }

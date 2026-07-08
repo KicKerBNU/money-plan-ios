@@ -31,25 +31,35 @@ struct ExpenseFormSheet: View {
     var body: some View {
         NavigationStack {
             Form {
-                DatePicker("expenses.form.date", selection: $date, displayedComponents: .date)
+                Section {
+                    Picker("expenses.form.category", selection: $categoryId) {
+                        ForEach(categories) { cat in
+                            Text(cat.name).tag(cat.id)
+                        }
+                    }
 
-                TextField("expenses.form.amount", text: $amountText)
-                    .keyboardType(.decimalPad)
+                    DatePicker("expenses.form.date", selection: $date, displayedComponents: .date)
 
-                Picker("expenses.form.category", selection: $categoryId) {
-                    ForEach(categories) { cat in
-                        Text(cat.name).tag(cat.id)
+                    HStack {
+                        Text("expenses.form.amount")
+                        Spacer()
+                        TextField("0.00", text: $amountText)
+                            .keyboardType(.decimalPad)
+                            .multilineTextAlignment(.trailing)
+                            .foregroundStyle(amountText.isEmpty ? AppColors.muted : .primary)
+                    }
+
+                    Picker("expenses.form.account", selection: $accountId) {
+                        ForEach(accounts) { acc in
+                            Text(acc.name).tag(acc.id)
+                        }
                     }
                 }
 
-                Picker("expenses.form.account", selection: $accountId) {
-                    ForEach(accounts) { acc in
-                        Text(acc.name).tag(acc.id)
-                    }
+                Section {
+                    TextField("expenses.form.notePlaceholder", text: $note, axis: .vertical)
+                        .lineLimit(1 ... 3)
                 }
-
-                TextField("expenses.form.note", text: $note, axis: .vertical)
-                    .lineLimit(2 ... 4)
 
                 if showsRecurrenceSection {
                     Section {
@@ -74,9 +84,11 @@ struct ExpenseFormSheet: View {
                 }
 
                 if !errorMessage.isEmpty {
-                    Text(errorMessage)
-                        .foregroundStyle(AppColors.danger)
-                        .font(.footnote)
+                    Section {
+                        Text(errorMessage)
+                            .foregroundStyle(AppColors.danger)
+                            .font(.footnote)
+                    }
                 }
             }
             .navigationTitle(editing == nil ? "expenses.form.title" : "expenses.form.editTitle")
@@ -106,7 +118,7 @@ struct ExpenseFormSheet: View {
     private func populate() {
         if let editing {
             date = DateUtils.parseLocalISODate(editing.date) ?? Date()
-            amountText = String(editing.amount)
+            amountText = formatAmountForField(editing.amount)
             categoryId = editing.categoryId
             accountId = editing.accountId
             note = editing.note ?? ""
@@ -117,6 +129,13 @@ struct ExpenseFormSheet: View {
             if let cat = categories.first { categoryId = cat.id }
             if let acc = DefaultAccountPicker.pick(from: accounts) { accountId = acc.id }
         }
+    }
+
+    private func formatAmountForField(_ value: Double) -> String {
+        if value.truncatingRemainder(dividingBy: 1) == 0 {
+            return String(format: "%.0f", value)
+        }
+        return String(value)
     }
 
     private func loadLinkedRecurringIfNeeded() async {
