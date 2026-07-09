@@ -250,6 +250,8 @@ struct ExpensesView: View {
                                 editingExpense = expense
                             } onDelete: {
                                 expenseToDelete = expense
+                            } onFullSwipe: {
+                                Task { await viewModel.deleteExpense(expense) }
                             }
 
                             if expense.id != group.items.last?.id {
@@ -259,6 +261,7 @@ struct ExpensesView: View {
                         }
                     }
                     .background(AppColors.surface, in: RoundedRectangle(cornerRadius: 16))
+                    .clipShape(RoundedRectangle(cornerRadius: 16))
                     .overlay(
                         RoundedRectangle(cornerRadius: 16)
                             .strokeBorder(Color.primary.opacity(0.08))
@@ -279,6 +282,7 @@ private struct ExpenseRow: View {
     let expense: Expense
     let onEdit: () -> Void
     let onDelete: () -> Void
+    let onFullSwipe: () -> Void
 
     private var subtitle: String {
         var parts = [DateUtils.formatShortDate(expense.date), expense.accountName]
@@ -289,27 +293,27 @@ private struct ExpenseRow: View {
     }
 
     var body: some View {
-        HStack(spacing: 12) {
-            CategoryIconView(name: expense.categoryName)
+        SwipeToDeleteRow(onTap: onEdit, onDelete: onDelete, onFullSwipe: onFullSwipe) {
+            HStack(spacing: 12) {
+                CategoryIconView(name: expense.categoryName)
 
-            VStack(alignment: .leading, spacing: 2) {
-                Text(expense.categoryName)
-                    .font(.subheadline.weight(.semibold))
-                Text(subtitle)
-                    .font(.caption)
-                    .foregroundStyle(AppColors.muted)
-                    .lineLimit(1)
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(expense.categoryName)
+                        .font(.subheadline.weight(.semibold))
+                    Text(subtitle)
+                        .font(.caption)
+                        .foregroundStyle(AppColors.muted)
+                        .lineLimit(1)
+                }
+
+                Spacer(minLength: 8)
+
+                Text(CurrencyFormatter.formatSigned(-expense.amount))
+                    .font(.subheadline.weight(.bold))
             }
-
-            Spacer(minLength: 8)
-
-            Text(CurrencyFormatter.formatSigned(-expense.amount))
-                .font(.subheadline.weight(.bold))
+            .padding(.horizontal, 14)
+            .padding(.vertical, 12)
         }
-        .padding(.horizontal, 14)
-        .padding(.vertical, 12)
-        .contentShape(Rectangle())
-        .onTapGesture(perform: onEdit)
         .contextMenu {
             Button { onEdit() } label: {
                 Label("common.edit", systemImage: "square.and.pencil")

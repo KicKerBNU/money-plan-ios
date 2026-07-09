@@ -191,10 +191,14 @@ struct AccountsView: View {
                                 .padding(.leading, 52)
                         }
 
-                        AccountRow(account: account)
-                            .contentShape(Rectangle())
-                            .onTapGesture { editingAccount = account }
-                            .contextMenu { rowMenu(for: account) }
+                        SwipeToDeleteRow(
+                            onTap: { editingAccount = account },
+                            onDelete: { toDelete = account },
+                            onFullSwipe: { Task { try? await viewModel.delete(id: account.id) } }
+                        ) {
+                            AccountRow(account: account)
+                        }
+                        .contextMenu { rowMenu(for: account) }
                     }
                 }
             }

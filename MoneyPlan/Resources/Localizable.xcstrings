@@ -3240,7 +3240,6 @@
       }
     },
     "common.delete" : {
-      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {

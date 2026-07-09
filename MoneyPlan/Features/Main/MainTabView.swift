@@ -9,17 +9,21 @@ struct MainTabView: View {
     @State private var previousTab: AppTab = .expenses
     @State private var showAddExpense = false
 
-    /// "Add" is rendered as a tab item so iOS keeps the bar at a natural 5 slots,
-    /// but selecting it bounces back to the prior tab and presents the form sheet
-    /// — a common iOS pattern (Instagram, Twitter/X) for primary-action tabs.
+    /// "Add" is rendered as a tab item so iOS keeps the bar at a natural 5 slots.
+    /// Selecting it jumps to the Expenses tab (where the sheet lives) and presents
+    /// the new-expense form — a common iOS pattern for primary-action tabs.
     private var tabSelection: Binding<AppTab> {
         Binding(
             get: { selectedTab },
             set: { newValue in
                 if newValue == .add {
                     showAddExpense = true
-                    // Snap selection back so the placeholder view never appears.
-                    DispatchQueue.main.async { selectedTab = previousTab }
+                    // Land on Expenses so the placeholder view never appears and
+                    // the user sees the new expense in context after saving.
+                    DispatchQueue.main.async {
+                        previousTab = .expenses
+                        selectedTab = .expenses
+                    }
                 } else {
                     previousTab = newValue
                     selectedTab = newValue

@@ -35,6 +35,7 @@
 		6E9E54022ACC366F73350318 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 72EF77A5C2EABD2649863217 /* Localizable.xcstrings */; };
 		718DE86802CC73AE852E9C64 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 953E7E9CB00744FFED3A3222 /* AppDelegate.swift */; };
 		740621324E217BB323A36585 /* AuthAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90910C4C8F87C854C5E81299 /* AuthAPI.swift */; };
+		74DF71F323293862278BECBE /* SwipeToDeleteRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1D3A07C7DFB4BFEE0387B01 /* SwipeToDeleteRow.swift */; };
 		78D4FA1249E29254A9F8DC70 /* RecurringExpensesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D2BF074E3830135C65B877B /* RecurringExpensesView.swift */; };
 		7B36250BBDB54737FEA96914 /* AppTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 629A21396DC9DC70DAA7CA3F /* AppTheme.swift */; };
 		8128981813EF4B19E5A5016F /* AccountsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B62C843536B751C032DB55B3 /* AccountsView.swift */; };
@@ -128,6 +129,7 @@
 		DFBA1A21B442862366724EBC /* MarketingScreenshotData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketingScreenshotData.swift; sourceTree = "<group>"; };
 		E67DC22AEDB17D0342074D54 /* RecurringIncomesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecurringIncomesView.swift; sourceTree = "<group>"; };
 		EECB05C68F571003623B46C1 /* MoneyPreferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoneyPreferences.swift; sourceTree = "<group>"; };
+		F1D3A07C7DFB4BFEE0387B01 /* SwipeToDeleteRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwipeToDeleteRow.swift; sourceTree = "<group>"; };
 		F9086F3696D1BC540FD2C232 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		F9D3B551C337D25B12A8738F /* FinanceAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinanceAPI.swift; sourceTree = "<group>"; };
 		FC7ACEDF23982E9E2CA2F867 /* MoneyPlanApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoneyPlanApp.swift; sourceTree = "<group>"; };
@@ -269,6 +271,7 @@
 			children = (
 				C74C070D4B5F4113D345DB6C /* AddAndSettingsToolbar.swift */,
 				3B1FD95C8AF3834D23D5D4FC /* FinanceCard.swift */,
+				F1D3A07C7DFB4BFEE0387B01 /* SwipeToDeleteRow.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -612,6 +615,7 @@
 				D777542ABEA9FD021893CE95 /* RecurringIncomesView.swift in Sources */,
 				31ABB72C248ECFE7AC2B641D /* RootView.swift in Sources */,
 				F2DA023D1A9177E86E0BE3B9 /* StatsView.swift in Sources */,
+				74DF71F323293862278BECBE /* SwipeToDeleteRow.swift in Sources */,
 				43E55B2C15F144F42C283EA3 /* ToastCenter.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -685,7 +689,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 12;
+				CURRENT_PROJECT_VERSION = 18;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 53K55422K6;
 				ENABLE_NS_ASSERTIONS = NO;
@@ -699,7 +703,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
-				MARKETING_VERSION = 1.0.3;
+				MARKETING_VERSION = 1.0.5;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -802,7 +806,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 12;
+				CURRENT_PROJECT_VERSION = 18;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = 53K55422K6;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -822,7 +826,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
-				MARKETING_VERSION = 1.0.3;
+				MARKETING_VERSION = 1.0.5;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;

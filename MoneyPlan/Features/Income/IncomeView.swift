@@ -162,17 +162,21 @@ struct IncomeView: View {
                                     .padding(.leading, 52)
                             }
 
-                            IncomeEntryRow(
-                                entry: entry,
-                                title: entryTitle(for: entry),
-                                isRecurring: viewModel.isRecurringEntry(entry)
-                            )
-                            .contentShape(Rectangle())
-                            .onTapGesture {
-                                Task {
-                                    await viewModel.load()
-                                    editingEntry = viewModel.freshEntry(for: entry)
-                                }
+                            SwipeToDeleteRow(
+                                onTap: {
+                                    Task {
+                                        await viewModel.load()
+                                        editingEntry = viewModel.freshEntry(for: entry)
+                                    }
+                                },
+                                onDelete: { toDelete = entry },
+                                onFullSwipe: { Task { await viewModel.delete(entry) } }
+                            ) {
+                                IncomeEntryRow(
+                                    entry: entry,
+                                    title: entryTitle(for: entry),
+                                    isRecurring: viewModel.isRecurringEntry(entry)
+                                )
                             }
                             .contextMenu {
                                 Button {

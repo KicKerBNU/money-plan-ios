@@ -114,6 +114,13 @@ struct IncomeFormSheet: View {
                 populateFormFields()
                 await loadLinkedRecurringIfNeeded()
             }
+            // Accounts can finish loading after the sheet is presented — backfill
+            // the selection so the picker never holds an invalid tag.
+            .onChange(of: accounts) {
+                if !accounts.contains(where: { $0.id == accountId }) {
+                    accountId = DefaultAccountPicker.pick(from: accounts)?.id ?? 0
+                }
+            }
         }
         .tint(AppColors.primary)
         .interactiveDismissDisabled(isSaving)

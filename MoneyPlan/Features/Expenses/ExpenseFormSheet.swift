@@ -32,9 +32,16 @@ struct ExpenseFormSheet: View {
         NavigationStack {
             Form {
                 Section {
-                    Picker("expenses.form.category", selection: $categoryId) {
-                        ForEach(categories) { cat in
-                            Text(cat.name).tag(cat.id)
+                    if categories.isEmpty {
+                        LabeledContent("expenses.form.category") {
+                            Text("—")
+                                .foregroundStyle(AppColors.muted)
+                        }
+                    } else {
+                        Picker("expenses.form.category", selection: $categoryId) {
+                            ForEach(categories) { cat in
+                                Text(cat.name).tag(cat.id)
+                            }
                         }
                     }
 
@@ -49,9 +56,16 @@ struct ExpenseFormSheet: View {
                             .foregroundStyle(amountText.isEmpty ? AppColors.muted : .primary)
                     }
 
-                    Picker("expenses.form.account", selection: $accountId) {
-                        ForEach(accounts) { acc in
-                            Text(acc.name).tag(acc.id)
+                    if accounts.isEmpty {
+                        LabeledContent("expenses.form.account") {
+                            Text("—")
+                                .foregroundStyle(AppColors.muted)
+                        }
+                    } else {
+                        Picker("expenses.form.account", selection: $accountId) {
+                            ForEach(accounts) { acc in
+                                Text(acc.name).tag(acc.id)
+                            }
                         }
                     }
                 }
@@ -101,10 +115,14 @@ struct ExpenseFormSheet: View {
                     Button("common.save") {
                         Task { await save() }
                     }
-                    .disabled(isSaving || parsedAmount == nil)
+                    .disabled(isSaving || parsedAmount == nil || categoryId <= 0 || accountId <= 0)
                 }
             }
             .onAppear(perform: populate)
+            // Data can finish loading after the sheet is presented (e.g. Add tapped
+            // right at app launch) — backfill the selections when it arrives.
+            .onChange(of: categories) { ensureValidSelections() }
+            .onChange(of: accounts) { ensureValidSelections() }
             .task(id: editing?.recurringExpenseId) {
                 await loadLinkedRecurringIfNeeded()
             }
@@ -125,9 +143,18 @@ struct ExpenseFormSheet: View {
             if let linked = linkedRecurring {
                 recurrenceFrequency = linked.frequency
             }
-        } else {
-            if let cat = categories.first { categoryId = cat.id }
-            if let acc = DefaultAccountPicker.pick(from: accounts) { accountId = acc.id }
+        }
+        ensureValidSelections()
+    }
+
+    /// A Picker whose selection matches no tag renders glitchy rows and would let
+    /// us POST categoryId/accountId 0, which the backend rejects as invalid payload.
+    private func ensureValidSelections() {
+        if !categories.contains(where: { $0.id == categoryId }) {
+            categoryId = categories.first?.id ?? 0
+        }
+        if !accounts.contains(where: { $0.id == accountId }) {
+            accountId = DefaultAccountPicker.pick(from: accounts)?.id ?? 0
         }
     }
 
@@ -158,7 +185,7 @@ struct ExpenseFormSheet: View {
     }
 
     private func save() async {
-        guard let amount = parsedAmount else { return }
+        guard let amount = parsedAmount, categoryId > 0, accountId > 0 else { return }
         isSaving = true
         errorMessage = ""
         defer { isSaving = false }
