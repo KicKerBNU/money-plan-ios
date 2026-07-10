@@ -24,10 +24,9 @@ final class GenerateScreenshotsTests: XCTestCase {
             ("05-overview", AnyView(MarketingOverviewScreenshot())),
             ("06-stats", AnyView(MarketingStatsScreenshot())),
             ("07-add-expense", AnyView(MarketingAddExpenseScreenshot())),
-            ("08-expenses-by-category", AnyView(MarketingExpensesByCategoryScreenshot())),
+            ("08-categories", AnyView(MarketingCategoriesScreenshot())),
             ("09-settings", AnyView(MarketingSettingsScreenshot())),
             ("10-login", AnyView(MarketingLoginScreenshot())),
-            ("11-expenses-phone", AnyView(MarketingExpensesPhoneScreenshot())),
         ]
 
         let iPhone65 = ScreenshotSpec(

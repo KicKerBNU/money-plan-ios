@@ -69,7 +69,6 @@ final class RecurringIncomesViewModel {
 }
 
 struct RecurringIncomesView: View {
-    @Environment(\.dismiss) private var dismiss
     @Environment(MoneyPreferences.self) private var money
     @State private var viewModel = RecurringIncomesViewModel()
     @State private var editingItem: RecurringIncome?
@@ -77,8 +76,7 @@ struct RecurringIncomesView: View {
 
     var body: some View {
         let _ = money.activeCurrency
-        NavigationStack {
-            Group {
+        Group {
                 if viewModel.isLoading {
                     LoadingStateView()
                 } else if let error = viewModel.errorMessage {
@@ -110,11 +108,6 @@ struct RecurringIncomesView: View {
             }
             .navigationTitle("recurringIncome.title")
             .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button("common.done") { dismiss() }
-                }
-            }
             .task { await viewModel.load() }
             .refreshable { await viewModel.load() }
             .sheet(item: $editingItem) { item in
@@ -142,7 +135,6 @@ struct RecurringIncomesView: View {
             } message: {
                 Text("recurringIncome.confirmDelete.body")
             }
-        }
     }
 }
 

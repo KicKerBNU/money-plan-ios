@@ -81,7 +81,7 @@ struct MarketingAppPreviewFrame: View {
         tripleCrossfade(
             segments: [
                 AnyView(MarketingAppPreviewScreen(tab: .expenses) { MarketingExpensesContent() }),
-                AnyView(MarketingAppPreviewScreen(tab: .expenses) { MarketingExpensesByCategoryContent() }),
+                AnyView(MarketingAppPreviewScreen(tab: .expenses) { MarketingCategoriesContent() }),
                 AnyView(MarketingAppPreviewScreen(tab: .expenses) { MarketingStatsContent() }),
             ]
         )
@@ -95,7 +95,7 @@ struct MarketingAppPreviewFrame: View {
             segments: [
                 AnyView(MarketingAppPreviewScreen(tab: .income) { MarketingIncomeContent() }),
                 AnyView(MarketingAppPreviewScreen(tab: .accounts) { MarketingAccountsContent() }),
-                AnyView(MarketingAppPreviewScreen(tab: .expenses) { MarketingOverviewContent() }),
+                AnyView(MarketingAppPreviewScreen(tab: .accounts) { MarketingSettingsContent() }),
             ]
         )
     }

@@ -246,7 +246,10 @@ struct ExpensesView: View {
 
                     VStack(spacing: 0) {
                         ForEach(group.items) { expense in
-                            ExpenseRow(expense: expense) {
+                            ExpenseRow(
+                                expense: expense,
+                                icon: viewModel.categories.first(where: { $0.id == expense.categoryId })?.icon
+                            ) {
                                 editingExpense = expense
                             } onDelete: {
                                 expenseToDelete = expense
@@ -280,6 +283,7 @@ struct ExpensesView: View {
 
 private struct ExpenseRow: View {
     let expense: Expense
+    var icon: String? = nil
     let onEdit: () -> Void
     let onDelete: () -> Void
     let onFullSwipe: () -> Void
@@ -295,7 +299,7 @@ private struct ExpenseRow: View {
     var body: some View {
         SwipeToDeleteRow(onTap: onEdit, onDelete: onDelete, onFullSwipe: onFullSwipe) {
             HStack(spacing: 12) {
-                CategoryIconView(name: expense.categoryName)
+                CategoryIconView(name: expense.categoryName, icon: icon)
 
                 VStack(alignment: .leading, spacing: 2) {
                     Text(expense.categoryName)

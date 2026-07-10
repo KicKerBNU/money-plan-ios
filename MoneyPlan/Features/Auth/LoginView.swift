@@ -61,20 +61,14 @@ struct LoginView: View {
 
     private var hero: some View {
         VStack(spacing: 10) {
-            ZStack {
-                RoundedRectangle(cornerRadius: 18, style: .continuous)
-                    .fill(LinearGradient(
-                        colors: [AppColors.primary, AppColors.primary.opacity(0.75)],
-                        startPoint: .topLeading,
-                        endPoint: .bottomTrailing
-                    ))
-                    .frame(width: 60, height: 60)
-                    .shadow(color: AppColors.primary.opacity(0.3), radius: 14, x: 0, y: 8)
-
-                Image(systemName: "dollarsign")
-                    .font(.system(size: 28, weight: .bold))
-                    .foregroundStyle(.white)
-            }
+            Image("MarketingAppIcon")
+                .resizable()
+                .interpolation(.high)
+                .aspectRatio(contentMode: .fill)
+                .frame(width: 72, height: 72)
+                .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
+                .shadow(color: AppColors.primary.opacity(0.3), radius: 14, x: 0, y: 8)
+                .accessibilityLabel(Self.appName)
 
             Text(Self.appName)
                 .font(.caption.weight(.semibold))

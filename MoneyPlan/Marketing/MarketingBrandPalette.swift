@@ -30,6 +30,14 @@ enum MarketingLayout {
     static func usesPadLayout(width: CGFloat) -> Bool { width >= 1024 }
 }
 
+/// Logical phone canvas + safe areas for marketing mockups (matches iPhone 15-class devices).
+enum MarketingPhoneMetrics {
+    static let contentWidth: CGFloat = 393
+    static let contentHeight: CGFloat = 852
+    static let topSafeArea: CGFloat = 59
+    static let aspect: CGFloat = contentHeight / contentWidth
+}
+
 /// Shared gradient background for screenshots and App Previews.
 struct MarketingCanvasBackground: View {
     let isPad: Bool

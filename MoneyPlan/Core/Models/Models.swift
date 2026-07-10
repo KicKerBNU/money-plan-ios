@@ -14,6 +14,8 @@ struct Category: Codable, Identifiable, Hashable, Sendable {
     let id: Int
     var name: String
     var isDefault: Bool
+    /// User-picked SF Symbol; nil = derive from name via `CategoryIcon`.
+    var icon: String? = nil
 }
 
 struct Expense: Codable, Identifiable, Hashable, Sendable {

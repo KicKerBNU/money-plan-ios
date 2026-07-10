@@ -159,7 +159,7 @@ private struct MarketingHeroExpensesCard: View {
                             .foregroundStyle(AppColors.muted)
                     }
                     Spacer()
-                    Text(CurrencyFormatter.format(expense.amount))
+                    Text(CurrencyFormatter.formatSigned(-expense.amount))
                         .font(.caption.weight(.bold))
                 }
             }

@@ -231,18 +231,24 @@ enum FinanceAPI {
         return response.data
     }
 
-    static func createCategory(name: String) async throws -> Category {
-        struct Body: Encodable { var name: String }
-        let response: DataResponse<Category> = try await client.fetch("/v1/categories", method: "POST", body: Body(name: name))
+    static func createCategory(name: String, icon: String? = nil) async throws -> Category {
+        struct Body: Encodable {
+            var name: String
+            var icon: String?
+        }
+        let response: DataResponse<Category> = try await client.fetch("/v1/categories", method: "POST", body: Body(name: name, icon: icon))
         return response.data
     }
 
-    static func updateCategory(id: Int, name: String) async throws -> Category {
-        struct Body: Encodable { var name: String }
+    static func updateCategory(id: Int, name: String, icon: String? = nil) async throws -> Category {
+        struct Body: Encodable {
+            var name: String
+            var icon: String?
+        }
         let response: DataResponse<Category> = try await client.fetch(
             "/v1/categories/\(id)",
             method: "PUT",
-            body: Body(name: name)
+            body: Body(name: name, icon: icon)
         )
         return response.data
     }

@@ -4,6 +4,19 @@ enum AppTab: Hashable {
     case expenses, income, add, chat, accounts
 }
 
+/// Currently selected tab, exposed to pushed screens (e.g. Settings) so they can
+/// pop themselves when the user switches tabs instead of lingering on the stack.
+private struct SelectedAppTabKey: EnvironmentKey {
+    static let defaultValue: AppTab? = nil
+}
+
+extension EnvironmentValues {
+    var selectedAppTab: AppTab? {
+        get { self[SelectedAppTabKey.self] }
+        set { self[SelectedAppTabKey.self] = newValue }
+    }
+}
+
 struct MainTabView: View {
     @State private var selectedTab: AppTab = .expenses
     @State private var previousTab: AppTab = .expenses
@@ -55,6 +68,7 @@ struct MainTabView: View {
                 .tabItem { Label("appNav.accounts", systemImage: "building.columns.fill") }
                 .tag(AppTab.accounts)
         }
+        .environment(\.selectedAppTab, selectedTab)
         .onAppear {
             logScreen(for: selectedTab)
         }
@@ -79,132 +93,14 @@ struct MainTabView: View {
     }
 }
 
+/// Gear button that pushes the dedicated Settings page (replaced the old dropdown menu).
 struct SettingsToolbar: View {
-    @Environment(AuthService.self) private var auth
-    @Environment(ThemeManager.self) private var theme
-    @Environment(MoneyPreferences.self) private var money
-
-    @State private var showDeleteAccountConfirm = false
-    @State private var showRecurringExpenses = false
-    @State private var showRecurringIncomes = false
-    @State private var isDeletingAccount = false
-
     var body: some View {
-        Menu {
-            // Theme submenu (System / Light / Dark)
-            Menu {
-                Picker("theme.label", selection: themePreferenceBinding) {
-                    Label("theme.system", systemImage: "circle.lefthalf.filled")
-                        .tag(ThemeManager.Preference.system)
-                    Label("theme.light", systemImage: "sun.max")
-                        .tag(ThemeManager.Preference.light)
-                    Label("theme.dark", systemImage: "moon")
-                        .tag(ThemeManager.Preference.dark)
-                }
-            } label: {
-                Label("theme.label", systemImage: themeIcon)
-            }
-
-            // Currency submenu
-            Menu {
-                Picker("preferences.currency", selection: currencyBinding) {
-                    Text(verbatim: String(localized: "preferences.currencyAuto") + " · " + money.autoCurrency)
-                        .tag(String?.none)
-                    ForEach(MoneyPreferences.supportedCurrencies, id: \.self) { code in
-                        Text(verbatim: code).tag(String?.some(code))
-                    }
-                }
-            } label: {
-                Label {
-                    HStack {
-                        Text("preferences.currency")
-                        Spacer()
-                        Text(verbatim: money.activeCurrency)
-                            .foregroundStyle(.secondary)
-                    }
-                } icon: {
-                    Image(systemName: "dollarsign.circle")
-                }
-            }
-
-            Divider()
-
-            Button {
-                showRecurringExpenses = true
-            } label: {
-                Label("recurring.settingsMenu", systemImage: "arrow.triangle.2.circlepath")
-            }
-
-            Button {
-                showRecurringIncomes = true
-            } label: {
-                Label("recurringIncome.settingsMenu", systemImage: "arrow.up.circle")
-            }
-
-            Divider()
-
-            Button(role: .destructive) {
-                showDeleteAccountConfirm = true
-            } label: {
-                Label("auth.deleteAccount.menu", systemImage: "person.crop.circle.badge.minus")
-            }
-            .disabled(isDeletingAccount)
-
-            Button(role: .destructive) {
-                try? auth.signOut()
-            } label: {
-                Label("appNav.logout", systemImage: "rectangle.portrait.and.arrow.right")
-            }
+        NavigationLink {
+            SettingsView()
         } label: {
             Image(systemName: "gearshape")
         }
         .accessibilityLabel("appNav.settingsMenu")
-        .confirmationDialog(
-            "auth.deleteAccount.confirmTitle",
-            isPresented: $showDeleteAccountConfirm,
-            titleVisibility: .visible
-        ) {
-            Button("auth.deleteAccount.confirmAction", role: .destructive) {
-                Task { await deleteAccount() }
-            }
-            Button("common.cancel", role: .cancel) {}
-        } message: {
-            Text("auth.deleteAccount.confirmBody")
-        }
-        .sheet(isPresented: $showRecurringExpenses) {
-            RecurringExpensesView()
-        }
-        .sheet(isPresented: $showRecurringIncomes) {
-            RecurringIncomesView()
-        }
-    }
-
-    private func deleteAccount() async {
-        isDeletingAccount = true
-        defer { isDeletingAccount = false }
-        do {
-            try await auth.deleteAccount()
-        } catch {
-            // Errors surface via ToastCenter from APIClient.
-        }
-    }
-
-    private var themeIcon: String {
-        switch theme.preference {
-        case .system: "circle.lefthalf.filled"
-        case .light: "sun.max"
-        case .dark: "moon"
-        }
-    }
-
-    private var themePreferenceBinding: Binding<ThemeManager.Preference> {
-        Binding(get: { theme.preference }, set: { theme.preference = $0 })
-    }
-
-    private var currencyBinding: Binding<String?> {
-        Binding(
-            get: { money.currency },
-            set: { money.setCurrency($0) }
-        )
     }
 }

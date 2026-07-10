@@ -51,18 +51,14 @@ struct MarketingStatsScreenshot: View {
 
 struct MarketingExpensesByCategoryScreenshot: View {
     var body: some View {
-        MarketingScreenshotFrame(copy: MarketingScreenshotCopy.expensesByCategory) {
-            MarketingScreenshotShell(tab: .expenses) {
-                MarketingExpensesByCategoryContent()
-            }
-        }
+        MarketingCategoriesScreenshot()
     }
 }
 
 struct MarketingSettingsScreenshot: View {
     var body: some View {
         MarketingScreenshotFrame(copy: MarketingScreenshotCopy.settings) {
-            MarketingScreenshotShell(tab: .expenses) {
+            MarketingScreenshotShell(tab: .accounts) {
                 MarketingSettingsContent()
             }
         }
@@ -172,7 +168,7 @@ private struct MarketingLoginContent: View {
             }
         }
         .padding(.horizontal, 20)
-        .padding(.top, 48)
+        .padding(.top, MarketingPhoneMetrics.topSafeArea + 12)
         .padding(.bottom, 24)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(
@@ -213,28 +209,48 @@ private struct MarketingLoginContent: View {
 // MARK: - Add expense sheet
 
 private struct MarketingExpenseFormPanel: View {
-    private let data = MarketingScreenshotData.self
-
     var body: some View {
         VStack(spacing: 0) {
+            Capsule()
+                .fill(Color.secondary.opacity(0.45))
+                .frame(width: 36, height: 5)
+                .padding(.top, 8)
+                .padding(.bottom, 4)
+
             MarketingSheetHeader(title: "expenses.form.title")
 
-            VStack(alignment: .leading, spacing: 16) {
-                formRow(label: "expenses.form.date", value: "Jun 8, 2026")
-                formRow(label: "expenses.form.amount", value: "42.50")
-                formRow(label: "expenses.form.category", value: "Food")
-                formRow(label: "expenses.form.account", value: "Main Checking")
-                formRow(label: "expenses.form.note", value: "Lunch with team")
+            VStack(spacing: 12) {
+                formSection {
+                    formPickerRow(label: "expenses.form.category", value: "Food")
+                    Divider().padding(.leading, 16)
+                    formPickerRow(label: "expenses.form.date", value: "Jul 8, 2026")
+                    Divider().padding(.leading, 16)
+                    formValueRow(label: "expenses.form.amount", value: "€42.50")
+                    Divider().padding(.leading, 16)
+                    formPickerRow(label: "expenses.form.account", value: "Bank Accounts")
+                }
 
-                Text("common.save")
-                    .fontWeight(.semibold)
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 12)
-                    .background(AppColors.primary, in: RoundedRectangle(cornerRadius: 10, style: .continuous))
-                    .foregroundStyle(.white)
-                    .padding(.top, 8)
+                formSection {
+                    Text("Note (optional)")
+                        .font(.body)
+                        .foregroundStyle(AppColors.muted)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(.horizontal, 16)
+                        .padding(.vertical, 12)
+                }
+
+                formSection {
+                    HStack {
+                        Text("recurring.form.isRecurring")
+                        Spacer()
+                        MarketingToggleOff()
+                    }
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 10)
+                }
             }
-            .padding(20)
+            .padding(.horizontal, 16)
+            .padding(.bottom, 16)
             .background(Color(.systemGroupedBackground))
         }
         .background(Color(.systemBackground))
@@ -244,17 +260,34 @@ private struct MarketingExpenseFormPanel: View {
         .padding(.bottom, 8)
     }
 
-    private func formRow(label: LocalizedStringKey, value: String) -> some View {
-        VStack(alignment: .leading, spacing: 4) {
+    private func formSection<C: View>(@ViewBuilder content: () -> C) -> some View {
+        content()
+            .background(Color(.secondarySystemGroupedBackground), in: RoundedRectangle(cornerRadius: 12, style: .continuous))
+    }
+
+    private func formPickerRow(label: LocalizedStringKey, value: String) -> some View {
+        HStack {
             Text(label)
-                .font(.caption.weight(.semibold))
                 .foregroundStyle(AppColors.muted)
+            Spacer()
             Text(value)
-                .font(.body)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(12)
-                .background(AppColors.surface, in: RoundedRectangle(cornerRadius: 10, style: .continuous))
+            Image(systemName: "chevron.right")
+                .font(.caption.weight(.semibold))
+                .foregroundStyle(AppColors.muted.opacity(0.6))
         }
+        .padding(.horizontal, 16)
+        .padding(.vertical, 12)
+    }
+
+    private func formValueRow(label: LocalizedStringKey, value: String) -> some View {
+        HStack {
+            Text(label)
+                .foregroundStyle(AppColors.muted)
+            Spacer()
+            Text(value)
+        }
+        .padding(.horizontal, 16)
+        .padding(.vertical, 12)
     }
 }
 
@@ -287,9 +320,7 @@ struct MarketingOverviewContent: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            MarketingNavBar(title: "overview.title") {
-                EmptyView()
-            } trailing: {
+            MarketingLargeTitleBar(title: "overview.title") {
                 MarketingToolbarGear()
             }
 
@@ -363,9 +394,7 @@ struct MarketingStatsContent: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            MarketingNavBar(title: "stats.title") {
-                EmptyView()
-            } trailing: {
+            MarketingLargeTitleBar(title: "stats.title") {
                 MarketingToolbarGear()
             }
 
@@ -417,173 +446,102 @@ struct MarketingStatsContent: View {
     }
 }
 
-// MARK: - Expenses filtered by category
+// MARK: - Settings page
 
-struct MarketingExpensesByCategoryContent: View {
-    private let data = MarketingScreenshotData.self
-
+struct MarketingSettingsContent: View {
     var body: some View {
         VStack(spacing: 0) {
-            MarketingNavBar(title: "expenses.title") {
+            MarketingLargeTitleBar(title: "settings.title") {
                 EmptyView()
-            } trailing: {
-                HStack {
-                    Image(systemName: "plus")
-                    MarketingToolbarGear()
-                }
             }
 
-            VStack(alignment: .leading, spacing: 16) {
-                Text("2 \(String(localized: "expenses.entriesThisMonth"))")
-                    .font(.subheadline)
-                    .foregroundStyle(AppColors.muted)
-
-                FinanceCard {
-                    KPIView(title: "expenses.summary.totalSpent", value: CurrencyFormatter.format(113.60))
-                    KPIView(title: "expenses.summary.cashFlow", value: CurrencyFormatter.formatSigned(data.cashFlow), valueColor: AppColors.positive)
+            VStack(spacing: 24) {
+                settingsSection(title: "settings.section.preferences") {
+                    settingsRow(icon: "tag", title: "settings.categories")
+                    settingsRow(icon: "moon", title: "settings.appearance")
                 }
 
-                HStack(spacing: 8) {
-                    chip("expenses.filters.all", selected: false)
-                    chipLiteral("Food", selected: true)
-                    chipLiteral("Transport", selected: false)
-                    chipLiteral("Rent", selected: false)
+                settingsSection(title: "settings.section.planning") {
+                    settingsRow(icon: "arrow.triangle.2.circlepath", title: "recurring.settingsMenu")
+                    settingsRow(icon: "arrow.up.circle", title: "recurringIncome.settingsMenu")
+                    settingsRow(icon: "coloncurrencysign.circle", title: "preferences.currency", value: "EUR (€)")
                 }
 
-                FinanceCard {
-                    ForEach(data.foodExpenses) { expense in
-                        MarketingExpenseRow(expense: expense)
-                        if expense.id != data.foodExpenses.last?.id { Divider() }
-                    }
+                settingsSection {
+                    settingsRow(icon: "rectangle.portrait.and.arrow.right", title: "appNav.logout", showsChevron: false)
+                    settingsRow(icon: "trash", title: "auth.deleteAccount.menu", iconColor: AppColors.danger, titleColor: AppColors.danger, showsChevron: false)
                 }
-
-                FinanceCard {
-                    Text("expenses.panels.byCategory")
-                        .font(.headline)
-                    ForEach(data.categoryBreakdown.prefix(4), id: \.name) { row in
-                        HStack {
-                            CategoryIconView(name: row.name)
-                            Text(row.name)
-                            Spacer()
-                            Text(CurrencyFormatter.format(row.amount))
-                                .font(.subheadline.weight(.semibold))
-                        }
-                        .padding(.vertical, 4)
-                    }
-                }
-
-                Spacer(minLength: 0)
             }
-            .padding()
+            .padding(.horizontal)
+            .padding(.bottom, 24)
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
             .background(Color(.systemGroupedBackground))
         }
     }
 
-    private func chip(_ key: LocalizedStringKey, selected: Bool) -> some View {
-        Text(key)
-            .font(.caption.weight(.medium))
-            .padding(.horizontal, 12)
-            .padding(.vertical, 8)
-            .background(selected ? AppColors.primary.opacity(0.2) : AppColors.surfaceSoft, in: Capsule())
+    @ViewBuilder
+    private func settingsSection(title: LocalizedStringKey? = nil, @ViewBuilder rows: @escaping () -> some View) -> some View {
+        VStack(alignment: .leading, spacing: 8) {
+            if let title {
+                Text(title)
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(AppColors.muted)
+                    .textCase(.uppercase)
+                    .tracking(0.8)
+                    .padding(.leading, 4)
+            }
+            FinanceCard {
+                VStack(spacing: 0) {
+                    rows()
+                }
+            }
+        }
     }
 
-    private func chipLiteral(_ title: String, selected: Bool) -> some View {
-        Text(title)
-            .font(.caption.weight(.medium))
-            .padding(.horizontal, 12)
-            .padding(.vertical, 8)
-            .background(selected ? AppColors.primary.opacity(0.2) : AppColors.surfaceSoft, in: Capsule())
+    private func settingsRow(
+        icon: String,
+        title: LocalizedStringKey,
+        value: String? = nil,
+        iconColor: Color = AppColors.primary,
+        titleColor: Color = .primary,
+        showsChevron: Bool = true
+    ) -> some View {
+        HStack(spacing: 12) {
+            Image(systemName: icon)
+                .font(.body.weight(.medium))
+                .foregroundStyle(iconColor)
+                .frame(width: 26)
+            Text(title)
+                .foregroundStyle(titleColor)
+            Spacer(minLength: 8)
+            if let value {
+                Text(verbatim: value)
+                    .foregroundStyle(.secondary)
+            }
+            if showsChevron {
+                Image(systemName: "chevron.right")
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(AppColors.muted.opacity(0.6))
+            }
+        }
+        .padding(.vertical, 12)
+        .padding(.horizontal, 4)
     }
 }
 
-// MARK: - Settings / preferences
+// MARK: - Toggle (ImageRenderer-safe; `Toggle` shows yellow error banners)
 
-private struct MarketingSettingsContent: View {
+private struct MarketingToggleOff: View {
     var body: some View {
-        VStack(spacing: 0) {
-            MarketingNavBar(title: "expenses.title") {
-                EmptyView()
-            } trailing: {
-                Image(systemName: "gearshape.fill")
-                    .foregroundStyle(AppColors.primary)
+        Capsule()
+            .fill(Color(.systemGray4))
+            .frame(width: 51, height: 31)
+            .overlay(alignment: .leading) {
+                Circle()
+                    .fill(.white)
+                    .shadow(color: .black.opacity(0.08), radius: 1, y: 1)
+                    .padding(2)
             }
-
-            VStack(alignment: .leading, spacing: 16) {
-                Text("Customize your experience")
-                    .font(.subheadline)
-                    .foregroundStyle(AppColors.muted)
-
-                FinanceCard {
-                    Label("theme.label", systemImage: "moon")
-                        .font(.headline)
-                    VStack(spacing: 8) {
-                        settingsOption("theme.light", icon: "sun.max", selected: true)
-                        settingsOption("theme.dark", icon: "moon", selected: false)
-                        settingsOption("theme.system", icon: "circle.lefthalf.filled", selected: false)
-                    }
-                }
-
-                FinanceCard {
-                    HStack {
-                        Label("preferences.currency", systemImage: "dollarsign.circle")
-                            .font(.headline)
-                        Spacer()
-                        Text(verbatim: "EUR")
-                            .font(.subheadline.weight(.semibold))
-                            .foregroundStyle(AppColors.primary)
-                    }
-
-                    VStack(spacing: 8) {
-                        currencyRow("EUR", selected: true)
-                        currencyRow("USD", selected: false)
-                        currencyRow("BRL", selected: false)
-                        currencyRow("GBP", selected: false)
-                    }
-                }
-
-                FinanceCard {
-                    Label("appNav.logout", systemImage: "rectangle.portrait.and.arrow.right")
-                        .font(.subheadline)
-                        .foregroundStyle(AppColors.danger)
-                }
-
-                Spacer(minLength: 0)
-            }
-            .padding()
-            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
-            .background(Color(.systemGroupedBackground))
-        }
-    }
-
-    private func settingsOption(_ label: LocalizedStringKey, icon: String, selected: Bool) -> some View {
-        HStack {
-            Image(systemName: icon)
-                .foregroundStyle(selected ? AppColors.primary : AppColors.muted)
-                .frame(width: 24)
-            Text(label)
-            Spacer()
-            if selected {
-                Image(systemName: "checkmark.circle.fill")
-                    .foregroundStyle(AppColors.primary)
-            }
-        }
-        .padding(12)
-        .background(selected ? AppColors.primary.opacity(0.1) : AppColors.surfaceSoft, in: RoundedRectangle(cornerRadius: 10, style: .continuous))
-    }
-
-    private func currencyRow(_ code: String, selected: Bool) -> some View {
-        HStack {
-            Text(verbatim: code)
-            Spacer()
-            if selected {
-                Image(systemName: "checkmark")
-                    .font(.caption.weight(.bold))
-                    .foregroundStyle(AppColors.primary)
-            }
-        }
-        .padding(12)
-        .background(selected ? AppColors.primary.opacity(0.1) : AppColors.surfaceSoft, in: RoundedRectangle(cornerRadius: 10, style: .continuous))
     }
 }
 

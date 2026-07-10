@@ -4,7 +4,11 @@ import SwiftUI
 
 struct MarketingExpensesScreenshot: View {
     var body: some View {
-        MarketingHeroExpensesScreenshot()
+        MarketingScreenshotFrame(copy: MarketingScreenshotCopy.expenses) {
+            MarketingScreenshotShell(tab: .expenses) {
+                MarketingExpensesContent()
+            }
+        }
     }
 }
 
@@ -38,6 +42,16 @@ struct MarketingAccountsScreenshot: View {
     }
 }
 
+struct MarketingCategoriesScreenshot: View {
+    var body: some View {
+        MarketingScreenshotFrame(copy: MarketingScreenshotCopy.categories) {
+            MarketingScreenshotShell(tab: .accounts) {
+                MarketingCategoriesContent()
+            }
+        }
+    }
+}
+
 /// Phone-frame expenses slide (optional slot 2+ in Connect).
 struct MarketingExpensesPhoneScreenshot: View {
     var body: some View {
@@ -65,6 +79,7 @@ struct MarketingScreenshotShell<Content: View>: View {
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
             MarketingTabBar(selected: tab)
         }
+        .padding(.top, MarketingPhoneMetrics.topSafeArea)
         .background(Color(.systemGroupedBackground))
         .preferredColorScheme(.light)
         .tint(AppColors.primary)
@@ -83,7 +98,7 @@ private struct MarketingTabBar: View {
             tabItem(.accounts, label: "appNav.accounts", icon: "building.columns.fill")
         }
         .padding(.top, 6)
-        .padding(.bottom, 10)
+        .padding(.bottom, 22)
         .background(.bar)
         .overlay(alignment: .top) { Divider() }
     }
@@ -106,6 +121,41 @@ struct MarketingToolbarGear: View {
     var body: some View {
         Image(systemName: "gearshape")
             .foregroundStyle(AppColors.primary)
+    }
+}
+
+struct MarketingAddAndSettingsToolbar: View {
+    var body: some View {
+        HStack(spacing: 16) {
+            Image(systemName: "plus")
+            Image(systemName: "gearshape")
+        }
+        .foregroundStyle(AppColors.primary)
+    }
+}
+
+/// Large-title header matching the redesigned list screens.
+struct MarketingLargeTitleBar: View {
+    let title: LocalizedStringKey
+    var trailing: AnyView
+
+    init(title: LocalizedStringKey, @ViewBuilder trailing: () -> some View = { EmptyView() }) {
+        self.title = title
+        self.trailing = AnyView(trailing())
+    }
+
+    var body: some View {
+        HStack(alignment: .center) {
+            Text(title)
+                .font(.largeTitle.bold())
+                .lineLimit(1)
+                .minimumScaleFactor(0.8)
+            Spacer(minLength: 8)
+            trailing
+        }
+        .padding(.horizontal, 16)
+        .padding(.top, 4)
+        .padding(.bottom, 4)
     }
 }
 
@@ -142,6 +192,23 @@ struct MarketingNavBar: View {
     }
 }
 
+// MARK: - Chart palette (matches ExpensesView)
+
+private enum MarketingChartPalette {
+    static let colors: [Color] = [
+        AppColors.primary,
+        Color(.systemRed),
+        Color(.systemYellow),
+        Color(.systemGray),
+        Color(.systemPurple),
+        Color(.systemOrange),
+    ]
+
+    static func color(at index: Int) -> Color {
+        index < colors.count ? colors[index] : Color(.systemGray3)
+    }
+}
+
 // MARK: - Expenses
 
 struct MarketingExpensesContent: View {
@@ -149,52 +216,15 @@ struct MarketingExpensesContent: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            MarketingNavBar(title: "expenses.title") {
-                EmptyView()
-            } trailing: {
-                HStack {
-                    Image(systemName: "plus")
-                    MarketingToolbarGear()
-                }
+            MarketingLargeTitleBar(title: "expenses.title") {
+                MarketingAddAndSettingsToolbar()
             }
 
+            // ImageRenderer does not rasterize ScrollView content — use a static VStack.
             VStack(alignment: .leading, spacing: 16) {
-                Text("\(data.expenses.count) \(String(localized: "expenses.entriesThisMonth"))")
-                    .font(.subheadline)
-                    .foregroundStyle(AppColors.muted)
-
-                FinanceCard {
-                    LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 12) {
-                        KPIView(title: "expenses.summary.totalSpent", value: CurrencyFormatter.format(data.totalSpent))
-                        KPIView(
-                            title: "expenses.summary.cashFlow",
-                            value: CurrencyFormatter.formatSigned(data.cashFlow),
-                            valueColor: data.cashFlow >= 0 ? AppColors.positive : AppColors.danger
-                        )
-                    }
-                }
-
-                HStack(spacing: 8) {
-                    marketingChip("expenses.filters.last3Days", selected: false)
-                    marketingChip("expenses.filters.last7Days", selected: true)
-                    marketingChip("expenses.filters.tripWeek", selected: false)
-                }
-
-                HStack(spacing: 8) {
-                    marketingChip("expenses.filters.all", selected: true)
-                    ForEach(data.categories.prefix(4)) { cat in
-                        marketingChipLiteral(cat.name, selected: false)
-                    }
-                }
-
-                FinanceCard {
-                    ForEach(data.expenses.prefix(3)) { expense in
-                        MarketingExpenseRow(expense: expense)
-                        if expense.id != data.expenses.prefix(3).last?.id { Divider() }
-                    }
-                }
-
-                Spacer(minLength: 0)
+                periodPicker
+                summaryCard
+                groupedList
             }
             .padding()
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
@@ -202,49 +232,146 @@ struct MarketingExpensesContent: View {
         }
     }
 
-    private func marketingChip(_ key: LocalizedStringKey, selected: Bool) -> some View {
-        Text(key)
-            .font(.caption.weight(.medium))
-            .padding(.horizontal, 12)
-            .padding(.vertical, 8)
-            .background(selected ? AppColors.primary.opacity(0.2) : AppColors.surfaceSoft, in: Capsule())
+    private var periodPicker: some View {
+        HStack {
+            Image(systemName: "chevron.left")
+                .font(.subheadline.weight(.semibold))
+                .foregroundStyle(AppColors.primary)
+            Spacer()
+            Text("July 2026")
+                .font(.subheadline.weight(.semibold))
+            Spacer()
+            Image(systemName: "chevron.right")
+                .font(.subheadline.weight(.semibold))
+                .foregroundStyle(AppColors.primary)
+        }
+        .padding(.top, 4)
     }
 
-    private func marketingChipLiteral(_ title: String, selected: Bool) -> some View {
-        Text(title)
-            .font(.caption.weight(.medium))
-            .padding(.horizontal, 12)
-            .padding(.vertical, 8)
-            .background(selected ? AppColors.primary.opacity(0.2) : AppColors.surfaceSoft, in: Capsule())
+    private var summaryCard: some View {
+        FinanceCard {
+            VStack(alignment: .leading, spacing: 14) {
+                HStack(alignment: .top) {
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("expenses.summary.totalSpent")
+                            .font(.caption)
+                            .foregroundStyle(AppColors.muted)
+                        Text(CurrencyFormatter.format(data.totalSpent))
+                            .font(.title3.weight(.bold))
+                    }
+                    Spacer()
+                    VStack(alignment: .trailing, spacing: 4) {
+                        Text("expenses.summary.cashFlow")
+                            .font(.caption)
+                            .foregroundStyle(AppColors.muted)
+                        Text(CurrencyFormatter.formatSigned(data.cashFlow))
+                            .font(.title3.weight(.bold))
+                            .foregroundStyle(data.cashFlow >= 0 ? AppColors.positive : AppColors.danger)
+                    }
+                }
+
+                categoryBar
+
+                LazyVGrid(
+                    columns: [GridItem(.flexible(), alignment: .leading), GridItem(.flexible(), alignment: .leading)],
+                    alignment: .leading,
+                    spacing: 10
+                ) {
+                    ForEach(Array(data.categoryBreakdown.enumerated()), id: \.element.name) { index, row in
+                        HStack(spacing: 6) {
+                            Circle()
+                                .fill(MarketingChartPalette.color(at: index))
+                                .frame(width: 8, height: 8)
+                            Text(row.name)
+                                .font(.caption)
+                                .foregroundStyle(AppColors.muted)
+                                .lineLimit(1)
+                            Text(CurrencyFormatter.formatSigned(-row.amount))
+                                .font(.caption.weight(.semibold))
+                                .lineLimit(1)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private var categoryBar: some View {
+        GeometryReader { geo in
+            HStack(spacing: 0) {
+                ForEach(Array(data.categoryBreakdown.enumerated()), id: \.element.name) { index, row in
+                    Rectangle()
+                        .fill(MarketingChartPalette.color(at: index))
+                        .frame(width: geo.size.width * row.amount / data.totalSpent)
+                }
+            }
+        }
+        .frame(height: 10)
+        .clipShape(Capsule())
+    }
+
+    private var groupedList: some View {
+        VStack(alignment: .leading, spacing: 20) {
+            ForEach(data.dateGroups, id: \.date) { group in
+                VStack(spacing: 8) {
+                    HStack {
+                        Text(data.dayHeader(group.date))
+                            .font(.caption.weight(.semibold))
+                            .tracking(0.6)
+                            .foregroundStyle(AppColors.muted)
+                        Spacer()
+                        Text(CurrencyFormatter.formatSigned(-group.total))
+                            .font(.caption.weight(.semibold))
+                            .foregroundStyle(AppColors.muted)
+                    }
+                    .padding(.horizontal, 4)
+
+                    VStack(spacing: 0) {
+                        ForEach(group.items) { expense in
+                            MarketingExpenseRow(expense: expense)
+                            if expense.id != group.items.last?.id {
+                                Divider().padding(.leading, 58)
+                            }
+                        }
+                    }
+                    .background(AppColors.surface, in: RoundedRectangle(cornerRadius: 16))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 16)
+                            .strokeBorder(Color.primary.opacity(0.08))
+                    )
+                }
+            }
+        }
     }
 }
 
 struct MarketingExpenseRow: View {
     let expense: Expense
+    var icon: String? = nil
+
+    private var subtitle: String {
+        var parts = [DateUtils.formatShortDate(expense.date), expense.accountName]
+        if let note = expense.note, !note.isEmpty { parts.append(note) }
+        return parts.joined(separator: " · ")
+    }
 
     var body: some View {
         HStack(spacing: 12) {
-            CategoryIconView(name: expense.categoryName)
+            CategoryIconView(name: expense.categoryName, icon: icon)
             VStack(alignment: .leading, spacing: 2) {
                 Text(expense.categoryName)
                     .font(.subheadline.weight(.semibold))
-                Text("\(DateUtils.formatShortDate(expense.date)) · \(expense.accountName)")
+                Text(subtitle)
                     .font(.caption)
                     .foregroundStyle(AppColors.muted)
-                if let note = expense.note, !note.isEmpty {
-                    Text(note)
-                        .font(.caption)
-                        .foregroundStyle(AppColors.muted)
-                        .lineLimit(1)
-                }
+                    .lineLimit(1)
             }
-            Spacer()
-            Text(CurrencyFormatter.format(expense.amount))
+            Spacer(minLength: 8)
+            Text(CurrencyFormatter.formatSigned(-expense.amount))
                 .font(.subheadline.weight(.bold))
-            Image(systemName: "ellipsis.circle")
-                .foregroundStyle(AppColors.muted)
         }
-        .padding(.vertical, 4)
+        .padding(.horizontal, 14)
+        .padding(.vertical, 12)
     }
 }
 
@@ -255,57 +382,103 @@ struct MarketingIncomeContent: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            MarketingNavBar(title: "income.title") {
-                EmptyView()
-            } trailing: {
-                MarketingToolbarGear()
+            MarketingLargeTitleBar(title: "income.title") {
+                MarketingAddAndSettingsToolbar()
             }
 
-            VStack(alignment: .leading, spacing: 16) {
-                Text("income.subtitle")
-                    .font(.subheadline)
-                    .foregroundStyle(AppColors.muted)
-
-                FinanceCard {
-                    KPIView(title: "income.summary.totalIncome", value: CurrencyFormatter.format(data.totalIncome))
-                    if let last = data.incomeEntries.map(\.date).sorted().last {
-                        Text(String(format: String(localized: "income.summary.lastEntry"), data.incomeEntries.count, DateUtils.formatShortDate(last)))
-                            .font(.caption)
-                            .foregroundStyle(AppColors.muted)
-                    }
-                }
-
-                FinanceCard {
-                    Text("income.recent.title")
-                        .font(.headline)
-                    ForEach(data.incomeEntries) { entry in
-                        HStack {
-                            VStack(alignment: .leading) {
-                                Text(CurrencyFormatter.format(entry.amount))
-                                    .font(.subheadline.weight(.semibold))
-                                Text("\(DateUtils.formatShortDate(entry.date)) · \(entry.accountName ?? "")")
-                                    .font(.caption)
-                                    .foregroundStyle(AppColors.muted)
-                                if let note = entry.note {
-                                    Text(note)
-                                        .font(.caption)
-                                        .foregroundStyle(AppColors.muted)
-                                }
-                            }
-                            Spacer()
-                            Image(systemName: "ellipsis.circle")
-                                .foregroundStyle(AppColors.muted)
-                        }
-                        .padding(.vertical, 6)
-                    }
-                }
-
-                Spacer(minLength: 0)
+            VStack(spacing: 24) {
+                periodPicker
+                totalHero
+                recentSection
             }
-            .padding()
+            .padding(.horizontal)
+            .padding(.bottom, 24)
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
             .background(Color(.systemGroupedBackground))
         }
+    }
+
+    private var periodPicker: some View {
+        HStack {
+            Image(systemName: "chevron.left")
+                .font(.subheadline.weight(.semibold))
+                .foregroundStyle(AppColors.primary)
+            Spacer()
+            Text("July 2026")
+                .font(.subheadline.weight(.semibold))
+            Spacer()
+            Image(systemName: "chevron.right")
+                .font(.subheadline.weight(.semibold))
+                .foregroundStyle(AppColors.primary)
+        }
+        .padding(.top, 4)
+    }
+
+    private var totalHero: some View {
+        VStack(spacing: 8) {
+            Text("income.summary.totalIncome")
+                .font(.subheadline)
+                .foregroundStyle(AppColors.muted)
+            Text(CurrencyFormatter.format(data.totalIncome))
+                .font(.system(size: 38, weight: .bold, design: .rounded))
+                .foregroundStyle(AppColors.primary)
+                .minimumScaleFactor(0.7)
+                .lineLimit(1)
+        }
+        .frame(maxWidth: .infinity)
+        .padding(.vertical, 4)
+    }
+
+    private var recentSection: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Text("income.recent.title")
+                .font(.caption.weight(.semibold))
+                .foregroundStyle(AppColors.muted)
+                .textCase(.uppercase)
+                .tracking(0.8)
+                .padding(.leading, 4)
+
+            FinanceCard {
+                VStack(spacing: 0) {
+                    ForEach(Array(data.incomeEntries.enumerated()), id: \.element.id) { index, entry in
+                        if index > 0 {
+                            Divider().padding(.leading, 52)
+                        }
+                        MarketingIncomeEntryRow(entry: entry)
+                    }
+                }
+            }
+        }
+    }
+}
+
+private struct MarketingIncomeEntryRow: View {
+    let entry: IncomeEntry
+
+    private var title: String {
+        if let note = entry.note?.trimmingCharacters(in: .whitespacesAndNewlines), !note.isEmpty {
+            return note
+        }
+        return entry.accountName ?? String(localized: "income.title")
+    }
+
+    var body: some View {
+        HStack(spacing: 12) {
+            IncomeIconView(label: title)
+            VStack(alignment: .leading, spacing: 4) {
+                Text(title)
+                    .font(.body.weight(.medium))
+                    .lineLimit(1)
+                Text("\(DateUtils.formatShortDate(entry.date)) · \(entry.accountName ?? "")")
+                    .font(.caption)
+                    .foregroundStyle(AppColors.muted)
+                    .lineLimit(1)
+            }
+            Spacer(minLength: 8)
+            Text(CurrencyFormatter.format(entry.amount))
+                .font(.body.weight(.semibold))
+        }
+        .padding(.vertical, 10)
     }
 }
 
@@ -334,8 +507,6 @@ private struct MarketingChatbotContent: View {
                     ForEach(messages) { message in
                         MarketingChatBubble(message: message)
                     }
-
-                    Spacer(minLength: 0)
                 }
                 .padding()
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
@@ -374,30 +545,184 @@ struct MarketingAccountsContent: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            MarketingNavBar(title: "accountsPage.title") {
-                EmptyView()
-            } trailing: {
-                MarketingToolbarGear()
+            MarketingLargeTitleBar(title: "accountsPage.title") {
+                MarketingAddAndSettingsToolbar()
             }
 
-            VStack(alignment: .leading, spacing: 16) {
-                Text("accountsPage.subtitle")
-                    .font(.subheadline)
+            VStack(alignment: .leading, spacing: 24) {
+                totalBalanceHero
+                cardsCarousel
+                allAccountsSection
+            }
+            .padding(.horizontal)
+            .padding(.bottom, 24)
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+            .background(Color(.systemGroupedBackground))
+        }
+    }
+
+    private var totalBalanceHero: some View {
+        FinanceCard {
+            VStack(alignment: .leading, spacing: 6) {
+                Text(verbatim: "Total balance")
+                    .font(.caption)
                     .foregroundStyle(AppColors.muted)
+                Text(CurrencyFormatter.format(MarketingScreenshotData.accountsBalance))
+                    .font(.title2.weight(.bold))
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+        }
+    }
 
-                FinanceCard {
-                    Text("accountsPage.listTitle")
-                        .font(.headline)
-                    Text("accountsPage.dragHint")
-                        .font(.caption)
-                        .foregroundStyle(AppColors.muted)
+    private var cardsCarousel: some View {
+        GeometryReader { geo in
+            let cardWidth: CGFloat = 178
+            let spacing: CGFloat = 10
+            let naturalWidth = cardWidth * CGFloat(accounts.count) + spacing * CGFloat(max(accounts.count - 1, 0))
+            let scale = min(1, geo.size.width / naturalWidth)
 
-                    ForEach(accounts) { account in
+            HStack(spacing: spacing) {
+                ForEach(accounts) { account in
+                    MarketingAccountCard(account: account, width: cardWidth)
+                }
+            }
+            .scaleEffect(scale, anchor: .leading)
+            .frame(width: geo.size.width, height: 148 * scale, alignment: .topLeading)
+        }
+        .frame(height: 148)
+    }
+
+    private var allAccountsSection: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Text("accountsPage.allAccounts")
+                .font(.caption.weight(.semibold))
+                .foregroundStyle(AppColors.muted)
+                .textCase(.uppercase)
+                .tracking(0.8)
+                .padding(.leading, 4)
+
+            FinanceCard {
+                VStack(spacing: 0) {
+                    ForEach(Array(accounts.enumerated()), id: \.element.id) { index, account in
+                        if index > 0 {
+                            Divider().padding(.leading, 52)
+                        }
                         MarketingAccountRow(account: account)
                     }
                 }
+            }
+        }
+    }
+}
 
-                Spacer(minLength: 0)
+private struct MarketingAccountCard: View {
+    let account: Account
+    var width: CGFloat = 190
+
+    private var metallicGradient: LinearGradient {
+        LinearGradient(
+            stops: [
+                .init(color: Color(white: 0.97), location: 0.0),
+                .init(color: Color(white: 0.84), location: 0.38),
+                .init(color: Color(white: 0.72), location: 0.62),
+                .init(color: Color(white: 0.88), location: 1.0),
+            ],
+            startPoint: .topLeading,
+            endPoint: .bottomTrailing
+        )
+    }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            HStack(alignment: .top) {
+                Image(systemName: AccountIcon.symbol(for: account.name))
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(.black)
+                    .frame(width: 34, height: 34)
+                    .background(Color.black.opacity(0.08), in: RoundedRectangle(cornerRadius: 9, style: .continuous))
+                Spacer(minLength: 8)
+                if account.isDefault {
+                    Text("accountsPage.defaultBadge")
+                        .font(.caption2.weight(.semibold))
+                        .textCase(.uppercase)
+                        .tracking(0.6)
+                        .foregroundStyle(.white)
+                        .padding(.horizontal, 10)
+                        .padding(.vertical, 4)
+                        .background(Color.black.opacity(0.82), in: Capsule())
+                }
+            }
+            Spacer(minLength: 20)
+            Text(account.name)
+                .font(.footnote)
+                .foregroundStyle(Color.black.opacity(0.55))
+                .lineLimit(1)
+            Text(CurrencyFormatter.format(account.currentBalance))
+                .font(.title3.weight(.bold))
+                .foregroundStyle(.black)
+                .lineLimit(1)
+                .minimumScaleFactor(0.7)
+        }
+        .padding(16)
+        .frame(width: width, height: 148, alignment: .topLeading)
+        .background(metallicGradient, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
+        .overlay {
+            RoundedRectangle(cornerRadius: 18, style: .continuous)
+                .strokeBorder(
+                    LinearGradient(
+                        colors: [Color.white.opacity(0.9), Color.black.opacity(0.06)],
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    ),
+                    lineWidth: 1
+                )
+        }
+        .shadow(color: .black.opacity(0.12), radius: 10, y: 6)
+    }
+}
+
+private struct MarketingAccountRow: View {
+    let account: Account
+
+    var body: some View {
+        HStack(spacing: 12) {
+            AccountIconView(name: account.name)
+            HStack(spacing: 6) {
+                Text(account.name)
+                    .font(.body.weight(.medium))
+                    .lineLimit(1)
+                if account.isDefault {
+                    Image(systemName: "star.fill")
+                        .font(.caption2)
+                        .foregroundStyle(AppColors.primary)
+                }
+            }
+            Spacer(minLength: 8)
+            Text(CurrencyFormatter.format(account.currentBalance))
+                .font(.body.weight(.semibold))
+        }
+        .padding(.vertical, 10)
+    }
+}
+
+// MARK: - Categories grid
+
+struct MarketingCategoriesContent: View {
+    private let categories = MarketingScreenshotData.categories
+    private let columns = [GridItem(.adaptive(minimum: 76), spacing: 14)]
+
+    var body: some View {
+        VStack(spacing: 0) {
+            MarketingLargeTitleBar(title: "settings.categories") {
+                Image(systemName: "plus")
+                    .foregroundStyle(AppColors.primary)
+            }
+
+            LazyVGrid(columns: columns, spacing: 20) {
+                ForEach(categories) { category in
+                    MarketingCategoryTile(category: category)
+                }
+                MarketingNewCategoryTile()
             }
             .padding()
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
@@ -406,35 +731,40 @@ struct MarketingAccountsContent: View {
     }
 }
 
-private struct MarketingAccountRow: View {
-    let account: Account
+private struct MarketingCategoryTile: View {
+    let category: Category
 
     var body: some View {
-        HStack {
-            Image(systemName: "line.3.horizontal")
+        VStack(spacing: 8) {
+            Image(systemName: CategoryIcon.symbol(for: category))
+                .font(.title3.weight(.semibold))
+                .foregroundStyle(AppColors.primary)
+                .frame(width: 58, height: 58)
+                .background(AppColors.primary.opacity(0.12), in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+            Text(category.name)
+                .font(.caption)
+                .foregroundStyle(.primary)
+                .lineLimit(1)
+        }
+        .frame(maxWidth: .infinity)
+    }
+}
+
+private struct MarketingNewCategoryTile: View {
+    var body: some View {
+        VStack(spacing: 8) {
+            Image(systemName: "plus")
+                .font(.title3.weight(.semibold))
                 .foregroundStyle(AppColors.muted)
-            VStack(alignment: .leading, spacing: 4) {
-                HStack {
-                    Text(account.name)
-                        .font(.subheadline.weight(.semibold))
-                    if account.isDefault {
-                        Text("accountsPage.defaultBadge")
-                            .font(.caption2.weight(.semibold))
-                            .padding(.horizontal, 8)
-                            .padding(.vertical, 2)
-                            .background(AppColors.primary.opacity(0.15), in: Capsule())
-                    }
+                .frame(width: 58, height: 58)
+                .background {
+                    RoundedRectangle(cornerRadius: 14, style: .continuous)
+                        .strokeBorder(AppColors.muted.opacity(0.5), style: StrokeStyle(lineWidth: 1.5, dash: [5, 4]))
                 }
-                Text("accountsPage.balanceCaption")
-                    .font(.caption)
-                    .foregroundStyle(AppColors.muted)
-                Text(CurrencyFormatter.format(account.currentBalance))
-                    .font(.title3.weight(.bold))
-            }
-            Spacer()
-            Image(systemName: "ellipsis.circle")
+            Text("categories.new")
+                .font(.caption)
                 .foregroundStyle(AppColors.muted)
         }
-        .padding(.vertical, 6)
+        .frame(maxWidth: .infinity)
     }
 }
