@@ -210,7 +210,7 @@ struct ExpensesView: View {
                     Circle()
                         .fill(chartColor(at: index))
                         .frame(width: 8, height: 8)
-                    Text(row.name)
+                    Text(SeedLocalization.localizedCategoryName(row.name))
                         .font(.caption)
                         .foregroundStyle(AppColors.muted)
                         .lineLimit(1)
@@ -289,7 +289,7 @@ private struct ExpenseRow: View {
     let onFullSwipe: () -> Void
 
     private var subtitle: String {
-        var parts = [DateUtils.formatShortDate(expense.date), expense.accountName]
+        var parts = [DateUtils.formatShortDate(expense.date), SeedLocalization.localizedAccountName(expense.accountName)]
         if let note = expense.note, !note.isEmpty {
             parts.append(note)
         }
@@ -302,7 +302,7 @@ private struct ExpenseRow: View {
                 CategoryIconView(name: expense.categoryName, icon: icon)
 
                 VStack(alignment: .leading, spacing: 2) {
-                    Text(expense.categoryName)
+                    Text(SeedLocalization.localizedCategoryName(expense.categoryName))
                         .font(.subheadline.weight(.semibold))
                     Text(subtitle)
                         .font(.caption)

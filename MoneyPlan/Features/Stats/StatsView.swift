@@ -69,7 +69,7 @@ struct StatsView: View {
                         VStack(alignment: .leading, spacing: 6) {
                             HStack {
                                 CategoryIconView(name: cat.categoryName)
-                                Text(cat.categoryName)
+                                Text(SeedLocalization.localizedCategoryName(cat.categoryName))
                                 Spacer()
                                 Text(CurrencyFormatter.format(cat.totalAmount))
                                     .font(.subheadline.weight(.semibold))

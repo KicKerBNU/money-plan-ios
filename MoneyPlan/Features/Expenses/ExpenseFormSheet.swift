@@ -40,7 +40,7 @@ struct ExpenseFormSheet: View {
                     } else {
                         Picker("expenses.form.category", selection: $categoryId) {
                             ForEach(categories) { cat in
-                                Text(cat.name).tag(cat.id)
+                                Text(cat.localizedDisplayName).tag(cat.id)
                             }
                         }
                     }
@@ -64,7 +64,7 @@ struct ExpenseFormSheet: View {
                     } else {
                         Picker("expenses.form.account", selection: $accountId) {
                             ForEach(accounts) { acc in
-                                Text(acc.name).tag(acc.id)
+                                Text(acc.localizedDisplayName).tag(acc.id)
                             }
                         }
                     }

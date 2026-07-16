@@ -199,7 +199,7 @@ struct OverviewView: View {
                     ForEach(viewModel.categoryTotals.prefix(5), id: \.name) { row in
                         HStack {
                             CategoryIconView(name: row.name)
-                            Text(row.name)
+                            Text(SeedLocalization.localizedCategoryName(row.name))
                             Spacer()
                             Text(CurrencyFormatter.format(row.amount))
                         }

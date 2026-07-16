@@ -42,6 +42,7 @@
 		8431211B16D74315B24DA7B2 /* MoneyPlanApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC7ACEDF23982E9E2CA2F867 /* MoneyPlanApp.swift */; };
 		93EB68917743DD7EC28F0D44 /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A251F5D8443B4159BBE9BD4B /* AuthService.swift */; };
 		998489A8D7E1D94D3B42D3AF /* IncomeIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = B75323D3CA7DEFDDF1A26940 /* IncomeIcon.swift */; };
+		E7C4A91B2D3F5E608172934 /* SeedLocalization.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8D5B02C3E406F719283045 /* SeedLocalization.swift */; };
 		9BE9809AA1DCE4CC2F22C78F /* CategoriesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9332C0EECB0FD5D71AC434A /* CategoriesView.swift */; };
 		A1C5A32F9DE0F70D87BD5E95 /* FinanceAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9D3B551C337D25B12A8738F /* FinanceAPI.swift */; };
 		A9C33F16C7813F9B430BA811 /* OverviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AB9162DE03405A29E0ADC1C /* OverviewView.swift */; };
@@ -135,6 +136,7 @@
 		EECB05C68F571003623B46C1 /* MoneyPreferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoneyPreferences.swift; sourceTree = "<group>"; };
 		F1D3A07C7DFB4BFEE0387B01 /* SwipeToDeleteRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwipeToDeleteRow.swift; sourceTree = "<group>"; };
 		F9086F3696D1BC540FD2C232 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		F8D5B02C3E406F719283045 /* SeedLocalization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeedLocalization.swift; sourceTree = "<group>"; };
 		F9D3B551C337D25B12A8738F /* FinanceAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinanceAPI.swift; sourceTree = "<group>"; };
 		FC7ACEDF23982E9E2CA2F867 /* MoneyPlanApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoneyPlanApp.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -418,6 +420,7 @@
 				2F0943E92808FBD3D6B3F710 /* CurrencyFormatter.swift */,
 				C626E57E422CCC291F60273D /* DateUtils.swift */,
 				B75323D3CA7DEFDDF1A26940 /* IncomeIcon.swift */,
+				F8D5B02C3E406F719283045 /* SeedLocalization.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -533,11 +536,31 @@
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				Base,
+				bg,
+				cs,
+				da,
+				de,
+				el,
 				en,
 				"en-US",
+				es,
+				et,
+				fi,
+				fr,
+				hr,
+				hu,
+				it,
+				lt,
+				lv,
+				nl,
+				pl,
 				pt,
 				"pt-BR",
 				"pt-PT",
+				ro,
+				sk,
+				sl,
+				sv,
 			);
 			mainGroup = F8E9E32473BC14922BA7B128;
 			minimizedProjectReferenceProxies = 1;
@@ -598,6 +621,7 @@
 				5529915E16CFA04F8947B546 /* CategoryIcon.swift in Sources */,
 				333470A4E5B4713D369F435E /* ChatbotView.swift in Sources */,
 				658F6036D6E1274AB2AED2F3 /* CurrencyFormatter.swift in Sources */,
+				E7C4A91B2D3F5E608172934 /* SeedLocalization.swift in Sources */,
 				5DB34E7446233D548C38C753 /* DateUtils.swift in Sources */,
 				D9A9B3F9CFB32485D90BA833 /* ExpenseChatConsentStore.swift in Sources */,
 				FBA032CF40921970E1375F88 /* ExpenseChatConsentViews.swift in Sources */,

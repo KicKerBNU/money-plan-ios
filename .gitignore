@@ -14,3 +14,6 @@ MoneyPlan/Resources/GoogleService-Info.plist
 # SPM
 .swiftpm/
 .build/
+
+# Localization script cache (machine translations)
+scripts/.translation-cache.json

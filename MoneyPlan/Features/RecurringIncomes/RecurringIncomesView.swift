@@ -166,7 +166,7 @@ private struct RecurringIncomeRow: View {
                         .clipShape(Capsule())
                 }
             }
-            Text(item.accountName)
+            Text(SeedLocalization.localizedAccountName(item.accountName))
                 .font(.subheadline)
                 .foregroundStyle(AppColors.muted)
             if item.active {
@@ -231,7 +231,7 @@ private struct RecurringIncomeEditSheet: View {
 
                 Picker("expenses.form.account", selection: $accountId) {
                     ForEach(accounts) { acc in
-                        Text(acc.name).tag(acc.id)
+                        Text(acc.localizedDisplayName).tag(acc.id)
                     }
                 }
 

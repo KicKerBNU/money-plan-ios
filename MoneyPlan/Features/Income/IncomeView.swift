@@ -205,7 +205,10 @@ struct IncomeView: View {
         if let note = entry.note?.trimmingCharacters(in: .whitespacesAndNewlines), !note.isEmpty {
             return note
         }
-        return entry.accountName ?? String(localized: "income.title")
+        if let accountName = entry.accountName {
+            return SeedLocalization.localizedAccountName(accountName)
+        }
+        return String(localized: "income.title")
     }
 }
 
@@ -249,7 +252,7 @@ private struct IncomeEntryRow: View {
 
     private var subtitle: String {
         let date = DateUtils.formatShortDate(entry.date)
-        let account = entry.accountName ?? ""
+        let account = entry.accountName.map { SeedLocalization.localizedAccountName($0) } ?? ""
         if account.isEmpty { return date }
         return "\(date) · \(account)"
     }

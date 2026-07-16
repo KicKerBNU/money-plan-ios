@@ -286,7 +286,7 @@ private struct AccountCard: View {
 
             Spacer(minLength: 20)
 
-            Text(account.name)
+            Text(account.localizedDisplayName)
                 .font(.footnote)
                 .foregroundStyle(isDark ? Color.white.opacity(0.7) : Color.black.opacity(0.55))
                 .lineLimit(1)
@@ -328,7 +328,7 @@ private struct AccountRow: View {
             AccountIconView(name: account.name)
 
             HStack(spacing: 6) {
-                Text(account.name)
+                Text(account.localizedDisplayName)
                     .font(.body.weight(.medium))
                     .lineLimit(1)
 

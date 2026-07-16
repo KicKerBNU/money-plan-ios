@@ -196,7 +196,7 @@ private struct CategoryTile: View {
                     }
                 }
 
-            Text(category.name)
+            Text(category.localizedDisplayName)
                 .font(.caption)
                 .foregroundStyle(.primary)
                 .lineLimit(1)

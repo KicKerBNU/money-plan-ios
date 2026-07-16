@@ -53,7 +53,7 @@ struct IncomeFormSheet: View {
                     } else {
                         Picker("income.form.account", selection: $accountId) {
                             ForEach(accounts) { acc in
-                                Text(acc.name).tag(acc.id)
+                                Text(acc.localizedDisplayName).tag(acc.id)
                             }
                         }
                     }

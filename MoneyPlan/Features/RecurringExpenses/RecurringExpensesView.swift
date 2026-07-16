@@ -171,7 +171,7 @@ private struct RecurringExpenseRow: View {
                         .clipShape(Capsule())
                 }
             }
-            Text("\(item.categoryName) · \(item.accountName)")
+            Text("\(SeedLocalization.localizedCategoryName(item.categoryName)) · \(SeedLocalization.localizedAccountName(item.accountName))")
                 .font(.subheadline)
                 .foregroundStyle(AppColors.muted)
             if item.active {
@@ -241,13 +241,13 @@ private struct RecurringExpenseEditSheet: View {
 
                 Picker("expenses.form.category", selection: $categoryId) {
                     ForEach(categories) { cat in
-                        Text(cat.name).tag(cat.id)
+                        Text(cat.localizedDisplayName).tag(cat.id)
                     }
                 }
 
                 Picker("expenses.form.account", selection: $accountId) {
                     ForEach(accounts) { acc in
-                        Text(acc.name).tag(acc.id)
+                        Text(acc.localizedDisplayName).tag(acc.id)
                     }
                 }
 
