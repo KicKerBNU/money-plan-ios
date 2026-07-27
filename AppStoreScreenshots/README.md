@@ -34,15 +34,19 @@ sips -g pixelWidth -g pixelHeight AppStoreScreenshots/iPhone-6.5/01-expenses.png
 
 ## Recommended upload order
 
-| # | File | Style |
-|---|------|--------|
-| 01 | `01-expenses.png` | Hero — floating cards + value prop |
-| 02 | `02-chatbot.png` | Phone — AI assistant |
-| 03 | `03-accounts.png` | Phone — accounts |
-| 04 | `04-income.png` | Phone — income |
-| 05 | `05-overview.png` | Phone — charts & insights |
+All slides share the same brand gradient and (except the pan pair) the same upright phone size and vertical position.
 
-Optional: `11-expenses-phone.png`, then 06–10.
+| # | File | Notes |
+|---|------|--------|
+| 01 | `01-expenses.png` | **Pan left** — continuous phone (swipe into 02) |
+| 02 | `02-expenses-continue.png` | **Pan right** — same phone, seam-aligned with 01 |
+| 03 | `03-chatbot.png` | AI assistant |
+| 04 | `04-income.png` | Income |
+| 05 | `05-accounts.png` | Accounts |
+| 06 | `06-overview.png` | Insights |
+| 07–11 | stats, add expense, categories, settings, login | Same upright layout |
+
+**Pan tip:** Upload **01** then **02** in order. Phone centers sit on the shared seam so swiping looks like one continuous device.
 
 ## App Store Connect steps
 

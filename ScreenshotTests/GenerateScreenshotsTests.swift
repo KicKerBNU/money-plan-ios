@@ -17,16 +17,17 @@ final class GenerateScreenshotsTests: XCTestCase {
         MoneyPreferences.shared.setCurrency("EUR")
 
         let screens: [(String, AnyView)] = [
-            ("01-expenses", AnyView(MarketingExpensesScreenshot())),
-            ("02-chatbot", AnyView(MarketingChatbotScreenshot())),
-            ("03-accounts", AnyView(MarketingAccountsScreenshot())),
+            ("01-expenses", AnyView(MarketingPanLeftScreenshot())),
+            ("02-expenses-continue", AnyView(MarketingPanRightScreenshot())),
+            ("03-chatbot", AnyView(MarketingChatbotScreenshot())),
             ("04-income", AnyView(MarketingIncomeScreenshot())),
-            ("05-overview", AnyView(MarketingOverviewScreenshot())),
-            ("06-stats", AnyView(MarketingStatsScreenshot())),
-            ("07-add-expense", AnyView(MarketingAddExpenseScreenshot())),
-            ("08-categories", AnyView(MarketingCategoriesScreenshot())),
-            ("09-settings", AnyView(MarketingSettingsScreenshot())),
-            ("10-login", AnyView(MarketingLoginScreenshot())),
+            ("05-accounts", AnyView(MarketingAccountsScreenshot())),
+            ("06-overview", AnyView(MarketingOverviewScreenshot())),
+            ("07-stats", AnyView(MarketingStatsScreenshot())),
+            ("08-add-expense", AnyView(MarketingAddExpenseScreenshot())),
+            ("09-categories", AnyView(MarketingCategoriesScreenshot())),
+            ("10-settings", AnyView(MarketingSettingsScreenshot())),
+            ("11-login", AnyView(MarketingLoginScreenshot())),
         ]
 
         let iPhone65 = ScreenshotSpec(

@@ -134,7 +134,7 @@ struct MarketingAddAndSettingsToolbar: View {
     }
 }
 
-/// Large-title header matching the redesigned list screens.
+/// Large-title header — fixed height so every marketing screen aligns.
 struct MarketingLargeTitleBar: View {
     let title: LocalizedStringKey
     var trailing: AnyView
@@ -147,15 +147,17 @@ struct MarketingLargeTitleBar: View {
     var body: some View {
         HStack(alignment: .center) {
             Text(title)
-                .font(.largeTitle.bold())
+                .font(.system(size: 28, weight: .bold))
+                .foregroundStyle(Color.primary)
                 .lineLimit(1)
-                .minimumScaleFactor(0.8)
+                .minimumScaleFactor(0.75)
             Spacer(minLength: 8)
             trailing
         }
+        .frame(height: 44, alignment: .center)
         .padding(.horizontal, 16)
-        .padding(.top, 4)
-        .padding(.bottom, 4)
+        .padding(.top, 8)
+        .padding(.bottom, 8)
     }
 }
 
@@ -484,7 +486,7 @@ private struct MarketingIncomeEntryRow: View {
 
 // MARK: - Chatbot
 
-private struct MarketingChatbotContent: View {
+struct MarketingChatbotContent: View {
     private let messages = MarketingScreenshotData.chatMessages
 
     var body: some View {

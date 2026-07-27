@@ -8,6 +8,18 @@ struct MarketingScreenshotCopyItem {
 
 /// App Store marketing copy paired with each screenshot slot.
 enum MarketingScreenshotCopy {
+    /// Pan pair 01 — left half of continuous phone
+    static let panLeft = MarketingScreenshotCopyItem(
+        category: "",
+        headline: "Need clarity\non spending?",
+        subheadline: nil
+    )
+    /// Pan pair 02 — right half continues the same phone
+    static let panRight = MarketingScreenshotCopyItem(
+        category: "",
+        headline: "Your month,\nrevealed.",
+        subheadline: nil
+    )
     static let expensesHero = MarketingScreenshotCopyItem(
         category: "",
         headline: "Your personal finance app",
@@ -15,62 +27,63 @@ enum MarketingScreenshotCopy {
     )
     static let expenses = MarketingScreenshotCopyItem(
         category: "EXPENSE TRACKING",
-        headline: "How much did I spend this month?",
-        subheadline: "Track spending, income, and every account"
+        headline: "Track every purchase\nin seconds",
+        subheadline: nil
     )
     static let income = MarketingScreenshotCopyItem(
         category: "INCOME & CASH FLOW",
-        headline: "Track salary and side income",
+        headline: "Salary, freelance,\nall in one place",
         subheadline: nil
     )
     static let chatbot = MarketingScreenshotCopyItem(
         category: "AI EXPENSE ASSISTANT",
-        headline: "Ask about your spending in plain language",
+        headline: "Ask your money\nanything",
         subheadline: nil
     )
     static let accounts = MarketingScreenshotCopyItem(
         category: "ACCOUNT OVERVIEW",
-        headline: "See every account balance",
+        headline: "Cash, cards &\nbank balances",
         subheadline: nil
     )
     static let login = MarketingScreenshotCopyItem(
         category: "SECURE SIGN-IN",
-        headline: "Start in under a minute",
-        subheadline: "Email, Apple, or Google"
+        headline: "Start in under\na minute",
+        subheadline: nil
     )
     static let addExpense = MarketingScreenshotCopyItem(
         category: "QUICK ENTRY",
-        headline: "Log an expense in seconds",
+        headline: "Log an expense\nin seconds",
         subheadline: nil
     )
     static let overview = MarketingScreenshotCopyItem(
         category: "SPENDING INSIGHTS",
-        headline: "See income vs expenses at a glance",
+        headline: "Income vs expenses\nat a glance",
         subheadline: nil
     )
     static let stats = MarketingScreenshotCopyItem(
         category: "CATEGORY BREAKDOWN",
-        headline: "Know where your money goes",
+        headline: "Know where your\nmoney goes",
         subheadline: nil
     )
     static let expensesByCategory = MarketingScreenshotCopyItem(
         category: "ORGANIZE SPENDING",
-        headline: "Custom categories with icons",
+        headline: "Custom categories\nwith icons",
         subheadline: nil
     )
     static let categories = MarketingScreenshotCopyItem(
         category: "ORGANIZE SPENDING",
-        headline: "Custom categories with icons",
+        headline: "Custom categories\nwith icons",
         subheadline: nil
     )
     static let settings = MarketingScreenshotCopyItem(
         category: "YOUR PREFERENCES",
-        headline: "Settings in one dedicated place",
+        headline: "Settings in one\ndedicated place",
         subheadline: nil
     )
 }
 
 /// Wraps app UI in a polished App Store marketing frame.
+/// Phone size and vertical position are fixed so every slide matches.
 struct MarketingScreenshotFrame<Content: View>: View {
     let copy: MarketingScreenshotCopyItem
     @ViewBuilder var phoneContent: () -> Content
@@ -100,35 +113,24 @@ struct MarketingScreenshotFrame<Content: View>: View {
     var body: some View {
         GeometryReader { geo in
             let isPad = MarketingLayout.usesPadLayout(width: geo.size.width)
-            ZStack(alignment: .bottom) {
+            let headerH = MarketingScreenshotMetrics.headerHeight(isPad: isPad)
+            let phoneW = MarketingScreenshotMetrics.phoneWidth(canvas: geo.size, isPad: isPad)
+            let phoneCenterY = MarketingScreenshotMetrics.phoneCenterY(canvas: geo.size, isPad: isPad)
+
+            ZStack {
                 MarketingCanvasBackground(isPad: isPad)
 
                 VStack(spacing: 0) {
                     marketingHeader(isPad: isPad)
+                        .frame(height: headerH, alignment: .top)
                     Spacer(minLength: 0)
                 }
-                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
 
-                MarketingPhoneMockup(
-                    isPad: isPad,
-                    canvas: geo.size,
-                    maxPhoneHeight: geo.size.height - headerReserve(isPad: isPad) + (isPad ? 0 : 12),
-                    content: phoneContent
-                )
+                MarketingPhoneChrome(phoneWidth: phoneW, isPad: isPad, content: phoneContent)
+                    .position(x: geo.size.width / 2, y: phoneCenterY)
             }
+            .clipped()
         }
-    }
-
-    /// Vertical space reserved for logo + headline so the phone mockup does not overlap copy.
-    private func headerReserve(isPad: Bool) -> CGFloat {
-        if isPad {
-            return copy.subheadline != nil ? 250 : 210
-        }
-        var height: CGFloat = 28 + 22 // brand lockup
-        if !copy.category.isEmpty { height += 18 }
-        height += copy.subheadline != nil ? 78 : 58 // headline (+ optional subheadline)
-        height += 10
-        return height
     }
 
     @ViewBuilder
@@ -151,7 +153,7 @@ struct MarketingScreenshotFrame<Content: View>: View {
                 .multilineTextAlignment(.center)
                 .lineSpacing(isPad ? 3 : 2)
                 .minimumScaleFactor(0.82)
-                .lineLimit(3)
+                .lineLimit(2)
                 .fixedSize(horizontal: false, vertical: true)
                 .padding(.horizontal, isPad ? 44 : 22)
                 .padding(.top, copy.category.isEmpty ? (isPad ? 16 : 12) : (isPad ? 10 : 8))
@@ -161,39 +163,36 @@ struct MarketingScreenshotFrame<Content: View>: View {
                     .font(.system(size: isPad ? 17 : 13, weight: .medium, design: .rounded))
                     .foregroundStyle(MarketingBrandPalette.subheadline)
                     .multilineTextAlignment(.center)
-                    .lineLimit(2)
+                    .lineLimit(1)
                     .padding(.horizontal, isPad ? 40 : 24)
                     .padding(.top, 6)
             }
         }
-        .padding(.bottom, isPad ? 12 : 8)
+        .padding(.bottom, isPad ? 16 : 12)
     }
 }
 
-// MARK: - Phone mockup
+// MARK: - Shared phone chrome
 
-private struct MarketingPhoneMockup<Content: View>: View {
+/// Device bezel + scaled screen content. Used by upright slides and the pan pair.
+struct MarketingPhoneChrome<Content: View>: View {
+    let phoneWidth: CGFloat
     let isPad: Bool
-    let canvas: CGSize
-    let maxPhoneHeight: CGFloat
+    var bezelExtra: CGFloat = 0
     @ViewBuilder var content: () -> Content
 
     var body: some View {
-        let horizontalInset: CGFloat = isPad ? 72 : 10
-        let maxWidth = canvas.width - horizontalInset * 2
-        let widthFromHeight = maxPhoneHeight / MarketingPhoneMetrics.aspect
-        let phoneWidth = min(maxWidth, widthFromHeight)
-        let phoneHeight = phoneWidth * MarketingPhoneMetrics.aspect
+        let phoneHeight = MarketingScreenshotMetrics.phoneHeight(phoneWidth: phoneWidth)
         let screenRadius = phoneWidth * 0.105
-        let bezelWidth: CGFloat = isPad ? 12 : 10
+        let bezel = MarketingScreenshotMetrics.bezel(isPad: isPad) + bezelExtra
         let scale = phoneWidth / MarketingPhoneMetrics.contentWidth
 
         ZStack {
             RoundedRectangle(cornerRadius: screenRadius + 6, style: .continuous)
                 .fill(MarketingBrandPalette.bezel)
-                .frame(width: phoneWidth + bezelWidth, height: phoneHeight + bezelWidth)
-                .shadow(color: .black.opacity(0.35), radius: 24, y: 14)
-                .shadow(color: .black.opacity(0.12), radius: 6, y: 3)
+                .frame(width: phoneWidth + bezel, height: phoneHeight + bezel)
+                .shadow(color: .black.opacity(0.32), radius: 22, y: 14)
+                .shadow(color: .black.opacity(0.10), radius: 5, y: 2)
 
             RoundedRectangle(cornerRadius: screenRadius, style: .continuous)
                 .fill(Color(.systemBackground))
@@ -221,7 +220,6 @@ private struct MarketingPhoneMockup<Content: View>: View {
                         )
                 }
         }
-        .frame(width: phoneWidth + bezelWidth, height: phoneHeight + bezelWidth)
-        .padding(.bottom, isPad ? 0 : -16)
+        .frame(width: phoneWidth + bezel, height: phoneHeight + bezel)
     }
 }

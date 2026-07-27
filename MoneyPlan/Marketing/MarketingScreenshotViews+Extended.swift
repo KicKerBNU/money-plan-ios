@@ -19,8 +19,11 @@ struct MarketingAddExpenseScreenshot: View {
             MarketingScreenshotShell(tab: .expenses) {
                 ZStack(alignment: .bottom) {
                     MarketingExpensesContent()
-                        .opacity(0.35)
                         .allowsHitTesting(false)
+
+                    // Scrim keeps the Expenses title black (not washed-out gray).
+                    Color.black.opacity(0.28)
+                        .ignoresSafeArea()
 
                     MarketingExpenseFormPanel()
                 }
@@ -271,6 +274,8 @@ private struct MarketingExpenseFormPanel: View {
                 .foregroundStyle(AppColors.muted)
             Spacer()
             Text(value)
+                .foregroundStyle(Color.primary)
+                .fontWeight(.medium)
             Image(systemName: "chevron.right")
                 .font(.caption.weight(.semibold))
                 .foregroundStyle(AppColors.muted.opacity(0.6))
@@ -285,6 +290,8 @@ private struct MarketingExpenseFormPanel: View {
                 .foregroundStyle(AppColors.muted)
             Spacer()
             Text(value)
+                .foregroundStyle(Color.primary)
+                .fontWeight(.semibold)
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 12)
@@ -394,18 +401,30 @@ struct MarketingStatsContent: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            MarketingLargeTitleBar(title: "stats.title") {
+            // Short title matches visual weight of Expenses / Income / Accounts.
+            MarketingLargeTitleBar(title: "Stats") {
                 MarketingToolbarGear()
             }
 
             VStack(alignment: .leading, spacing: 16) {
-                Text("stats.subtitle")
-                    .font(.subheadline)
-                    .foregroundStyle(AppColors.muted)
+                HStack {
+                    Image(systemName: "chevron.left")
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(AppColors.primary)
+                    Spacer()
+                    Text("July 2026")
+                        .font(.subheadline.weight(.semibold))
+                    Spacer()
+                    Image(systemName: "chevron.right")
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(AppColors.primary)
+                }
+                .padding(.top, 4)
 
                 FinanceCard {
                     Text(CurrencyFormatter.format(stats.total))
-                        .font(.largeTitle.weight(.bold))
+                        .font(.title.weight(.bold))
+                        .foregroundStyle(Color.primary)
                     Text(String(format: String(localized: "stats.spentAcrossCategories"), stats.categories.count))
                         .font(.caption)
                         .foregroundStyle(AppColors.muted)
@@ -414,6 +433,7 @@ struct MarketingStatsContent: View {
                 FinanceCard {
                     Text("stats.lineupTitle")
                         .font(.headline)
+                        .foregroundStyle(Color.primary)
                     let maxTotal = stats.categories.map(\.totalAmount).max() ?? 1
 
                     ForEach(stats.categories) { cat in
@@ -421,9 +441,11 @@ struct MarketingStatsContent: View {
                             HStack {
                                 CategoryIconView(name: cat.categoryName)
                                 Text(cat.categoryName)
+                                    .foregroundStyle(Color.primary)
                                 Spacer()
                                 Text(CurrencyFormatter.format(cat.totalAmount))
                                     .font(.subheadline.weight(.semibold))
+                                    .foregroundStyle(Color.primary)
                             }
                             GeometryReader { geo in
                                 RoundedRectangle(cornerRadius: 4)
@@ -576,8 +598,10 @@ private struct MarketingSignInWithAppleButton: View {
 private struct MarketingGoogleSignInButton: View {
     var body: some View {
         HStack(spacing: 8) {
-            Image(systemName: "globe")
-                .font(.body.weight(.semibold))
+            Image("GoogleG")
+                .resizable()
+                .interpolation(.high)
+                .frame(width: 18, height: 18)
             Text("auth.login.googleButton")
                 .font(.body.weight(.semibold))
         }

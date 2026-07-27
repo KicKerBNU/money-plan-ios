@@ -273,10 +273,12 @@ struct LoginView: View {
         Button {
             Task { await submitGoogle() }
         } label: {
-                HStack(spacing: 8) {
-                    Image(systemName: "globe")
-                        .font(.body.weight(.semibold))
-                    Text("auth.login.googleButton")
+            HStack(spacing: 8) {
+                Image("GoogleG")
+                    .resizable()
+                    .interpolation(.high)
+                    .frame(width: 18, height: 18)
+                Text("auth.login.googleButton")
                     .font(.body.weight(.semibold))
             }
             .frame(maxWidth: .infinity)

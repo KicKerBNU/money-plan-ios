@@ -7,7 +7,7 @@ enum IncomeIcon {
         "wage": "briefcase.fill",
         "freelance": "laptopcomputer",
         "contract": "doc.text.fill",
-        "consulting": "handshake.fill",
+        "consulting": "person.2.fill",
         "bonus": "gift.fill",
         "dividend": "chart.line.uptrend.xyaxis",
         "rent": "house.fill",
