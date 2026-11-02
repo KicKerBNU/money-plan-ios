@@ -6,16 +6,15 @@ import Charts
 final class OverviewViewModel {
     var preset: OverviewPreset = .month
     var anchor = Date()
-    var expenses: [Expense] = []
-    var incomes: [IncomeEntry] = []
+    var summary: OverviewSummary?
     var accounts: [Account] = []
     var isLoading = true
     var errorMessage: String?
 
     var periodRange: PeriodRange { OverviewPeriod.range(preset: preset, anchor: anchor) }
 
-    var totalIncome: Double { incomes.reduce(0) { $0 + $1.amount } }
-    var totalExpenses: Double { expenses.reduce(0) { $0 + $1.amount } }
+    var totalIncome: Double { summary?.totalIncome ?? 0 }
+    var totalExpenses: Double { summary?.totalExpenses ?? 0 }
     var net: Double { totalIncome - totalExpenses }
     var savingsRate: Double {
         guard totalIncome > 0 else { return 0 }
@@ -24,27 +23,18 @@ final class OverviewViewModel {
     var accountsBalance: Double { accounts.reduce(0) { $0 + $1.currentBalance } }
 
     var categoryTotals: [(name: String, amount: Double, share: Double)] {
-        var map: [String: Double] = [:]
-        for e in expenses { map[e.categoryName, default: 0] += e.amount }
-        return map.map { (name: $0.key, amount: $0.value, share: totalExpenses > 0 ? $0.value / totalExpenses : 0) }
-            .sorted { $0.amount > $1.amount }
+        let total = totalExpenses
+        return (summary?.categories ?? []).map { row in
+            (name: row.categoryName, amount: row.totalAmount, share: total > 0 ? row.totalAmount / total : 0)
+        }
     }
 
     var chartBuckets: [(label: String, income: Double, expenses: Double)] {
         let keys = OverviewPeriod.listBucketKeys(preset: preset, start: periodRange.start, end: periodRange.end)
-        var inc = Dictionary(uniqueKeysWithValues: keys.map { ($0, 0.0) })
-        var exp = inc
-
-        for i in incomes {
-            let key = OverviewPeriod.bucketKey(for: i.date, preset: preset)
-            if inc[key] != nil { inc[key, default: 0] += i.amount }
-        }
-        for e in expenses {
-            let key = OverviewPeriod.bucketKey(for: e.date, preset: preset)
-            if exp[key] != nil { exp[key, default: 0] += e.amount }
-        }
+        let byKey = Dictionary(uniqueKeysWithValues: (summary?.series ?? []).map { ($0.key, $0) })
 
         return keys.map { key in
+            let point = byKey[key]
             let label: String
             if preset == .year {
                 label = String(key.suffix(2))
@@ -55,7 +45,7 @@ final class OverviewViewModel {
             } else {
                 label = key
             }
-            return (label, inc[key] ?? 0, exp[key] ?? 0)
+            return (label, point?.income ?? 0, point?.expenses ?? 0)
         }
     }
 
@@ -89,12 +79,15 @@ final class OverviewViewModel {
         errorMessage = nil
         defer { isLoading = false }
         let range = periodRange
+        let bucket = preset == .year ? "month" : "day"
         do {
-            async let exp = FinanceAPI.fetchExpenses(startDate: range.start, endDate: range.end)
-            async let inc = FinanceAPI.fetchIncomes(startDate: range.start, endDate: range.end)
+            async let summaryTask = FinanceAPI.fetchOverviewSummary(
+                startDate: range.start,
+                endDate: range.end,
+                bucket: bucket
+            )
             async let acc = FinanceAPI.fetchAccounts()
-            expenses = try await exp
-            incomes = try await inc
+            summary = try await summaryTask
             accounts = try await acc
         } catch {
             errorMessage = error.localizedDescription
@@ -120,6 +113,12 @@ struct OverviewView: View {
             Group {
                 if viewModel.isLoading {
                     LoadingStateView()
+                } else if let error = viewModel.errorMessage {
+                    ContentUnavailableView(
+                        "common.unexpectedError",
+                        systemImage: "exclamationmark.triangle",
+                        description: Text(error)
+                    )
                 } else {
                     content
                 }

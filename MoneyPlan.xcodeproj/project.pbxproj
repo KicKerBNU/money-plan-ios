@@ -45,6 +45,7 @@
 		74DF71F323293862278BECBE /* SwipeToDeleteRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1D3A07C7DFB4BFEE0387B01 /* SwipeToDeleteRow.swift */; };
 		78D4FA1249E29254A9F8DC70 /* RecurringExpensesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D2BF074E3830135C65B877B /* RecurringExpensesView.swift */; };
 		7B36250BBDB54737FEA96914 /* AppTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 629A21396DC9DC70DAA7CA3F /* AppTheme.swift */; };
+		80682B47AD8B341B8B5CC446 /* View+FormAccessibility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F57EADD0CCD39E4D0858629 /* View+FormAccessibility.swift */; };
 		8128981813EF4B19E5A5016F /* AccountsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B62C843536B751C032DB55B3 /* AccountsView.swift */; };
 		8431211B16D74315B24DA7B2 /* MoneyPlanApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC7ACEDF23982E9E2CA2F867 /* MoneyPlanApp.swift */; };
 		868C65E784E72C89B41043D8 /* OverviewPeriodTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE19AF968E0E56AD9C46A339 /* OverviewPeriodTests.swift */; };
@@ -143,6 +144,7 @@
 		90910C4C8F87C854C5E81299 /* AuthAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthAPI.swift; sourceTree = "<group>"; };
 		953E7E9CB00744FFED3A3222 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		989D051614B728EDCFCD8EEC /* FormDatePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FormDatePicker.swift; sourceTree = "<group>"; };
+		9F57EADD0CCD39E4D0858629 /* View+FormAccessibility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+FormAccessibility.swift"; sourceTree = "<group>"; };
 		A251F5D8443B4159BBE9BD4B /* AuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
 		AB06E2ED2139A0EBA2B4D8D8 /* SmokeUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SmokeUITests.swift; sourceTree = "<group>"; };
 		ABB1D5AD6229C9EC81E4C00C /* MoneyPlanTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = MoneyPlanTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -342,6 +344,7 @@
 				3B1FD95C8AF3834D23D5D4FC /* FinanceCard.swift */,
 				989D051614B728EDCFCD8EEC /* FormDatePicker.swift */,
 				F1D3A07C7DFB4BFEE0387B01 /* SwipeToDeleteRow.swift */,
+				9F57EADD0CCD39E4D0858629 /* View+FormAccessibility.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -814,6 +817,7 @@
 				F9DA343C69AA8DE623CB82D5 /* UITestPageAnchor.swift in Sources */,
 				1DA6D67EB408FAC19E438388 /* UITestingSupport.swift in Sources */,
 				FAEAB63705AA8525906F45BF /* UITestingURLProtocol.swift in Sources */,
+				80682B47AD8B341B8B5CC446 /* View+FormAccessibility.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

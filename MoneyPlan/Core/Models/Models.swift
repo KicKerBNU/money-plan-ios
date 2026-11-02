@@ -235,8 +235,45 @@ struct ExpenseChatReply: Codable, Sendable {
 
 // MARK: - API envelope
 
+struct ListMeta: Decodable, Sendable {
+    var limit: Int
+    var returned: Int
+    var truncated: Bool
+}
+
+struct ListedResult<T: Sendable>: Sendable {
+    var items: [T]
+    var truncated: Bool
+}
+
 struct DataResponse<T: Decodable>: Decodable {
     var data: T
+    var meta: ListMeta?
+}
+
+struct OverviewCategoryTotal: Decodable, Sendable, Identifiable {
+    var categoryId: Int
+    var categoryName: String
+    var totalAmount: Double
+    var id: Int { categoryId }
+}
+
+struct OverviewSeriesPoint: Decodable, Sendable {
+    var key: String
+    var income: Double
+    var expenses: Double
+}
+
+struct OverviewSummary: Decodable, Sendable {
+    var startDate: String
+    var endDate: String
+    var bucket: String
+    var totalIncome: Double
+    var totalExpenses: Double
+    var incomeCount: Int
+    var expenseCount: Int
+    var categories: [OverviewCategoryTotal]
+    var series: [OverviewSeriesPoint]
 }
 
 struct APIErrorBody: Decodable {

@@ -102,6 +102,20 @@ final class UITestingURLProtocol: URLProtocol, @unchecked Sendable {
             Self.state.recurringIncomes.removeAll { ($0["id"] as? Int) == id }
             status = 204
             responseBody = NSNull()
+        } else if path.contains("/v1/stats/overview-summary") {
+            responseBody = [
+                "data": [
+                    "startDate": "2026-01-01",
+                    "endDate": "2026-01-31",
+                    "bucket": "day",
+                    "totalIncome": 0,
+                    "totalExpenses": 0,
+                    "incomeCount": 0,
+                    "expenseCount": 0,
+                    "categories": [],
+                    "series": [],
+                ] as [String: Any],
+            ]
         } else if path.contains("/v1/stats") {
             responseBody = ["data": ["categories": []]]
         } else if path.contains("/v1/ai/") {

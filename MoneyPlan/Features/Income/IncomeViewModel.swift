@@ -9,6 +9,7 @@ final class IncomeViewModel {
     var isLoading = true
     var isRefreshing = false
     var errorMessage: String?
+    var listTruncated = false
 
     private(set) var hasCompletedInitialLoad = false
     private(set) var year: Int
@@ -66,7 +67,9 @@ final class IncomeViewModel {
             async let inc = FinanceAPI.fetchIncomes(year: year, month: month)
             async let acc = FinanceAPI.fetchAccounts()
             async let recurring = FinanceAPI.fetchRecurringIncomes()
-            entries = try await inc
+            let incomeList = try await inc
+            entries = incomeList.items
+            listTruncated = incomeList.truncated
             accounts = try await acc
             recurringIncomes = try await recurring
             hasCompletedInitialLoad = true

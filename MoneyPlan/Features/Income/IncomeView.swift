@@ -82,6 +82,15 @@ struct IncomeView: View {
             LazyVStack(spacing: 24) {
                 periodPicker
 
+                if viewModel.listTruncated {
+                    Text("income.list.truncated")
+                        .font(.caption.weight(.semibold))
+                        .foregroundStyle(.orange)
+                        .padding(12)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .background(Color.orange.opacity(0.12), in: RoundedRectangle(cornerRadius: 12))
+                }
+
                 totalHero
 
                 recentSection
@@ -105,6 +114,7 @@ struct IncomeView: View {
             } label: {
                 Image(systemName: "chevron.left")
                     .font(.subheadline.weight(.semibold))
+                    .minHitTarget()
             }
             .foregroundStyle(AppColors.primary)
             .accessibilityLabel("income.period.prev")
@@ -121,6 +131,7 @@ struct IncomeView: View {
             } label: {
                 Image(systemName: "chevron.right")
                     .font(.subheadline.weight(.semibold))
+                    .minHitTarget()
             }
             .foregroundStyle(AppColors.primary)
             .accessibilityLabel("income.period.next")
@@ -135,7 +146,7 @@ struct IncomeView: View {
                 .foregroundStyle(AppColors.muted)
 
             Text(CurrencyFormatter.format(viewModel.total))
-                .font(.system(size: 38, weight: .bold, design: .rounded))
+                .font(.system(.largeTitle, design: .rounded).weight(.bold))
                 .foregroundStyle(AppColors.primary)
                 .minimumScaleFactor(0.7)
                 .lineLimit(1)

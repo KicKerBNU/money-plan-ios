@@ -105,6 +105,16 @@ struct ExpensesView: View {
                 periodPicker
                 summaryCard
 
+                if viewModel.listTruncated {
+                    Text("expenses.list.truncated")
+                        .font(.caption.weight(.semibold))
+                        .foregroundStyle(.orange)
+                        .padding(12)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .background(Color.orange.opacity(0.12), in: RoundedRectangle(cornerRadius: 12))
+                        .accessibilityAddTraits(.isStaticText)
+                }
+
                 if viewModel.filteredExpenses.isEmpty {
                     EmptyStateView(
                         title: "expenses.emptyMonth.title",
@@ -135,6 +145,7 @@ struct ExpensesView: View {
             } label: {
                 Image(systemName: "chevron.left")
                     .font(.subheadline.weight(.semibold))
+                    .minHitTarget()
             }
             .foregroundStyle(AppColors.primary)
             .accessibilityLabel("expenses.period.prev")
@@ -151,6 +162,7 @@ struct ExpensesView: View {
             } label: {
                 Image(systemName: "chevron.right")
                     .font(.subheadline.weight(.semibold))
+                    .minHitTarget()
             }
             .foregroundStyle(AppColors.primary)
             .accessibilityLabel("expenses.period.next")

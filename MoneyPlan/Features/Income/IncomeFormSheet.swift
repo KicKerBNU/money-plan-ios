@@ -44,6 +44,7 @@ struct IncomeFormSheet: View {
                             .multilineTextAlignment(.trailing)
                             .foregroundStyle(amountText.isEmpty ? AppColors.muted : .primary)
                             .accessibilityIdentifier("income-form-amount")
+                            .decimalPadDoneToolbar()
                     }
 
                     if accounts.isEmpty {
@@ -130,7 +131,10 @@ struct IncomeFormSheet: View {
     }
 
     private var parsedAmount: Double? {
-        Double(amountText.replacingOccurrences(of: ",", with: "."))
+        guard let value = Double(amountText.replacingOccurrences(of: ",", with: ".")), value > 0 else {
+            return nil
+        }
+        return value
     }
 
     private func populateFormFields() {
@@ -188,7 +192,11 @@ struct IncomeFormSheet: View {
     }
 
     private func save() async {
-        guard let amount = parsedAmount, accountId > 0 else { return }
+        guard accountId > 0 else { return }
+        guard let amount = parsedAmount else {
+            errorMessage = String(localized: "common.validation.amountPositive")
+            return
+        }
         isSaving = true
         errorMessage = ""
         defer { isSaving = false }

@@ -11,6 +11,7 @@ final class ExpensesViewModel {
     var isLoading = true
     var isRefreshing = false
     var errorMessage: String?
+    var listTruncated = false
     var searchText = ""
 
     private(set) var hasCompletedInitialLoad = false
@@ -107,8 +108,11 @@ final class ExpensesViewModel {
             async let cat = FinanceAPI.fetchCategories()
             async let recurring = FinanceAPI.fetchRecurringExpenses()
 
-            expenses = try await exp
-            incomes = try await inc
+            let expenseList = try await exp
+            let incomeList = try await inc
+            expenses = expenseList.items
+            incomes = incomeList.items
+            listTruncated = expenseList.truncated || incomeList.truncated
             accounts = try await acc
             categories = try await cat
             recurringExpenses = try await recurring

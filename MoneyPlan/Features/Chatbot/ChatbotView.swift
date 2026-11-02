@@ -215,7 +215,7 @@ private struct ChatComposer: View {
             }
             .buttonStyle(.plain)
             .disabled(!canSend)
-            .padding(4)
+            .minHitTarget()
             .accessibilityLabel("chatbot.send")
         }
         .background(

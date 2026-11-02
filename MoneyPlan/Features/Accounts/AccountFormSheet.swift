@@ -37,6 +37,7 @@ struct AccountFormSheet: View {
                             .keyboardType(.decimalPad)
                             .multilineTextAlignment(.trailing)
                             .foregroundStyle(balanceText.isEmpty ? AppColors.muted : .primary)
+                            .decimalPadDoneToolbar()
                     }
                 }
 

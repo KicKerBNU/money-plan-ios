@@ -6,19 +6,19 @@ enum FinanceAPI {
 
     // MARK: - Expenses
 
-    static func fetchExpenses(year: Int, month: Int) async throws -> [Expense] {
+    static func fetchExpenses(year: Int, month: Int) async throws -> ListedResult<Expense> {
         let response: DataResponse<[Expense]> = try await client.fetch("/v1/expenses?year=\(year)&month=\(month)")
-        return response.data
+        return ListedResult(items: response.data, truncated: response.meta?.truncated ?? false)
     }
 
-    static func fetchExpenses(startDate: String, endDate: String) async throws -> [Expense] {
+    static func fetchExpenses(startDate: String, endDate: String) async throws -> ListedResult<Expense> {
         var components = URLComponents()
         components.queryItems = [
             URLQueryItem(name: "startDate", value: startDate),
             URLQueryItem(name: "endDate", value: endDate),
         ]
         let response: DataResponse<[Expense]> = try await client.fetch("/v1/expenses?\(components.query ?? "")")
-        return response.data
+        return ListedResult(items: response.data, truncated: response.meta?.truncated ?? false)
     }
 
     static func createExpense(
@@ -260,19 +260,19 @@ enum FinanceAPI {
 
     // MARK: - Income
 
-    static func fetchIncomes(year: Int, month: Int) async throws -> [IncomeEntry] {
+    static func fetchIncomes(year: Int, month: Int) async throws -> ListedResult<IncomeEntry> {
         let response: DataResponse<[IncomeEntry]> = try await client.fetch("/v1/incomes?year=\(year)&month=\(month)")
-        return response.data
+        return ListedResult(items: response.data, truncated: response.meta?.truncated ?? false)
     }
 
-    static func fetchIncomes(startDate: String, endDate: String) async throws -> [IncomeEntry] {
+    static func fetchIncomes(startDate: String, endDate: String) async throws -> ListedResult<IncomeEntry> {
         var components = URLComponents()
         components.queryItems = [
             URLQueryItem(name: "startDate", value: startDate),
             URLQueryItem(name: "endDate", value: endDate),
         ]
         let response: DataResponse<[IncomeEntry]> = try await client.fetch("/v1/incomes?\(components.query ?? "")")
-        return response.data
+        return ListedResult(items: response.data, truncated: response.meta?.truncated ?? false)
     }
 
     static func createIncome(
@@ -393,6 +393,23 @@ enum FinanceAPI {
     static func fetchMonthlyStats(year: Int, month: Int) async throws -> MonthlyExpensesStats {
         let response: DataResponse<MonthlyExpensesStats> = try await client.fetch(
             "/v1/stats/monthly-expenses?year=\(year)&month=\(month)"
+        )
+        return response.data
+    }
+
+    static func fetchOverviewSummary(
+        startDate: String,
+        endDate: String,
+        bucket: String
+    ) async throws -> OverviewSummary {
+        var components = URLComponents()
+        components.queryItems = [
+            URLQueryItem(name: "startDate", value: startDate),
+            URLQueryItem(name: "endDate", value: endDate),
+            URLQueryItem(name: "bucket", value: bucket),
+        ]
+        let response: DataResponse<OverviewSummary> = try await client.fetch(
+            "/v1/stats/overview-summary?\(components.query ?? "")"
         )
         return response.data
     }

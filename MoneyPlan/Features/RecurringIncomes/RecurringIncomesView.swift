@@ -6,18 +6,35 @@ final class RecurringIncomesViewModel {
     var items: [RecurringIncome] = []
     var accounts: [Account] = []
     var isLoading = true
+    var isRefreshing = false
     var errorMessage: String?
 
+    private(set) var hasCompletedInitialLoad = false
+
+    /// Full-screen error only before the first successful load; refresh failures keep prior data.
+    var fullScreenErrorMessage: String? {
+        guard !hasCompletedInitialLoad else { return nil }
+        return errorMessage
+    }
+
     func load() async {
-        isLoading = true
         errorMessage = nil
-        defer { isLoading = false }
+        if hasCompletedInitialLoad {
+            isRefreshing = true
+        } else {
+            isLoading = true
+        }
+        defer {
+            isLoading = false
+            isRefreshing = false
+        }
 
         do {
             async let recurring = FinanceAPI.fetchRecurringIncomes()
             async let acc = FinanceAPI.fetchAccounts()
             items = try await recurring
             accounts = try await acc
+            hasCompletedInitialLoad = true
         } catch {
             errorMessage = error.localizedDescription
         }
@@ -79,7 +96,7 @@ struct RecurringIncomesView: View {
         Group {
                 if viewModel.isLoading {
                     LoadingStateView()
-                } else if let error = viewModel.errorMessage {
+                } else if let error = viewModel.fullScreenErrorMessage {
                     ContentUnavailableView("common.unexpectedError", systemImage: "exclamationmark.triangle", description: Text(error))
                 } else if viewModel.items.isEmpty {
                     ContentUnavailableView("recurringIncome.empty.title", systemImage: "arrow.up.circle", description: Text("recurringIncome.empty.body"))
@@ -110,6 +127,12 @@ struct RecurringIncomesView: View {
             .navigationTitle("recurringIncome.title")
             .uiTestPage("recurring-incomes-page")
             .navigationBarTitleDisplayMode(.inline)
+            .overlay(alignment: .top) {
+                if viewModel.isRefreshing {
+                    ProgressView()
+                        .padding(.top, 8)
+                }
+            }
             .task { await viewModel.load() }
             .refreshable { await viewModel.load() }
             .sheet(item: $editingItem) { item in
@@ -230,6 +253,7 @@ private struct RecurringIncomeEditSheet: View {
             Form {
                 TextField("income.form.amount", text: $amountText)
                     .keyboardType(.decimalPad)
+                    .decimalPadDoneToolbar()
 
                 Picker("expenses.form.account", selection: $accountId) {
                     ForEach(accounts) { acc in
@@ -279,11 +303,17 @@ private struct RecurringIncomeEditSheet: View {
     }
 
     private var parsedAmount: Double? {
-        Double(amountText.replacingOccurrences(of: ",", with: "."))
+        guard let value = Double(amountText.replacingOccurrences(of: ",", with: ".")), value > 0 else {
+            return nil
+        }
+        return value
     }
 
     private func save() async {
-        guard let amount = parsedAmount else { return }
+        guard let amount = parsedAmount else {
+            errorMessage = String(localized: "common.validation.amountPositive")
+            return
+        }
         isSaving = true
         errorMessage = ""
         defer { isSaving = false }

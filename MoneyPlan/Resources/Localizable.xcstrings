@@ -42204,7 +42204,181 @@
       }
     },
     "You retained roughly %@%% of income.": {},
-    "Your accounts": {}
+    "Your accounts": {},
+    "expenses.list.truncated": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Showing the first 500 entries for this month. Narrow filters for a complete view — Overview totals stay accurate."
+          }
+        },
+        "en-US": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Showing the first 500 entries for this month. Narrow filters for a complete view — Overview totals stay accurate."
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mostrando as primeiras 500 despesas deste mês. Use filtros para ver tudo — os totais na Visão geral continuam corretos."
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mostrando as primeiras 500 despesas deste mês. Use filtros para ver tudo — os totais na Visão geral continuam corretos."
+          }
+        },
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mostrando as primeiras 500 despesas deste mês. Use filtros para ver tudo — os totais na Visão geral continuam corretos."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Showing the first 500 entries for this month. Narrow filters for a complete view — Overview totals stay accurate."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Showing the first 500 entries for this month. Narrow filters for a complete view — Overview totals stay accurate."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Showing the first 500 entries for this month. Narrow filters for a complete view — Overview totals stay accurate."
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Showing the first 500 entries for this month. Narrow filters for a complete view — Overview totals stay accurate."
+          }
+        }
+      }
+    },
+    "income.list.truncated": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Showing the first 500 income entries for this month. Narrow the period for a complete list — Overview totals stay accurate."
+          }
+        },
+        "en-US": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Showing the first 500 income entries for this month. Narrow the period for a complete list — Overview totals stay accurate."
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mostrando as primeiras 500 receitas deste mês. Use um período menor para ver tudo — os totais na Visão geral continuam corretos."
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mostrando as primeiras 500 receitas deste mês. Use um período menor para ver tudo — os totais na Visão geral continuam corretos."
+          }
+        },
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mostrando as primeiras 500 receitas deste mês. Use um período menor para ver tudo — os totais na Visão geral continuam corretos."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Showing the first 500 income entries for this month. Narrow the period for a complete list — Overview totals stay accurate."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Showing the first 500 income entries for this month. Narrow the period for a complete list — Overview totals stay accurate."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Showing the first 500 income entries for this month. Narrow the period for a complete list — Overview totals stay accurate."
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Showing the first 500 income entries for this month. Narrow the period for a complete list — Overview totals stay accurate."
+          }
+        }
+      }
+    },
+    "common.validation.amountPositive": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Enter an amount greater than zero."
+          }
+        },
+        "en-US": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Enter an amount greater than zero."
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Informe um valor maior que zero."
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Informe um valor maior que zero."
+          }
+        },
+        "pt-PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Informe um valor maior que zero."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Introduce un importe mayor que cero."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Saisissez un montant supérieur à zéro."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Inserisci un importo maggiore di zero."
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gib einen Betrag größer als null ein."
+          }
+        }
+      }
+    }
   },
   "version": "1.0"
 }

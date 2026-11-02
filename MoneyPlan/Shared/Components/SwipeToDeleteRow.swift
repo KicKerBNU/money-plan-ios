@@ -1,33 +1,29 @@
 import SwiftUI
 import UIKit
 
-/// Gmail-style swipe-to-delete for rows in our custom (non-`List`) cards.
+/// Swipe-to-delete for rows in our custom (non-`List`) cards.
 ///
-/// Two stages, right-to-left:
-/// - Short swipe: reveals a trash button; tapping it calls `onDelete`
-///   (callers usually show a confirmation dialog there).
-/// - Long swipe past the commit threshold: haptic tick, the row slides away
-///   and `onFullSwipe` fires immediately — the fast path, like Gmail.
+/// Right-to-left swipe reveals a trash button; tapping it calls `onDelete`
+/// (callers show a confirmation dialog). Full-swipe past the threshold snaps
+/// open to the same trash button — it does **not** delete without confirm
+/// (matches recurring lists' `allowsFullSwipe: false` behavior).
 ///
 /// Tapping the row runs `onTap` when closed, or just closes a revealed row.
 struct SwipeToDeleteRow<Content: View>: View {
     var backgroundColor: Color = AppColors.surface
     var onTap: (() -> Void)? = nil
     let onDelete: () -> Void
-    /// Immediate delete on full swipe. Defaults to `onDelete` when nil.
-    var onFullSwipe: (() -> Void)? = nil
     @ViewBuilder let content: () -> Content
 
     @State private var offset: CGFloat = 0
     @State private var isOpen = false
     @State private var isPastCommit = false
-    @State private var isDeleting = false
     @State private var rowWidth: CGFloat = 0
 
     private let actionWidth: CGFloat = 72
     private let animation = Animation.spring(response: 0.3, dampingFraction: 0.85)
 
-    /// Swiping past this point commits the delete on release.
+    /// Visual feedback threshold (haptic) while dragging — does not auto-delete.
     private var commitThreshold: CGFloat {
         max(rowWidth * 0.55, actionWidth * 2)
     }
@@ -57,7 +53,7 @@ struct SwipeToDeleteRow<Content: View>: View {
             .accessibilityAction(named: Text("common.delete")) { onDelete() }
     }
 
-    // MARK: - Delete background (full-bleed red, Gmail style)
+    // MARK: - Delete background
 
     private var deleteBackground: some View {
         HStack {
@@ -90,7 +86,6 @@ struct SwipeToDeleteRow<Content: View>: View {
     private var dragGesture: some Gesture {
         DragGesture(minimumDistance: 20)
             .onChanged { value in
-                guard !isDeleting else { return }
                 // Ignore mostly-vertical drags so scrolling stays untouched.
                 guard isOpen || abs(value.translation.width) > abs(value.translation.height) else { return }
 
@@ -98,51 +93,33 @@ struct SwipeToDeleteRow<Content: View>: View {
                 var proposed = base + value.translation.width
                 // Slight resistance when dragging right past the resting point.
                 if proposed > 0 { proposed = proposed * 0.15 }
-                offset = max(proposed, -rowWidth)
+                // Cap at reveal width — never slide the row fully away without confirm.
+                offset = max(min(proposed, 0), -actionWidth * 1.15)
 
-                let nowPastCommit = offset < -commitThreshold
+                let nowPastCommit = offset < -commitThreshold || offset <= -actionWidth
                 if nowPastCommit != isPastCommit {
                     isPastCommit = nowPastCommit
-                    UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+                    if nowPastCommit {
+                        UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+                    }
                 }
             }
             .onEnded { _ in
-                guard !isDeleting else { return }
-
-                if isPastCommit {
-                    commitDelete()
-                } else {
-                    withAnimation(animation) {
-                        if offset < -actionWidth * 0.55 {
-                            offset = -actionWidth
-                            isOpen = true
-                        } else {
-                            offset = 0
-                            isOpen = false
-                        }
+                withAnimation(animation) {
+                    if offset < -actionWidth * 0.45 {
+                        offset = -actionWidth
+                        isOpen = true
+                        isPastCommit = false
+                    } else {
+                        offset = 0
+                        isOpen = false
+                        isPastCommit = false
                     }
                 }
             }
     }
 
     // MARK: - Actions
-
-    private func commitDelete() {
-        isDeleting = true
-        UINotificationFeedbackGenerator().notificationOccurred(.success)
-        withAnimation(.easeIn(duration: 0.2)) {
-            offset = -rowWidth
-        } completion: {
-            (onFullSwipe ?? onDelete)()
-            // Reset so the row is usable again if the delete fails and rolls back.
-            withAnimation(animation.delay(0.4)) {
-                offset = 0
-                isOpen = false
-                isPastCommit = false
-                isDeleting = false
-            }
-        }
-    }
 
     private func close() {
         withAnimation(animation) {
