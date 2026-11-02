@@ -9,11 +9,19 @@ final class ExpensesViewModel {
     var categories: [Category] = []
     var recurringExpenses: [RecurringExpense] = []
     var isLoading = true
+    var isRefreshing = false
     var errorMessage: String?
     var searchText = ""
 
+    private(set) var hasCompletedInitialLoad = false
     private(set) var year: Int
     private(set) var month: Int
+
+    /// Full-screen error only before the first successful load; refresh failures keep prior data.
+    var fullScreenErrorMessage: String? {
+        guard !hasCompletedInitialLoad else { return nil }
+        return errorMessage
+    }
 
     init() {
         let current = DateUtils.currentYearMonth()
@@ -81,9 +89,16 @@ final class ExpensesViewModel {
     }
 
     func load() async {
-        isLoading = true
         errorMessage = nil
-        defer { isLoading = false }
+        if hasCompletedInitialLoad {
+            isRefreshing = true
+        } else {
+            isLoading = true
+        }
+        defer {
+            isLoading = false
+            isRefreshing = false
+        }
 
         do {
             async let exp = FinanceAPI.fetchExpenses(year: year, month: month)
@@ -97,6 +112,7 @@ final class ExpensesViewModel {
             accounts = try await acc
             categories = try await cat
             recurringExpenses = try await recurring
+            hasCompletedInitialLoad = true
         } catch {
             errorMessage = error.localizedDescription
         }

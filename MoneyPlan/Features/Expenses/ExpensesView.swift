@@ -26,7 +26,7 @@ struct ExpensesView: View {
             Group {
                 if viewModel.isLoading {
                     LoadingStateView()
-                } else if let error = viewModel.errorMessage {
+                } else if let error = viewModel.fullScreenErrorMessage {
                     ContentUnavailableView("common.unexpectedError", systemImage: "exclamationmark.triangle", description: Text(error))
                 } else {
                     expensesContent
@@ -101,7 +101,7 @@ struct ExpensesView: View {
 
     private var expensesContent: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 16) {
+            LazyVStack(alignment: .leading, spacing: 16) {
                 periodPicker
                 summaryCard
 
@@ -120,6 +120,12 @@ struct ExpensesView: View {
             .padding()
         }
         .background(Color(.systemGroupedBackground))
+        .overlay(alignment: .top) {
+            if viewModel.isRefreshing {
+                ProgressView()
+                    .padding(.top, 8)
+            }
+        }
     }
 
     private var periodPicker: some View {
@@ -230,7 +236,7 @@ struct ExpensesView: View {
     // MARK: - Date-grouped list
 
     private var groupedList: some View {
-        VStack(alignment: .leading, spacing: 20) {
+        LazyVStack(alignment: .leading, spacing: 20) {
             ForEach(viewModel.dateGroups, id: \.date) { group in
                 VStack(spacing: 8) {
                     HStack {
@@ -245,7 +251,7 @@ struct ExpensesView: View {
                     }
                     .padding(.horizontal, 4)
 
-                    VStack(spacing: 0) {
+                    LazyVStack(spacing: 0) {
                         ForEach(group.items) { expense in
                             ExpenseRow(
                                 expense: expense,
@@ -254,8 +260,6 @@ struct ExpensesView: View {
                                 editingExpense = expense
                             } onDelete: {
                                 expenseToDelete = expense
-                            } onFullSwipe: {
-                                Task { await viewModel.deleteExpense(expense) }
                             }
 
                             if expense.id != group.items.last?.id {
@@ -287,7 +291,6 @@ private struct ExpenseRow: View {
     var icon: String? = nil
     let onEdit: () -> Void
     let onDelete: () -> Void
-    let onFullSwipe: () -> Void
 
     private var subtitle: String {
         var parts = [DateUtils.formatShortDate(expense.date), SeedLocalization.localizedAccountName(expense.accountName)]
@@ -297,8 +300,14 @@ private struct ExpenseRow: View {
         return parts.joined(separator: " · ")
     }
 
+    private var accessibilitySummary: String {
+        let category = SeedLocalization.localizedCategoryName(expense.categoryName)
+        let amount = CurrencyFormatter.formatSigned(-expense.amount)
+        return "\(category), \(subtitle), \(amount)"
+    }
+
     var body: some View {
-        SwipeToDeleteRow(onTap: onEdit, onDelete: onDelete, onFullSwipe: onFullSwipe) {
+        SwipeToDeleteRow(onTap: onEdit, onDelete: onDelete) {
             HStack(spacing: 12) {
                 CategoryIconView(name: expense.categoryName, icon: icon)
 
@@ -319,8 +328,12 @@ private struct ExpenseRow: View {
             .padding(.horizontal, 14)
             .padding(.vertical, 12)
         }
-        .accessibilityElement(children: .combine)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(accessibilitySummary)
+        .accessibilityAddTraits(.isButton)
         .accessibilityIdentifier("expense-row-\(expense.id)")
+        .accessibilityAction(named: Text("common.edit")) { onEdit() }
+        .accessibilityAction(named: Text("common.delete")) { onDelete() }
         .contextMenu {
             Button { onEdit() } label: {
                 Label("common.edit", systemImage: "square.and.pencil")

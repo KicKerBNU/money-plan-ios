@@ -5,18 +5,35 @@ import SwiftUI
 final class AccountsViewModel {
     var accounts: [Account] = []
     var isLoading = true
+    var isRefreshing = false
     var errorMessage: String?
+
+    private(set) var hasCompletedInitialLoad = false
 
     var totalBalance: Double {
         accounts.reduce(0) { $0 + $1.currentBalance }
     }
 
+    /// Full-screen error only before the first successful load; refresh failures keep prior data.
+    var fullScreenErrorMessage: String? {
+        guard !hasCompletedInitialLoad else { return nil }
+        return errorMessage
+    }
+
     func load() async {
-        isLoading = true
         errorMessage = nil
-        defer { isLoading = false }
+        if hasCompletedInitialLoad {
+            isRefreshing = true
+        } else {
+            isLoading = true
+        }
+        defer {
+            isLoading = false
+            isRefreshing = false
+        }
         do {
             accounts = try await FinanceAPI.fetchAccounts()
+            hasCompletedInitialLoad = true
         } catch {
             errorMessage = error.localizedDescription
         }
@@ -60,6 +77,8 @@ struct AccountsView: View {
             Group {
                 if viewModel.isLoading {
                     LoadingStateView()
+                } else if let error = viewModel.fullScreenErrorMessage {
+                    ContentUnavailableView("common.unexpectedError", systemImage: "exclamationmark.triangle", description: Text(error))
                 } else {
                     content
                 }
@@ -114,7 +133,7 @@ struct AccountsView: View {
 
     private var content: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 24) {
+            LazyVStack(alignment: .leading, spacing: 24) {
                 if viewModel.accounts.isEmpty {
                     FinanceCard {
                         EmptyStateView(
@@ -135,6 +154,12 @@ struct AccountsView: View {
             .padding(.bottom, 24)
         }
         .background(Color(.systemGroupedBackground))
+        .overlay(alignment: .top) {
+            if viewModel.isRefreshing {
+                ProgressView()
+                    .padding(.top, 8)
+            }
+        }
     }
 
     // MARK: - Cards carousel
@@ -185,7 +210,7 @@ struct AccountsView: View {
                 .padding(.leading, 4)
 
             FinanceCard {
-                VStack(spacing: 0) {
+                LazyVStack(spacing: 0) {
                     ForEach(Array(viewModel.accounts.enumerated()), id: \.element.id) { index, account in
                         if index > 0 {
                             Divider()
@@ -194,11 +219,16 @@ struct AccountsView: View {
 
                         SwipeToDeleteRow(
                             onTap: { editingAccount = account },
-                            onDelete: { toDelete = account },
-                            onFullSwipe: { Task { try? await viewModel.delete(id: account.id) } }
+                            onDelete: { toDelete = account }
                         ) {
                             AccountRow(account: account)
                         }
+                        .accessibilityElement(children: .ignore)
+                        .accessibilityLabel(accountAccessibilityLabel(for: account))
+                        .accessibilityAddTraits(.isButton)
+                        .accessibilityIdentifier("account-row-\(account.id)")
+                        .accessibilityAction(named: Text("common.edit")) { editingAccount = account }
+                        .accessibilityAction(named: Text("common.delete")) { toDelete = account }
                         .contextMenu { rowMenu(for: account) }
                     }
                 }
@@ -219,6 +249,16 @@ struct AccountsView: View {
         } label: {
             Label("common.delete", systemImage: "trash")
         }
+    }
+
+    private func accountAccessibilityLabel(for account: Account) -> String {
+        let name = account.localizedDisplayName
+        let balance = CurrencyFormatter.format(account.currentBalance)
+        if account.isDefault {
+            let badge = String(localized: "accountsPage.defaultBadge")
+            return "\(name), \(badge), \(balance)"
+        }
+        return "\(name), \(balance)"
     }
 }
 

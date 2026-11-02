@@ -13,6 +13,8 @@ struct IncomeView: View {
             Group {
                 if viewModel.isLoading {
                     LoadingStateView()
+                } else if let error = viewModel.fullScreenErrorMessage {
+                    ContentUnavailableView("common.unexpectedError", systemImage: "exclamationmark.triangle", description: Text(error))
                 } else {
                     content
                 }
@@ -77,7 +79,7 @@ struct IncomeView: View {
 
     private var content: some View {
         ScrollView {
-            VStack(spacing: 24) {
+            LazyVStack(spacing: 24) {
                 periodPicker
 
                 totalHero
@@ -88,6 +90,12 @@ struct IncomeView: View {
             .padding(.bottom, 24)
         }
         .background(Color(.systemGroupedBackground))
+        .overlay(alignment: .top) {
+            if viewModel.isRefreshing {
+                ProgressView()
+                    .padding(.top, 8)
+            }
+        }
     }
 
     private var periodPicker: some View {
@@ -156,7 +164,7 @@ struct IncomeView: View {
                     }
                     .padding(.vertical, 8)
                 } else {
-                    VStack(spacing: 0) {
+                    LazyVStack(spacing: 0) {
                         ForEach(Array(viewModel.entries.enumerated()), id: \.element.id) { index, entry in
                             if index > 0 {
                                 Divider()
@@ -170,8 +178,7 @@ struct IncomeView: View {
                                         editingEntry = viewModel.freshEntry(for: entry)
                                     }
                                 },
-                                onDelete: { toDelete = entry },
-                                onFullSwipe: { Task { await viewModel.delete(entry) } }
+                                onDelete: { toDelete = entry }
                             ) {
                                 IncomeEntryRow(
                                     entry: entry,
@@ -179,8 +186,17 @@ struct IncomeView: View {
                                     isRecurring: viewModel.isRecurringEntry(entry)
                                 )
                             }
-                            .accessibilityElement(children: .combine)
+                            .accessibilityElement(children: .ignore)
+                            .accessibilityLabel(incomeAccessibilityLabel(for: entry))
+                            .accessibilityAddTraits(.isButton)
                             .accessibilityIdentifier("income-row-\(entry.id)")
+                            .accessibilityAction(named: Text("common.edit")) {
+                                Task {
+                                    await viewModel.load()
+                                    editingEntry = viewModel.freshEntry(for: entry)
+                                }
+                            }
+                            .accessibilityAction(named: Text("common.delete")) { toDelete = entry }
                             .contextMenu {
                                 Button {
                                     Task {
@@ -214,6 +230,15 @@ struct IncomeView: View {
             return SeedLocalization.localizedAccountName(accountName)
         }
         return String(localized: "income.title")
+    }
+
+    private func incomeAccessibilityLabel(for entry: IncomeEntry) -> String {
+        let title = entryTitle(for: entry)
+        let date = DateUtils.formatShortDate(entry.date)
+        let account = entry.accountName.map { SeedLocalization.localizedAccountName($0) } ?? ""
+        let amount = CurrencyFormatter.format(entry.amount)
+        let subtitle = account.isEmpty ? date : "\(date) · \(account)"
+        return "\(title), \(subtitle), \(amount)"
     }
 }
 
