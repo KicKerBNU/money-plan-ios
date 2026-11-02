@@ -1,7 +1,7 @@
 import SwiftUI
 
 enum AppTab: Hashable {
-    case expenses, income, add, chat, accounts
+    case expenses, income, chat, accounts
 }
 
 /// Currently selected tab, exposed to pushed screens (e.g. Settings) so they can
@@ -19,56 +19,31 @@ extension EnvironmentValues {
 
 struct MainTabView: View {
     @State private var selectedTab: AppTab = .expenses
-    @State private var previousTab: AppTab = .expenses
-    @State private var showAddExpense = false
-
-    /// "Add" is rendered as a tab item so iOS keeps the bar at a natural 5 slots.
-    /// Selecting it jumps to the Expenses tab (where the sheet lives) and presents
-    /// the new-expense form — a common iOS pattern for primary-action tabs.
-    private var tabSelection: Binding<AppTab> {
-        Binding(
-            get: { selectedTab },
-            set: { newValue in
-                if newValue == .add {
-                    showAddExpense = true
-                    // Land on Expenses so the placeholder view never appears and
-                    // the user sees the new expense in context after saving.
-                    DispatchQueue.main.async {
-                        previousTab = .expenses
-                        selectedTab = .expenses
-                    }
-                } else {
-                    previousTab = newValue
-                    selectedTab = newValue
-                }
-            }
-        )
-    }
 
     var body: some View {
-        TabView(selection: tabSelection) {
-            ExpensesView(showAddSheet: $showAddExpense)
+        TabView(selection: $selectedTab) {
+            ExpensesView()
                 .tabItem { Label("appNav.expenses", systemImage: "list.bullet.rectangle.fill") }
                 .tag(AppTab.expenses)
+                .accessibilityIdentifier("tab-expenses")
 
             IncomeView()
                 .tabItem { Label("appNav.income", systemImage: "arrow.up.right") }
                 .tag(AppTab.income)
-
-            // Placeholder view — never actually shown thanks to the binding above.
-            Color.clear
-                .tabItem { Label("appNav.add", systemImage: "plus.circle.fill") }
-                .tag(AppTab.add)
+                .accessibilityIdentifier("tab-income")
 
             ChatbotView()
                 .tabItem { Label("appNav.chatbot", systemImage: "bubble.left.and.bubble.right.fill") }
                 .tag(AppTab.chat)
+                .accessibilityIdentifier("tab-chatbot")
 
             AccountsView()
                 .tabItem { Label("appNav.accounts", systemImage: "building.columns.fill") }
                 .tag(AppTab.accounts)
+                .accessibilityIdentifier("tab-accounts")
         }
         .environment(\.selectedAppTab, selectedTab)
+        .accessibilityIdentifier("main-tabs")
         .onAppear {
             logScreen(for: selectedTab)
         }
@@ -78,7 +53,6 @@ struct MainTabView: View {
     }
 
     private func logScreen(for tab: AppTab) {
-        guard tab != .add else { return }
         AnalyticsService.logScreen(screenName(for: tab))
     }
 
@@ -86,7 +60,6 @@ struct MainTabView: View {
         switch tab {
         case .expenses: "expenses"
         case .income: "income"
-        case .add: "add"
         case .chat: "chatbot"
         case .accounts: "accounts"
         }
@@ -102,5 +75,6 @@ struct SettingsToolbar: View {
             Image(systemName: "gearshape")
         }
         .accessibilityLabel("appNav.settingsMenu")
+        .accessibilityIdentifier("settings-menu-trigger")
     }
 }

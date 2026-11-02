@@ -1,5 +1,6 @@
 import Foundation
 
+@MainActor
 enum AuthAPI {
     private static let client = APIClient.shared
 

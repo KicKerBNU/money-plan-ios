@@ -50,3 +50,15 @@ enum DefaultAccountPicker {
         return accounts.first
     }
 }
+
+/// Prefers Food for new expenses (most-used category); falls back to first available.
+enum DefaultCategoryPicker {
+    static func pick(from categories: [Category]) -> Category? {
+        if let food = categories.first(where: {
+            $0.name.trimmingCharacters(in: .whitespacesAndNewlines).lowercased() == "food"
+        }) {
+            return food
+        }
+        return categories.first
+    }
+}

@@ -97,6 +97,7 @@ struct RecurringExpensesView: View {
                                 }
                             )
                                 .contentShape(Rectangle())
+                                .accessibilityIdentifier("recurring-expense-row-\(item.id)")
                                 .onTapGesture { editingItem = item }
                                 .swipeActions(edge: .trailing, allowsFullSwipe: false) {
                                     Button(role: .destructive) {
@@ -104,6 +105,7 @@ struct RecurringExpensesView: View {
                                     } label: {
                                         Label("common.delete", systemImage: "trash")
                                     }
+                                    .accessibilityIdentifier("recurring-expense-delete")
                                 }
                         }
                     }
@@ -111,6 +113,7 @@ struct RecurringExpensesView: View {
                 }
             }
             .navigationTitle("recurring.title")
+            .uiTestPage("recurring-expenses-page")
             .navigationBarTitleDisplayMode(.inline)
             .task { await viewModel.load() }
             .refreshable { await viewModel.load() }
@@ -257,7 +260,7 @@ private struct RecurringExpenseEditSheet: View {
                     }
                 }
 
-                DatePicker("recurring.form.startDate", selection: $startDate, displayedComponents: .date)
+                FormDatePicker(title: "recurring.form.startDate", date: $startDate)
 
                 Toggle("recurring.form.isRecurring", isOn: $isActive)
 
@@ -300,7 +303,7 @@ private struct RecurringExpenseEditSheet: View {
         let accountName = accounts.first(where: { $0.id == accountId })?.name ?? ""
         let startIso = DateUtils.localISODate(from: startDate)
 
-        var updated = RecurringExpense(
+        let updated = RecurringExpense(
             id: itemId,
             amount: amount,
             categoryId: categoryId,

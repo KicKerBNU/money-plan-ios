@@ -127,6 +127,7 @@ struct ChatbotView: View {
                 }
             }
             .navigationTitle("chatbot.title")
+            .uiTestPage("chatbot-page")
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
                     Button("chatbot.clear") { viewModel.clear() }

@@ -1,5 +1,6 @@
 import Foundation
 
+@MainActor
 enum FinanceAPI {
     private static let client = APIClient.shared
 

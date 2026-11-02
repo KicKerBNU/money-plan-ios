@@ -18,6 +18,7 @@ struct IncomeView: View {
                 }
             }
             .navigationTitle("income.title")
+            .uiTestPage("income-page")
             .navigationBarTitleDisplayMode(.large)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
@@ -178,6 +179,8 @@ struct IncomeView: View {
                                     isRecurring: viewModel.isRecurringEntry(entry)
                                 )
                             }
+                            .accessibilityElement(children: .combine)
+                            .accessibilityIdentifier("income-row-\(entry.id)")
                             .contextMenu {
                                 Button {
                                     Task {
@@ -187,12 +190,14 @@ struct IncomeView: View {
                                 } label: {
                                     Label("common.edit", systemImage: "square.and.pencil")
                                 }
+                                .accessibilityIdentifier("income-edit")
 
                                 Button(role: .destructive) {
                                     toDelete = entry
                                 } label: {
                                     Label("common.delete", systemImage: "trash")
                                 }
+                                .accessibilityIdentifier("income-delete")
                             }
                         }
                     }

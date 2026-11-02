@@ -44,6 +44,28 @@
             parallelizable = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
+               BlueprintIdentifier = "02BFB507CE27AE078DD28D03"
+               BuildableName = "MoneyPlanTests.xctest"
+               BlueprintName = "MoneyPlanTests"
+               ReferencedContainer = "container:MoneyPlan.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO"
+            parallelizable = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "7F21F1A63ABB920E486F0CD9"
+               BuildableName = "MoneyPlanUITests.xctest"
+               BlueprintName = "MoneyPlanUITests"
+               ReferencedContainer = "container:MoneyPlan.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO"
+            parallelizable = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
                BlueprintIdentifier = "29BE24CBFD2DF9EF3A22E733"
                BuildableName = "MoneyPlanScreenshotTests.xctest"
                BlueprintName = "MoneyPlanScreenshotTests"

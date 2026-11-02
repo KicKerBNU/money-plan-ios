@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+# Blocks commits when unit or UI tests fail.
+set -euo pipefail
+
+# Follow symlink so ROOT is the package root (githooks/..), not .git/.
+SOURCE="${BASH_SOURCE[0]}"
+while [[ -L "$SOURCE" ]]; do
+  DIR="$(cd -P "$(dirname "$SOURCE")" && pwd)"
+  SOURCE="$(readlink "$SOURCE")"
+  [[ "$SOURCE" != /* ]] && SOURCE="$DIR/$SOURCE"
+done
+ROOT="$(cd "$(dirname "$SOURCE")/.." && pwd)"
+cd "$ROOT"
+
+# Non-interactive git hooks don't load nvm; make node/yarn available.
+export NVM_DIR="${NVM_DIR:-$HOME/.nvm}"
+if [[ -s "$NVM_DIR/nvm.sh" ]]; then
+  # shellcheck disable=SC1090
+  . "$NVM_DIR/nvm.sh"
+  nvm use default >/dev/null 2>&1 || nvm use node >/dev/null 2>&1 || true
+fi
+
+if [[ "${SKIP_TEST_HOOK:-}" == "1" ]]; then
+  echo "pre-commit: SKIP_TEST_HOOK=1 — skipping iOS tests"
+  exit 0
+fi
+
+echo "pre-commit: running ./scripts/run-ios-tests.sh..."
+if ! ./scripts/run-ios-tests.sh; then
+  echo ""
+  echo "================================================================"
+  echo "COMMIT BLOCKED: iOS tests are failing."
+  echo "Fix with: ./scripts/run-ios-tests.sh"
+  echo "Emergency skip (not recommended): SKIP_TEST_HOOK=1 git commit ..."
+  echo "================================================================"
+  exit 1
+fi
+
+echo "pre-commit: tests passed."

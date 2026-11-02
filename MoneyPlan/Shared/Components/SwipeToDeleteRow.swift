@@ -68,10 +68,15 @@ struct SwipeToDeleteRow<Content: View>: View {
                 .scaleEffect(isPastCommit ? 1.25 : 1.0)
                 .animation(.spring(response: 0.25, dampingFraction: 0.6), value: isPastCommit)
                 .padding(.trailing, (actionWidth - 20) / 2)
+                .accessibilityHidden(true)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(AppColors.danger)
         .opacity(offset < 0 ? 1 : 0)
+        .accessibilityElement()
+        .accessibilityIdentifier("row-swipe-delete")
+        .accessibilityAddTraits(.isButton)
+        .accessibilityLabel(Text("common.delete"))
         .onTapGesture {
             if isOpen {
                 close()

@@ -12,13 +12,16 @@ struct MoneyPlanApp: App {
     @State private var moneyPreferences: MoneyPreferences
 
     init() {
-        if ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] == nil {
+        // Hosted unit tests skip Firebase; UI tests launch with `-UITesting` and must configure.
+        if !Self.isRunningUnitTests {
             _ = FirebaseConfiguration.configure()
+            UITestingSupport.bootstrapIfNeeded()
         }
-        _authService = State(initialValue: AuthService.shared)
-        _themeManager = State(initialValue: ThemeManager.shared)
+        // App.init runs on the main actor at launch; assumeIsolated satisfies Swift 6 checks.
+        _authService = State(initialValue: MainActor.assumeIsolated { AuthService.shared })
+        _themeManager = State(initialValue: MainActor.assumeIsolated { ThemeManager.shared })
         _toastCenter = State(initialValue: ToastCenter())
-        _moneyPreferences = State(initialValue: MoneyPreferences.shared)
+        _moneyPreferences = State(initialValue: MainActor.assumeIsolated { MoneyPreferences.shared })
     }
 
     var body: some Scene {
@@ -38,7 +41,9 @@ struct MoneyPlanApp: App {
         }
     }
 
+    /// True only for the unit-test host process — not the UI-tested app (`-UITesting`).
     private static var isRunningUnitTests: Bool {
         ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] != nil
+            && !ProcessInfo.processInfo.arguments.contains("-UITesting")
     }
 }

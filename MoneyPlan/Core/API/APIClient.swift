@@ -45,8 +45,16 @@ final class APIClient {
         return URL(string: "https://money-plan-backend-production.up.railway.app")!
     }
 
-    init(session: URLSession = .shared) {
-        self.session = session
+    init(session: URLSession? = nil) {
+        if let session {
+            self.session = session
+        } else if UITestingSupport.isEnabled {
+            let config = URLSessionConfiguration.ephemeral
+            config.protocolClasses = [UITestingURLProtocol.self] + (config.protocolClasses ?? [])
+            self.session = URLSession(configuration: config)
+        } else {
+            self.session = .shared
+        }
     }
 
     func fetch<T: Decodable>(

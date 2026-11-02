@@ -125,6 +125,7 @@ struct OverviewView: View {
                 }
             }
             .navigationTitle("overview.title")
+            .accessibilityIdentifier("overview-page")
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) { SettingsToolbar() }
             }

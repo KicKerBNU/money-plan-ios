@@ -37,6 +37,7 @@ struct StatsView: View {
                 }
             }
             .navigationTitle("stats.title")
+            .accessibilityIdentifier("stats-page")
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) { SettingsToolbar() }
             }

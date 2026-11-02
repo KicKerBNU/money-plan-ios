@@ -108,6 +108,29 @@ Production API: `https://money-plan-backend-production.up.railway.app`
 
 See **[APP_STORE.md](./APP_STORE.md)** for the full shipping guide (archive, TestFlight, metadata, privacy, submission). Update the status table at the top of this README when Apple approves or rejects the build.
 
+## Tests
+
+Unit + UI tests mirror the web Vitest/Playwright suite (auth smoke, tabs/settings, expense/income edit-delete).
+
+```bash
+cd money-plan-ios
+./scripts/run-ios-tests.sh
+```
+
+Or in Xcode: scheme **MoneyPlan** → Test (`⌘U`). UI tests need the Firebase Auth emulator (`FIREBASE_AUTH_EMULATOR_HOST=127.0.0.1:9099`; the script starts it from `money-plan-frontend`).
+
+Targets: `MoneyPlanTests` (XCTest), `MoneyPlanUITests` (XCUITest). Screenshot generation remains in `MoneyPlanScreenshotTests`.
+
+### Pre-commit gate
+
+Commits are blocked when tests fail. Install once per clone:
+
+```bash
+./scripts/install-git-hooks.sh
+```
+
+That wires `.git/hooks/pre-commit` → `githooks/pre-commit` (runs `./scripts/run-ios-tests.sh`). Emergency bypass: `SKIP_TEST_HOOK=1 git commit ...`.
+
 ## Not ported (web-only)
 
 - Public marketing home page & FAQ

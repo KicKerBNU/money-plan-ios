@@ -34,7 +34,7 @@ struct IncomeFormSheet: View {
         NavigationStack {
             Form {
                 Section {
-                    DatePicker("income.form.date", selection: $date, displayedComponents: .date)
+                    FormDatePicker(title: "income.form.date", date: $date)
 
                     HStack {
                         Text("income.form.amount")
@@ -43,6 +43,7 @@ struct IncomeFormSheet: View {
                             .keyboardType(.decimalPad)
                             .multilineTextAlignment(.trailing)
                             .foregroundStyle(amountText.isEmpty ? AppColors.muted : .primary)
+                            .accessibilityIdentifier("income-form-amount")
                     }
 
                     if accounts.isEmpty {
@@ -62,6 +63,7 @@ struct IncomeFormSheet: View {
                 Section {
                     TextField("income.form.notePlaceholder", text: $note, axis: .vertical)
                         .lineLimit(1 ... 3)
+                        .accessibilityIdentifier("income-form-note")
                 }
 
                 Section {
@@ -107,6 +109,7 @@ struct IncomeFormSheet: View {
                             Task { await save() }
                         }
                         .disabled(parsedAmount == nil || accountId <= 0)
+                        .accessibilityIdentifier("income-form-submit")
                     }
                 }
             }

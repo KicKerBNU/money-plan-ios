@@ -1,9 +1,9 @@
 import SwiftUI
 
 struct ExpensesView: View {
-    @Binding var showAddSheet: Bool
     @Environment(MoneyPreferences.self) private var money
     @State private var viewModel = ExpensesViewModel()
+    @State private var showAddSheet = false
     @State private var editingExpense: Expense?
     @State private var expenseToDelete: Expense?
 
@@ -34,6 +34,7 @@ struct ExpensesView: View {
             }
             .navigationTitle("expenses.title")
             .navigationBarTitleDisplayMode(.large)
+            .uiTestPage("expenses-page")
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     AddAndSettingsToolbar(addAccessibilityLabel: "expenses.actions.addExpense") {
@@ -318,13 +319,17 @@ private struct ExpenseRow: View {
             .padding(.horizontal, 14)
             .padding(.vertical, 12)
         }
+        .accessibilityElement(children: .combine)
+        .accessibilityIdentifier("expense-row-\(expense.id)")
         .contextMenu {
             Button { onEdit() } label: {
                 Label("common.edit", systemImage: "square.and.pencil")
             }
+            .accessibilityIdentifier("expense-edit")
             Button(role: .destructive) { onDelete() } label: {
                 Label("common.delete", systemImage: "trash")
             }
+            .accessibilityIdentifier("expense-delete")
         }
     }
 }

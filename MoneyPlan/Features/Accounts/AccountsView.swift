@@ -66,6 +66,7 @@ struct AccountsView: View {
             }
             .navigationTitle("accountsPage.title")
             .navigationBarTitleDisplayMode(.large)
+            .uiTestPage("accounts-page")
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     AddAndSettingsToolbar(addAccessibilityLabel: "accountsPage.actions.addAccount") {

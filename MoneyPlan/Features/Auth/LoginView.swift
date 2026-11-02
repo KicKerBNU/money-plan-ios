@@ -48,6 +48,7 @@ struct LoginView: View {
         .frame(maxWidth: 480)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(backgroundGradient.ignoresSafeArea())
+        .uiTestPage("login-page")
         .sheet(isPresented: $showResetSheet) {
             PasswordResetSheet(prefilledEmail: email) { resetEmail in
                 Task { await submitPasswordReset(email: resetEmail) }
@@ -132,6 +133,7 @@ struct LoginView: View {
             .controlSize(.large)
             .tint(AppColors.primary)
             .disabled(primaryDisabled)
+            .accessibilityIdentifier("login-submit")
         }
         .animation(.snappy(duration: 0.2), value: mode)
         .animation(.snappy(duration: 0.2), value: errorMessage)
@@ -147,6 +149,7 @@ struct LoginView: View {
                     .autocorrectionDisabled()
                     .submitLabel(.next)
                     .focused($focusedField, equals: .email)
+                    .accessibilityIdentifier("login-email")
                     .onSubmit { focusedField = .password }
             }
 
@@ -167,6 +170,7 @@ struct LoginView: View {
                     .autocorrectionDisabled()
                     .submitLabel(.go)
                     .focused($focusedField, equals: .password)
+                    .accessibilityIdentifier("login-password")
                     .onSubmit {
                         guard !primaryDisabled else { return }
                         Task { await submitEmail() }
@@ -197,6 +201,11 @@ struct LoginView: View {
                 .padding(.horizontal, 16)
                 .padding(.vertical, 10)
                 .background(AppColors.danger.opacity(0.08))
+                .overlay(alignment: .leading) {
+                    UITestPageAnchor(identifier: "login-error")
+                        .frame(width: 1, height: 1)
+                }
+                .accessibilityIdentifier("login-error")
             }
         }
         .background(Color.white)
@@ -294,6 +303,7 @@ struct LoginView: View {
         .disabled(isSubmitting)
         .opacity(isSubmitting ? 0.55 : 1)
         .accessibilityLabel("auth.login.googleButton")
+        .accessibilityIdentifier("login-google")
     }
 
     private var line: some View {

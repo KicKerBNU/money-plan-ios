@@ -66,7 +66,7 @@ struct MarketingExpensesPhoneScreenshot: View {
 // MARK: - Shell (nav + tab bar)
 
 enum MarketingTab: Hashable {
-    case expenses, income, add, chat, accounts
+    case expenses, income, chat, accounts
 }
 
 struct MarketingScreenshotShell<Content: View>: View {
@@ -93,7 +93,6 @@ private struct MarketingTabBar: View {
         HStack {
             tabItem(.expenses, label: "appNav.expenses", icon: "list.bullet.rectangle.fill")
             tabItem(.income, label: "appNav.income", icon: "arrow.up.right")
-            tabItem(.add, label: "appNav.add", icon: "plus.circle.fill", prominent: true)
             tabItem(.chat, label: "appNav.chatbot", icon: "bubble.left.and.bubble.right.fill")
             tabItem(.accounts, label: "appNav.accounts", icon: "building.columns.fill")
         }
@@ -103,11 +102,11 @@ private struct MarketingTabBar: View {
         .overlay(alignment: .top) { Divider() }
     }
 
-    private func tabItem(_ tab: MarketingTab, label: LocalizedStringKey, icon: String, prominent: Bool = false) -> some View {
+    private func tabItem(_ tab: MarketingTab, label: LocalizedStringKey, icon: String) -> some View {
         let isSelected = selected == tab
         return VStack(spacing: 4) {
             Image(systemName: icon)
-                .font(prominent ? .title2 : .body)
+                .font(.body)
                 .symbolVariant(isSelected ? .fill : .none)
             Text(label)
                 .font(.caption2)

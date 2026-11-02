@@ -45,7 +45,7 @@ struct ExpenseFormSheet: View {
                         }
                     }
 
-                    DatePicker("expenses.form.date", selection: $date, displayedComponents: .date)
+                    FormDatePicker(title: "expenses.form.date", date: $date)
 
                     HStack {
                         Text("expenses.form.amount")
@@ -54,6 +54,7 @@ struct ExpenseFormSheet: View {
                             .keyboardType(.decimalPad)
                             .multilineTextAlignment(.trailing)
                             .foregroundStyle(amountText.isEmpty ? AppColors.muted : .primary)
+                            .accessibilityIdentifier("expense-form-amount")
                     }
 
                     if accounts.isEmpty {
@@ -73,6 +74,7 @@ struct ExpenseFormSheet: View {
                 Section {
                     TextField("expenses.form.notePlaceholder", text: $note, axis: .vertical)
                         .lineLimit(1 ... 3)
+                        .accessibilityIdentifier("expense-form-note")
                 }
 
                 if showsRecurrenceSection {
@@ -116,6 +118,7 @@ struct ExpenseFormSheet: View {
                         Task { await save() }
                     }
                     .disabled(isSaving || parsedAmount == nil || categoryId <= 0 || accountId <= 0)
+                    .accessibilityIdentifier("expense-form-submit")
                 }
             }
             .onAppear(perform: populate)
@@ -151,7 +154,7 @@ struct ExpenseFormSheet: View {
     /// us POST categoryId/accountId 0, which the backend rejects as invalid payload.
     private func ensureValidSelections() {
         if !categories.contains(where: { $0.id == categoryId }) {
-            categoryId = categories.first?.id ?? 0
+            categoryId = DefaultCategoryPicker.pick(from: categories)?.id ?? 0
         }
         if !accounts.contains(where: { $0.id == accountId }) {
             accountId = DefaultAccountPicker.pick(from: accounts)?.id ?? 0

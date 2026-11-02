@@ -1,7 +1,7 @@
 import SwiftUI
 
 enum AppColors {
-    static let primary = Color("Primary")
+    static let primary = Color("BrandPrimary")
     static let positive = Color("Positive")
     static let danger = Color("Danger")
     static let surface = Color("Surface")

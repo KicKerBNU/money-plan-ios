@@ -32,12 +32,14 @@ struct SettingsView: View {
                     RecurringExpensesView()
                 } label: {
                     SettingsRow(icon: "arrow.triangle.2.circlepath", title: "recurring.settingsMenu")
+                        .accessibilityIdentifier("settings-recurring-expenses")
                 }
 
                 NavigationLink {
                     RecurringIncomesView()
                 } label: {
                     SettingsRow(icon: "arrow.up.circle", title: "recurringIncome.settingsMenu")
+                        .accessibilityIdentifier("settings-recurring-incomes")
                 }
 
                 NavigationLink {
@@ -48,6 +50,7 @@ struct SettingsView: View {
                         title: "preferences.currency",
                         value: currencyValueLabel
                     )
+                    .accessibilityIdentifier("settings-currency")
                 }
             }
 
@@ -58,6 +61,7 @@ struct SettingsView: View {
                     SettingsRow(icon: "rectangle.portrait.and.arrow.right", title: "appNav.logout")
                         .foregroundStyle(.primary)
                 }
+                .accessibilityIdentifier("settings-logout")
 
                 Button(role: .destructive) {
                     showDeleteAccountConfirm = true
@@ -65,10 +69,12 @@ struct SettingsView: View {
                     SettingsRow(icon: "trash", title: "auth.deleteAccount.menu", iconColor: AppColors.danger)
                 }
                 .disabled(isDeletingAccount)
+                .accessibilityIdentifier("settings-delete-account")
             }
         }
         .navigationTitle("settings.title")
         .navigationBarTitleDisplayMode(.large)
+        .uiTestPage("settings-page")
         // Switching tabs pops Settings (and anything pushed above it), so coming
         // back to the tab shows its root screen instead of a stale Settings page.
         .onChange(of: selectedAppTab) {

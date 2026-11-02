@@ -1,6 +1,6 @@
 import SwiftUI
 
-/// Money Plan App Store marketing palette — matches app icon & `Primary` asset colors.
+/// Money Plan App Store marketing palette — matches app icon & `BrandPrimary` asset colors.
 enum MarketingBrandPalette {
     // Icon gradient: warm yellow → mint → teal (light-mode Primary #2F7F73)
     static let canvasTop = Color(red: 0.98, green: 0.86, blue: 0.42)

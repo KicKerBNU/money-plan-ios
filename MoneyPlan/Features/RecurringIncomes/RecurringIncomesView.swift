@@ -92,6 +92,7 @@ struct RecurringIncomesView: View {
                                     Task { await viewModel.setActive(item, active: active) }
                                 }
                             )
+                            .accessibilityIdentifier("recurring-income-row-\(item.id)")
                             .contentShape(Rectangle())
                             .onTapGesture { editingItem = item }
                             .swipeActions(edge: .trailing, allowsFullSwipe: false) {
@@ -107,6 +108,7 @@ struct RecurringIncomesView: View {
                 }
             }
             .navigationTitle("recurringIncome.title")
+            .uiTestPage("recurring-incomes-page")
             .navigationBarTitleDisplayMode(.inline)
             .task { await viewModel.load() }
             .refreshable { await viewModel.load() }
@@ -241,7 +243,7 @@ private struct RecurringIncomeEditSheet: View {
                     }
                 }
 
-                DatePicker("recurring.form.startDate", selection: $startDate, displayedComponents: .date)
+                FormDatePicker(title: "recurring.form.startDate", date: $startDate)
 
                 Toggle("recurringIncome.form.isRecurring", isOn: $isActive)
 

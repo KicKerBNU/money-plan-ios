@@ -198,6 +198,7 @@ Common upload failures:
 | Invalid signing | Team + distribution certificate in Xcode |
 | Bundle ID mismatch | Must match App Store Connect and Firebase |
 | Missing icons | 1024×1024 in AppIcon asset |
+| **Upload Symbols Failed** for `FirebaseAnalytics` / `GoogleAppMeasurement` / `GoogleAdsOnDeviceConversion` / `GoogleAppMeasurementIdentitySupport` | **Safe to ignore.** Xcode 16+ warns when SPM binary Firebase Analytics frameworks ship without separate dSYMs. Upload and App Review still succeed. Firebase tracks this as [firebase-ios-sdk#13551](https://github.com/firebase/firebase-ios-sdk/issues/13551); there is no app-side fix while using Swift Package Manager. Your own app binary’s dSYM is still included. |
 
 ---
 
