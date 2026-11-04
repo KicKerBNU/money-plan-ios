@@ -37,9 +37,14 @@ final class ChatbotViewModel {
         }
     }
 
-    func clear() {
-        messages.removeAll()
-        errorMessage = nil
+    func clear() async {
+        do {
+            try await FinanceAPI.clearChat()
+            messages.removeAll()
+            errorMessage = nil
+        } catch {
+            errorMessage = error.localizedDescription
+        }
     }
 }
 
@@ -130,7 +135,7 @@ struct ChatbotView: View {
             .uiTestPage("chatbot-page")
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
-                    Button("chatbot.clear") { viewModel.clear() }
+                    Button("chatbot.clear") { Task { await viewModel.clear() } }
                         .disabled(viewModel.messages.isEmpty || !hasAIConsent)
                 }
                 ToolbarItem(placement: .topBarTrailing) { SettingsToolbar() }

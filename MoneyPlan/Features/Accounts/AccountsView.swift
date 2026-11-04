@@ -87,10 +87,8 @@ struct AccountsView: View {
             .navigationBarTitleDisplayMode(.large)
             .uiTestPage("accounts-page")
             .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
-                    AddAndSettingsToolbar(addAccessibilityLabel: "accountsPage.actions.addAccount") {
-                        showAddSheet = true
-                    }
+                AddAndSettingsToolbar(addAccessibilityLabel: "accountsPage.actions.addAccount") {
+                    showAddSheet = true
                 }
             }
             .sheet(isPresented: $showAddSheet) {

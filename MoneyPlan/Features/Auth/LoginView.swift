@@ -32,6 +32,12 @@ struct LoginView: View {
         isSubmitting || email.trimmingCharacters(in: .whitespaces).isEmpty || password.count < 6
     }
 
+    /// UI tests skip password autofill so the system "Not Now" sheet never covers the toolbar.
+    private var passwordContentType: UITextContentType? {
+        guard !UITestingSupport.isEnabled else { return nil }
+        return mode == .signIn ? .password : .newPassword
+    }
+
     var body: some View {
         VStack(spacing: 24) {
             hero
@@ -143,7 +149,7 @@ struct LoginView: View {
         VStack(spacing: 0) {
             fieldRow(icon: "envelope", label: "auth.login.emailLabel") {
                 TextField("auth.login.emailPlaceholder", text: $email)
-                    .textContentType(.emailAddress)
+                    .textContentType(UITestingSupport.isEnabled ? nil : .emailAddress)
                     .keyboardType(.emailAddress)
                     .textInputAutocapitalization(.never)
                     .autocorrectionDisabled()
@@ -160,10 +166,10 @@ struct LoginView: View {
                     Group {
                         if isPasswordVisible {
                             TextField("auth.login.passwordPlaceholder", text: $password)
-                                .textContentType(mode == .signIn ? .password : .newPassword)
+                                .textContentType(passwordContentType)
                         } else {
                             SecureField("auth.login.passwordPlaceholder", text: $password)
-                                .textContentType(mode == .signIn ? .password : .newPassword)
+                                .textContentType(passwordContentType)
                         }
                     }
                     .textInputAutocapitalization(.never)

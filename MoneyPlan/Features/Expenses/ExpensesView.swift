@@ -36,10 +36,8 @@ struct ExpensesView: View {
             .navigationBarTitleDisplayMode(.large)
             .uiTestPage("expenses-page")
             .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
-                    AddAndSettingsToolbar(addAccessibilityLabel: "expenses.actions.addExpense") {
-                        showAddSheet = true
-                    }
+                AddAndSettingsToolbar(addAccessibilityLabel: "expenses.actions.addExpense") {
+                    showAddSheet = true
                 }
             }
             .searchable(text: $viewModel.searchText, prompt: "expenses.searchPlaceholder")
@@ -90,6 +88,7 @@ struct ExpensesView: View {
                         Task { await viewModel.deleteExpense(expense) }
                     }
                 }
+                .accessibilityIdentifier("expense-delete-confirm")
                 Button("common.cancel", role: .cancel) {}
             } message: {
                 Text("expenses.confirmDelete.expenseBody")

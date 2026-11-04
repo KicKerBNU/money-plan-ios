@@ -28,8 +28,7 @@ final class AppScreensUITests: XCTestCase {
         app.launchForUITesting()
         app.loginAsE2EUser()
 
-        app.buttons["settings-menu-trigger"].tap()
-        XCTAssertTrue(app.uiElement("settings-page").waitForExistence(timeout: 5))
+        app.openSettings()
         XCTAssertTrue(app.buttons["settings-logout"].exists)
         XCTAssertTrue(app.buttons["settings-delete-account"].exists)
 
@@ -46,8 +45,10 @@ final class AppScreensUITests: XCTestCase {
         app.launchForUITesting()
         app.loginAsE2EUser()
 
-        app.buttons["settings-menu-trigger"].tap()
-        app.buttons["settings-logout"].tap()
+        app.openSettings()
+        let logout = app.buttons["settings-logout"]
+        XCTAssertTrue(logout.waitForExistence(timeout: 5))
+        logout.tap()
 
         XCTAssertTrue(app.uiElement("login-page").waitForExistence(timeout: 10))
         XCTAssertFalse(app.buttons["settings-menu-trigger"].exists)

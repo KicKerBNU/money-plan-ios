@@ -67,12 +67,14 @@ struct MainTabView: View {
 }
 
 /// Gear button that pushes the dedicated Settings page (replaced the old dropdown menu).
+/// Must be its own toolbar item. Nested in another control, the link has no hit frame.
 struct SettingsToolbar: View {
     var body: some View {
         NavigationLink {
             SettingsView()
         } label: {
             Image(systemName: "gearshape")
+                .frame(width: 24, height: 24)
         }
         .accessibilityLabel("appNav.settingsMenu")
         .accessibilityIdentifier("settings-menu-trigger")

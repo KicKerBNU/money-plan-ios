@@ -72,19 +72,27 @@ extension XCUIApplication {
     }
 
     /// Dismiss Save Password / keyboard / other transient system chrome.
+    /// Only taps a control that is on screen. An off-screen "Not Now" still
+    /// exists after the password prompt closes, and `tap()` then fails with a
+    /// hit point of {-1, -1}.
     func dismissTransientUI() {
         let dismissLabels = ["Not Now", "Never", "No Thanks", "Dismiss", "Close", "Not now"]
         for label in dismissLabels {
             let springboard = XCUIApplication(bundleIdentifier: "com.apple.springboard")
-            let sbButton = springboard.buttons[label]
-            if sbButton.exists { sbButton.tap(); return }
-            let appButton = buttons[label]
-            if appButton.exists { appButton.tap(); return }
+            if tapIfHittable(springboard.buttons[label]) { return }
+            if tapIfHittable(buttons[label]) { return }
         }
         if keyboards.firstMatch.exists {
             // Decimal/email keyboards — tap elsewhere to dismiss when possible.
             coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.1)).tap()
         }
+    }
+
+    @discardableResult
+    private func tapIfHittable(_ element: XCUIElement) -> Bool {
+        guard element.exists, element.isHittable else { return false }
+        element.tap()
+        return true
     }
 
     func loginAsE2EUser() {
@@ -103,6 +111,18 @@ extension XCUIApplication {
         dismissTransientUI()
         XCTAssertTrue(uiElement("expenses-page").waitForExistence(timeout: 20))
         dismissTransientUI()
+    }
+
+    /// Opens Settings from the gear in the navigation bar and waits until that page is up.
+    func openSettings() {
+        dismissTransientUI()
+        let trigger = buttons["settings-menu-trigger"].firstMatch
+        XCTAssertTrue(trigger.waitForExistence(timeout: 5), "settings-menu-trigger missing")
+        let hittable = NSPredicate(format: "isHittable == true")
+        _ = XCTWaiter.wait(for: [XCTNSPredicateExpectation(predicate: hittable, object: trigger)], timeout: 5)
+        XCTAssertTrue(trigger.isHittable, "settings-menu-trigger is not on screen")
+        trigger.tap()
+        XCTAssertTrue(uiElement("settings-page").waitForExistence(timeout: 8), "settings-page did not open")
     }
 
     func openTab(index: Int) {

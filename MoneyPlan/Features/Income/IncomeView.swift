@@ -23,10 +23,8 @@ struct IncomeView: View {
             .uiTestPage("income-page")
             .navigationBarTitleDisplayMode(.large)
             .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
-                    AddAndSettingsToolbar(addAccessibilityLabel: "income.actions.addIncome") {
-                        showAddSheet = true
-                    }
+                AddAndSettingsToolbar(addAccessibilityLabel: "income.actions.addIncome") {
+                    showAddSheet = true
                 }
             }
             .confirmationDialog(

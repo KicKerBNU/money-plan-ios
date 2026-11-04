@@ -433,4 +433,12 @@ enum FinanceAPI {
         )
         return response.data.reply
     }
+
+    static func clearChat() async throws {
+        let _: EmptyResponse = try await client.fetch(
+            "/v1/ai/expense-chat",
+            method: "DELETE",
+            options: APIFetchOptions(silentError: true, silentSuccess: true)
+        )
+    }
 }

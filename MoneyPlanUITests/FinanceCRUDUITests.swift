@@ -42,27 +42,31 @@ final class FinanceCRUDUITests: XCTestCase {
         app.launchForUITesting()
         app.loginAsE2EUser()
 
-        let row = app.waitForAny("expense-row-101", timeout: 10)
-        XCTAssertNotNil(row, "expense-row-101 missing")
-        row?.press(forDuration: 1.2)
+        let row = app.buttons["expense-row-101"].firstMatch
+        XCTAssertTrue(row.waitForExistence(timeout: 10), "expense-row-101 missing")
 
-        // SwiftUI context menu — prefer accessibility id, then localized label / menu item.
+        row.press(forDuration: 1.2)
         let menuDelete = app.buttons["expense-delete"].firstMatch
-        if menuDelete.waitForExistence(timeout: 4) {
+        if menuDelete.waitForExistence(timeout: 2), menuDelete.isHittable {
             menuDelete.tap()
-        } else if app.menuItems["Delete"].waitForExistence(timeout: 2) {
-            app.menuItems["Delete"].tap()
         } else {
-            app.buttons.matching(NSPredicate(format: "label ==[c] %@", "Delete")).firstMatch.tap()
+            let start = row.coordinate(withNormalizedOffset: CGVector(dx: 0.85, dy: 0.5))
+            let end = row.coordinate(withNormalizedOffset: CGVector(dx: 0.15, dy: 0.5))
+            start.press(forDuration: 0.05, thenDragTo: end)
+            let trash = app.buttons["row-swipe-delete"].firstMatch
+            let revealed = NSPredicate(format: "isHittable == true")
+            _ = XCTWaiter.wait(for: [XCTNSPredicateExpectation(predicate: revealed, object: trash)], timeout: 3)
+            XCTAssertTrue(trash.isHittable, "swipe delete was not revealed")
+            trash.tap()
         }
 
-        let confirm = app.buttons.matching(NSPredicate(format: "label ==[c] %@", "Delete")).firstMatch
-        if confirm.waitForExistence(timeout: 5) {
-            confirm.tap()
-        }
+        let confirm = app.buttons["expense-delete-confirm"].firstMatch
+        XCTAssertTrue(confirm.waitForExistence(timeout: 5), "delete confirmation missing")
+        confirm.tap()
 
-        let stillThere = app.waitForAny("expense-row-101", timeout: 3)
-        XCTAssertNil(stillThere)
+        let gone = NSPredicate(format: "exists == false")
+        _ = XCTWaiter.wait(for: [XCTNSPredicateExpectation(predicate: gone, object: app.buttons["expense-row-101"].firstMatch)], timeout: 5)
+        XCTAssertFalse(app.buttons["expense-row-101"].firstMatch.exists)
     }
 
     func testEditIncomeUpdatesNote() {
